@@ -40,6 +40,14 @@ public class KeyStores {
 
     static Logr logger = LogrFactory.getLogger(KeyStores.class);
 
+    public static KeyStore loadKeyStore(String type, String filePath, char[] keyStorePassword) 
+        throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(type);
+        FileInputStream inputStream = new FileInputStream(filePath);
+        keyStore.load(inputStream, keyStorePassword);
+        return keyStore;
+    }
+
     public static X509TrustManager loadTrustManager(TrustManagerFactory trustManagerFactory) 
             throws Exception {
         for (TrustManager trustManager : trustManagerFactory.getTrustManagers()) {
@@ -90,17 +98,6 @@ public class KeyStores {
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             kmf.init(keyStore, keyPassword);
             return kmf;
-        } catch (Exception e) {
-            throw Exceptions.newRuntimeException(e);
-        }
-    }
-
-    public static KeyStore loadKeyStore(String type, String filePath, char[] keyStorePassword) {
-        try {
-            KeyStore keyStore = KeyStore.getInstance(type);
-            FileInputStream inputStream = new FileInputStream(filePath);
-            keyStore.load(inputStream, keyStorePassword);
-            return keyStore;
         } catch (Exception e) {
             throw Exceptions.newRuntimeException(e);
         }

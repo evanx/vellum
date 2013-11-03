@@ -65,7 +65,9 @@ public class SSLContexts {
         if (keyStoreLocation.equals(trustStoreLocation)) {
             throw new KeyStoreException("Require separate truststore");
         }
-        SSLContext sslContext = create(keyStoreLocation, pass, trustStoreLocation);
+        KeyStore keyStore = KeyStores.loadKeyStore("JKS", keyStoreLocation, pass);
+        KeyStore trustStore = KeyStores.loadKeyStore("JKS", trustStoreLocation, pass);
+        SSLContext sslContext = create(keyStore, pass, createTrustManager(trustStore));
         Arrays.fill(pass, (char) 0);
         return sslContext;
     }

@@ -20,10 +20,10 @@
  */
 package localca;
 
+import java.io.FileInputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import javax.net.ssl.TrustManagerFactory;
@@ -37,6 +37,14 @@ import org.slf4j.LoggerFactory;
  */
 public class KeyStores {
     static Logger logger = LoggerFactory.getLogger(KeyStores.class);
+    
+    public static KeyStore loadKeyStore(String type, String filePath, char[] keyStorePassword) 
+        throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(type);
+        FileInputStream inputStream = new FileInputStream(filePath);
+        keyStore.load(inputStream, keyStorePassword);
+        return keyStore;
+    }
     
     public static X509Certificate findPrivateKeyCertificate(KeyStore keyStore, 
             String keyAlias) throws KeyStoreException {
@@ -101,4 +109,6 @@ public class KeyStores {
         }
         throw new GeneralSecurityException("Default X509TrustManager not found");
     }
+    
+    
 }
