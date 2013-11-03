@@ -65,7 +65,7 @@ public class DualControlEnroll {
     }
     
     public void init() throws Exception {
-        sslContext = SSLContexts.create(true, "dualcontrol.ssl", props, console);
+        sslContext = SSLContexts.create("dualcontrol.ssl", props, console);
     }
 
     public void clear() {

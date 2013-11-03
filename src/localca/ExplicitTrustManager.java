@@ -40,8 +40,8 @@ import vellum.security.Certificates;
 public class ExplicitTrustManager implements X509TrustManager {
     static Logger logger = LoggerFactory.getLogger(ExplicitTrustManager.class);
 
-    X509TrustManager delegate;
-    Map<String, X509Certificate> certificateMap = new HashMap();
+    final private X509TrustManager delegate;
+    final private Map<String, X509Certificate> certificateMap = new HashMap();
     
     public ExplicitTrustManager(KeyStore trustStore) throws GeneralSecurityException {
         this.delegate = KeyStores.findX509TrustManager(trustStore);
@@ -50,13 +50,6 @@ public class ExplicitTrustManager implements X509TrustManager {
         }
     }
 
-    public ExplicitTrustManager(X509TrustManager delegate, 
-            Map<String, X509Certificate> certificateMap) 
-            throws GeneralSecurityException {
-        this.delegate = delegate;
-        this.certificateMap = certificateMap;
-    }
-    
     @Override
     public X509Certificate[] getAcceptedIssuers() {
         return new X509Certificate[0];
@@ -76,6 +69,7 @@ public class ExplicitTrustManager implements X509TrustManager {
                 trustedCertificate.getPublicKey().getEncoded())) {
             throw new CertificateException("Invalid peer certificate");
         }
+        trustedCertificate.checkValidity();
     }
 
     @Override

@@ -33,7 +33,7 @@ import java.net.Socket;
 public class FileClient {
 
     public static byte[] read(String hostAddress, int port) throws Exception {
-        Socket socket = SSLContexts.create(false, "fileclient.ssl", 
+        Socket socket = SSLContexts.create("fileclient.ssl", 
                 System.getProperties(), new MockableConsoleAdapter(System.console())).
                 getSocketFactory().createSocket(hostAddress, port);
         byte[] bytes = readBytes(socket.getInputStream());

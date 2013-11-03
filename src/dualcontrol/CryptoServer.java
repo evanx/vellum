@@ -57,7 +57,7 @@ public class CryptoServer {
             String remoteHostAddress, String keyStoreLocation, char[] storePass) 
             throws Exception {
         dualControlSession.configure(keyStoreLocation, storePass, purpose);
-        SSLContext sslContext = SSLContexts.create(true, "cryptoserver.ssl", 
+        SSLContext sslContext = SSLContexts.create("cryptoserver.ssl", 
                 properties, console);
         ServerSocket serverSocket = sslContext.getServerSocketFactory().
                 createServerSocket(port, backlog, localAddress);

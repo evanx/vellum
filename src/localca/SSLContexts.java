@@ -44,7 +44,7 @@ public class SSLContexts {
 
     static Logger logger = Logger.getLogger(SSLContexts.class);
 
-    public static SSLContext create(boolean strict, String sslPrefix, Properties properties,
+    public static SSLContext create(String sslPrefix, Properties properties,
             MockableConsole console) throws Exception {
         ExtendedProperties props = new ExtendedProperties(properties);
         sslPrefix = props.getString(sslPrefix, sslPrefix);
@@ -56,9 +56,8 @@ public class SSLContexts {
         if (pass == null) {
             pass = console.readPassword("Enter passphrase for %s: ", sslPrefix);
         }
-        String trustStoreLocation = props.getString(sslPrefix + ".trustStore", 
-                keyStoreLocation);
-        if (strict && keyStoreLocation.equals(trustStoreLocation)) {
+        String trustStoreLocation = props.getString(sslPrefix + ".trustStore"); 
+        if (keyStoreLocation.equals(trustStoreLocation)) {
             throw new KeyStoreException("Require separate truststore");
         }
         SSLContext sslContext = create(keyStoreLocation, pass, trustStoreLocation);

@@ -203,7 +203,7 @@ public class DualControlManager {
     public static Map.Entry<String, char[]> readDualEntry(String purpose) throws Exception {
         DualControlManager manager = new DualControlManager(System.getProperties(), 2, purpose);
         manager.setVerifyPassphrase(false);
-        SSLContext sslContext = SSLContexts.create(true, "dualcontrol.ssl", 
+        SSLContext sslContext = SSLContexts.create("dualcontrol.ssl", 
                 System.getProperties(), new MockableConsoleAdapter(System.console()));
         manager.init(sslContext);
         manager.call();
