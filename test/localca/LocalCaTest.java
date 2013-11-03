@@ -21,8 +21,6 @@
  */
 package localca;
 
-import vellumtest.util.Invoker;
-import vellumtest.util.Exec;
 import vellum.crypto.rsa.GenRsaPair;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,6 +41,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.pkcs.PKCS10;
+import vellumtest.util.Exec;
+import vellumtest.util.AnonymousMethodInvoker;
 
 /**
  *
@@ -278,7 +278,7 @@ public class LocalCaTest {
     public void testOpenssl() throws Exception {
         System.setProperty("Xjavax.net.debug", "ssl:trustmanager");
         server.init();
-        new Invoker(new Object() {
+        new AnonymousMethodInvoker(new Object() {
             public void run() throws Exception {
                 accept(server.keyStore, pass, server.trustStore, port);
             }
