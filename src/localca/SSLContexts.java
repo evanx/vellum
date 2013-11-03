@@ -44,6 +44,11 @@ public class SSLContexts {
 
     static Logger logger = Logger.getLogger(SSLContexts.class);
 
+    public static X509TrustManager createTrustManager(KeyStore trustStore) 
+            throws GeneralSecurityException {
+            return new ExplicitTrustManager(trustStore);    
+    }
+    
     public static SSLContext create(String sslPrefix, Properties properties,
             MockableConsole console) throws Exception {
         ExtendedProperties props = new ExtendedProperties(properties);
@@ -77,7 +82,7 @@ public class SSLContexts {
         keyStore.load(new FileInputStream(keyStoreLocation), keyStorePassword);
         KeyStore trustStore = KeyStore.getInstance("JKS");
         trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword);
-        return create(keyStore, keyPass, trustStore);
+        return create(keyStore, keyPass, createTrustManager(trustStore));
     }
 
     public static SSLContext create(KeyStore keyStore, char[] keyPass,
