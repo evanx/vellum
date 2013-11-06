@@ -31,6 +31,7 @@ import javax.crypto.spec.PBEKeySpec;
  */
 public class Passwords {
 
+    public static final int HASH_MILLIS = 200; // log hashing if slowing than this
     public static final String ALGORITHM = "PBKDF2WithHmacSHA1";
     public static final int ITERATION_COUNT = 30000;
     public static final int KEY_SIZE = 160;
