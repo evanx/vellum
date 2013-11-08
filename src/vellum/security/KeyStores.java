@@ -40,12 +40,16 @@ public class KeyStores {
 
     static Logr logger = LogrFactory.getLogger(KeyStores.class);
 
-    public static KeyStore loadKeyStore(String type, String filePath, char[] keyStorePassword) 
-        throws Exception {
-        KeyStore keyStore = KeyStore.getInstance(type);
-        FileInputStream inputStream = new FileInputStream(filePath);
-        keyStore.load(inputStream, keyStorePassword);
-        return keyStore;
+    public static KeyStore loadKeyStore(String type, String filePath, 
+            char[] keyStorePassword) throws Exception {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(type);
+            FileInputStream inputStream = new FileInputStream(filePath);
+            keyStore.load(inputStream, keyStorePassword);
+            return keyStore;
+        } catch (Exception e) {
+            throw Exceptions.newRuntimeException(e);
+        }
     }
 
     public static X509TrustManager loadTrustManager(TrustManagerFactory trustManagerFactory) 
