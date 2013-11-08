@@ -39,14 +39,15 @@ import vellum.security.Certificates;
  */
 public class ExplicitTrustManager implements X509TrustManager {
     static Logger logger = LoggerFactory.getLogger(ExplicitTrustManager.class);
-
     final private X509TrustManager delegate;
     final private Map<String, X509Certificate> certificateMap = new HashMap();
     
     public ExplicitTrustManager(KeyStore trustStore) throws GeneralSecurityException {
         this.delegate = KeyStores.findX509TrustManager(trustStore);
         for (String alias : Collections.list(trustStore.aliases())) {
-            certificateMap.put(alias, (X509Certificate) trustStore.getCertificate(alias));
+            X509Certificate certificate = (X509Certificate) trustStore.getCertificate(alias);
+            String commonName = Certificates.getCommonName(certificate.getSubjectDN());
+            certificateMap.put(commonName, certificate);
         }
     }
 
@@ -61,7 +62,7 @@ public class ExplicitTrustManager implements X509TrustManager {
             throw new CertificateException("Invalid cert chain length");
         }
         X509Certificate trustedCertificate = certificateMap.get(
-                Certificates.getCN(chain[0].getSubjectDN()));
+                Certificates.getCommonName(chain[0].getSubjectDN()));
         if (trustedCertificate == null) {
             throw new CertificateException("Untrusted peer certificate");
         }
