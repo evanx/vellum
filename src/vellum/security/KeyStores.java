@@ -41,7 +41,7 @@ public class KeyStores {
     static Logr logger = LogrFactory.getLogger(KeyStores.class);
 
     public static KeyStore loadKeyStore(String type, String filePath, 
-            char[] keyStorePassword) throws Exception {
+            char[] keyStorePassword) {
         try {
             KeyStore keyStore = KeyStore.getInstance(type);
             FileInputStream inputStream = new FileInputStream(filePath);
