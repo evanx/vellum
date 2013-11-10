@@ -24,9 +24,13 @@ import java.io.FileInputStream;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
+import vellum.crypto.ec.GenECPair;
+import vellum.crypto.genkeypair.GenKeyPair;
 import vellum.exception.Exceptions;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
@@ -122,4 +126,15 @@ public class KeyStores {
         }
         return clientCertificateMap;
     }    
+    
+    public static KeyStore createKeyStore(String type, String commonName, char[] keyPassword,
+            int validityDays, GenKeyPair keyPair) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(type);
+        keyStore.load(null, null);
+        keyPair.generate("CN=" + commonName, new Date(), validityDays, TimeUnit.DAYS);
+        X509Certificate[] chain = new X509Certificate[]{keyPair.getCertificate()};
+        keyStore.setKeyEntry(commonName, keyPair.getPrivateKey(), keyPassword, chain);
+        return keyStore;
+    }
+    
 }

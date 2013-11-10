@@ -20,11 +20,11 @@
  */
 package vellum.security;
 
-import com.sun.net.ssl.internal.pkcs12.PKCS12KeyStore;
 import java.io.OutputStream;
 import java.util.Date;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
+import sun.security.pkcs12.PKCS12KeyStore;
 import vellum.crypto.rsa.GenRsaPair;
 
 /**

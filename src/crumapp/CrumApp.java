@@ -27,7 +27,7 @@ import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.crypto.rsa.ECKeyStores;
+import vellum.crypto.ec.ECKeyStores;
 import vellum.httpserver.VellumHttpsServer;
 
 /**
