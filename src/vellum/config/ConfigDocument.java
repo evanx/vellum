@@ -16,7 +16,7 @@ public class ConfigDocument extends HashMap<ComparableTuple, ConfigSection> {
     List<ConfigSection> entryList = new ArrayList();
 
     public ConfigSection find(String type, String name) {
-        ConfigSection entry = get(ComparableTuple.newInstance(type, name));
+        ConfigSection entry = get(ComparableTuple.create(type, name));
         if (entry == null) {
             throw new ConfigException(ConfigExceptionType.NOT_FOUND, type, name);
         }
@@ -24,7 +24,7 @@ public class ConfigDocument extends HashMap<ComparableTuple, ConfigSection> {
     }
 
     public ConfigSection get(String type, String name) {
-        ConfigSection entry = get(ComparableTuple.newInstance(type, name));
+        ConfigSection entry = get(ComparableTuple.create(type, name));
         if (entry == null) {
             entry = new ConfigSection(type, name);
         }

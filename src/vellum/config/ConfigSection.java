@@ -19,7 +19,7 @@ public class ConfigSection {
     public ConfigSection(String type, String name) {
         this.type = type;
         this.name = name;
-        this.key = ComparableTuple.newInstance(type, name);
+        this.key = ComparableTuple.create(type, name);
     }
 
     public ComparableTuple getKey() {

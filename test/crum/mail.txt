@@ -1,0 +1,8 @@
+From: root (Cron Daemon)
+To: root
+Subject: Cron <root@finadmin> echo test
+Content-Type: text/plain; charset=UTF-8
+Auto-Submitted: auto-generated
+X-Cron-Env: <SHELL=/bin/sh>
+
+test

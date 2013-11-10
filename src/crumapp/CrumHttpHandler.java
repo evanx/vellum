@@ -5,14 +5,10 @@ package crumapp;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import static crumapp.CrumRecord.logger;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.httpserver.Httpx;
 import vellum.util.Streams;
 
 /**
@@ -37,6 +33,7 @@ public class CrumHttpHandler implements HttpHandler {
                     httpExchange.getRequestBody()));
             logger.info("record {}", record);            
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            app.add(record);
         } catch (Exception e) {
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);            
         }

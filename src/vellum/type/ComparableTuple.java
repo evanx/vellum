@@ -57,7 +57,7 @@ public class ComparableTuple implements Comparable<ComparableTuple> {
         return ArgFormats.formatter.format(values);
     }
     
-    public static ComparableTuple newInstance(Comparable ... values) {
+    public static ComparableTuple create(Comparable ... values) {
         return new ComparableTuple(values);
     }   
 }

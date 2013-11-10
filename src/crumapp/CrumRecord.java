@@ -22,11 +22,13 @@ package crumapp;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.type.ComparableTuple;
 
 /**
  * 
@@ -35,9 +37,11 @@ import org.slf4j.LoggerFactory;
 public class CrumRecord {
     static Logger logger = LoggerFactory.getLogger(CrumRecord.class);
     static Pattern subjectCronPattern = Pattern.compile("^Subject: Cron <(\\S+)@(\\S+)> (.*)$");
-    
+
     List<String> lineList = new ArrayList();
-    
+    AlertType alertType;
+    String alertString;
+            
     String fromLine;
     String subjectLine;
     String contentTypeLine;
@@ -47,6 +51,10 @@ public class CrumRecord {
     String username; 
     String hostname; 
     String source; 
+    
+    public ComparableTuple getKey() {
+        return ComparableTuple.create(username, hostname, source);
+    }
     
     public void setFromLine(String fromLine) {
         this.fromLine = fromLine;
@@ -77,13 +85,18 @@ public class CrumRecord {
         }        
     }
 
+    public void setAlertType(AlertType alertType) {
+        this.alertType = alertType;
+    }
+    
     public List<String> getLineList() {
         return lineList;
     }
         
     @Override
     public String toString() {
-        return String.format("%s@%s: %s: %s: %s", username, hostname, source, subject, contentType);
+        return Arrays.toString(new Object[] {username, hostname, source, subject, 
+            contentType, lineList.size(), alertType});
     }
     
     public static CrumRecord parse(String text) throws IOException {
@@ -93,23 +106,36 @@ public class CrumRecord {
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i].trim();
             System.out.println(line);
-            if (line.length() == 0) {
-                inHeader = false;
-                System.out.println("--");
-            } else if (inHeader) {
-                record.getLineList().add(line);
-            } else {
-            }
             if (line.startsWith("From: ")) {
                 record.setFromLine(line);
             } else if (line.startsWith("Subject: ")) {
                 record.setSubjectLine(line);
             } else if (line.startsWith("Content-Type: ")) {
                 record.setContentTypeLine(line);
-            } else {                
+            } else if (line.startsWith("Alert: ")) {
+                record.parseAlertType(line.substring(7));
+            } else if (!inHeader) {
+                record.getLineList().add(line);
+            } else if (line.length() == 0) {
+                inHeader = false;
             }
+        }
+        if (record.getLineList().size() > 0) {
+            logger.info("first {}", record.getLineList().get(0));
         }
         return record;
     }
     
+    private void parseAlertType(String string) {
+        int index = string.indexOf(" ");
+        if (index > 0) {
+            alertString = string.substring(index + 1);
+            string = string.substring(0, index);
+        }
+        try {
+            alertType = AlertType.valueOf(string);
+        } catch (Exception e) {
+            logger.warn("parseAlertType {}: {}", string, e.getMessage());
+        }
+    }       
 }
