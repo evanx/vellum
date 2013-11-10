@@ -65,6 +65,15 @@ public class CrumApp {
             logger.info("HTTPS server started");
         }
         logger.info("started");
+        if (config.systemProperties.getBoolean("crum.test")) {
+            test();
+        }
+    }
+    
+    public void test() throws Exception {
+        String pattern = "From: [a-z]+ \\(Cron Daemon\\)";
+        logger.info("matches {}", "From: root (Cron Daemon)".matches(pattern));
+        
     }
 
     public void stop() throws Exception {

@@ -24,7 +24,6 @@ import dualcontrol.ExtendedProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.config.ConfigDocument;
-import vellum.util.SystemProperties;
 
 /**
  * 
@@ -45,7 +44,7 @@ public class CrumConfig {
         if (prefix.equals("httpsServer")) {
             properties.put("port", 8443);
         } else if (prefix.equals("ssl")) {
-            char[] pass = systemProperties.getPassword("ssl.pass");
+            char[] pass = systemProperties.getPassword("crum.ssl.pass");
             properties.put("keyStoreLocation", "keystores/crum.jks");
             properties.put("pass", pass);
         }

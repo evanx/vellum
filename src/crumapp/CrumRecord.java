@@ -20,6 +20,11 @@
  */
 package crumapp;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,32 +33,83 @@ import org.slf4j.LoggerFactory;
  * @author evan.summers
  */
 public class CrumRecord {
-    Logger logger = LoggerFactory.getLogger(CrumRecord.class);
+    static Logger logger = LoggerFactory.getLogger(CrumRecord.class);
+    static Pattern subjectCronPattern = Pattern.compile("^Subject: Cron <(\\S+)@(\\S+)> (.*)$");
+    
+    List<String> lineList = new ArrayList();
     
     String fromLine;
     String subjectLine;
     String contentTypeLine;
-
+    String contentType;
+    String from; 
+    String subject;
+    String username; 
+    String hostname; 
+    String source; 
+    
     public void setFromLine(String fromLine) {
         this.fromLine = fromLine;
-        String pattern = "From: [a-z]* (Cron Daemon)";
-        logger.info("fromLine [{}] {}", fromLine, pattern);
-        if (fromLine.matches(pattern)) {
-            logger.info("fromLine {}", fromLine);
-        }
+        String fromCronPattern = "^From: ([a-z]+) \\(Cron Daemon\\)$";
+        username = fromLine.replaceAll(fromCronPattern, "$1");
     }
 
     public void setSubjectLine(String subjectLine) {
         this.subjectLine = subjectLine;
+        Matcher matcher = subjectCronPattern.matcher(subjectLine);
+        if (matcher.find()) {
+            username = matcher.group(1);
+            hostname = matcher.group(2);
+            source = matcher.group(3);
+            subject = source;
+        } else {
+            subject = subjectLine.substring(9);
+        }
     }
 
     public void setContentTypeLine(String contentTypeLine) {
         this.contentTypeLine = contentTypeLine;
+        int index = contentTypeLine.indexOf(";");
+        if (index > 14) {
+            contentType = contentTypeLine.substring(14, index);
+        } else {
+            contentType = contentTypeLine.substring(14);
+        }        
     }
-    
+
+    public List<String> getLineList() {
+        return lineList;
+    }
+        
     @Override
     public String toString() {
-        return subjectLine;
+        return String.format("%s@%s: %s: %s: %s", username, hostname, source, subject, contentType);
+    }
+    
+    public static CrumRecord parse(String text) throws IOException {
+        CrumRecord record = new CrumRecord();
+        boolean inHeader = true;
+        String[] lines = text.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i].trim();
+            System.out.println(line);
+            if (line.length() == 0) {
+                inHeader = false;
+                System.out.println("--");
+            } else if (inHeader) {
+                record.getLineList().add(line);
+            } else {
+            }
+            if (line.startsWith("From: ")) {
+                record.setFromLine(line);
+            } else if (line.startsWith("Subject: ")) {
+                record.setSubjectLine(line);
+            } else if (line.startsWith("Content-Type: ")) {
+                record.setContentTypeLine(line);
+            } else {                
+            }
+        }
+        return record;
     }
     
 }
