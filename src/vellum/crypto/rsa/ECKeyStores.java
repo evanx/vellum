@@ -20,13 +20,25 @@
  */
 package vellum.crypto.rsa;
 
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author evan.summers
  */
-public class GenRsaPair extends GenKeyPair {
-
-    public GenRsaPair() {
-        super("RSA", 2048, "SHA256WithRSA");
+public class ECKeyStores {    
+    
+    public static KeyStore createKeyStore(String type, String commonName, char[] keyPassword,
+            int validityDays) throws Exception {
+        KeyStore keyStore = KeyStore.getInstance(type);
+        keyStore.load(null, null);
+        GenECPair keyPair = new GenECPair();
+        keyPair.generate("CN=" + commonName, new Date(), validityDays, TimeUnit.DAYS);
+        X509Certificate[] chain = new X509Certificate[]{keyPair.getCertificate()};
+        keyStore.setKeyEntry(commonName, keyPair.getPrivateKey(), keyPassword, chain);
+        return keyStore;
     }
 }

@@ -25,12 +25,10 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.crypto.rsa.RsaKeyStores;
+import vellum.crypto.rsa.ECKeyStores;
 import vellum.httpserver.VellumHttpsServer;
-import vellum.security.KeyStores;
 
 /**
  *
@@ -50,7 +48,7 @@ public class CrumApp {
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
                 System.currentTimeMillis()).toCharArray();
-        KeyStore keyStore = RsaKeyStores.createKeyStore("JKS", "crum", keyPassword, 365);
+        KeyStore keyStore = ECKeyStores.createKeyStore("JKS", "crum", keyPassword, 365);
         SSLContext sslContext = SSLContexts.create(keyStore, keyPassword, 
                 new CrumTrustManager(this));
         httpsServer.init(sslContext);        

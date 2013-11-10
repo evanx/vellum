@@ -24,9 +24,9 @@ package vellum.crypto.rsa;
  *
  * @author evan.summers
  */
-public class GenRsaPair extends GenKeyPair {
+public class GenECPair extends GenKeyPair {
 
-    public GenRsaPair() {
-        super("RSA", 2048, "SHA256WithRSA");
+    public GenECPair() {
+        super("EC", 256, "SHA256withECDSA");
     }
 }
