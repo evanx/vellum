@@ -5,10 +5,10 @@ package crumapp;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.httpserver.Httpx;
 
 /**
  *
@@ -27,7 +27,9 @@ public class CrumHttpHandler implements HttpHandler {
     
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        HttpHandler handler = getHandler(httpExchange);
+        String path = httpExchange.getRequestURI().getPath();
+        logger.info("path {}", path);
+        HttpHandler handler = getHandler(path);
         if (handler == null) {
             app.handle(httpExchange);
         } else {
@@ -35,9 +37,7 @@ public class CrumHttpHandler implements HttpHandler {
         }
     }
 
-    public HttpHandler getHandler(HttpExchange httpExchange) throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
-        logger.info("path", path);
+    public HttpHandler getHandler(String path) throws IOException {
         return null;
     }
 }

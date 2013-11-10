@@ -55,7 +55,7 @@ public class VellumHttpsServer implements Startable {
     @Override
     public void start() throws Exception {
         int port = properties.getInt("port");
-        boolean needClientAuth = properties.getBoolean("needClientAuth", true);
+        boolean needClientAuth = properties.getBoolean("needClientAuth", false);
         executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
             new ArrayBlockingQueue<Runnable>(4));
         InetSocketAddress socketAddress = new InetSocketAddress(port);
@@ -64,10 +64,10 @@ public class VellumHttpsServer implements Startable {
                 createHttpsConfigurator(sslContext, needClientAuth));
         httpsServer.setExecutor(executor);
         httpsServer.start();
-        logger.info("start", port);
+        logger.info("start {}", port);
     }
 
-    public void startContext(String contextName, HttpHandler httpHandler) {
+    public void createContext(String contextName, HttpHandler httpHandler) {
         httpsServer.createContext(contextName, httpHandler);
     }
 

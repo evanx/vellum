@@ -45,7 +45,7 @@ import vellum.util.Strings;
  *
  * @author evan.summers
  */
-public class HttpExchangeInfo {
+public class Httpx {
     
     Logr logger = LogrFactory.getLogger(getClass());
     HttpExchange httpExchange;
@@ -59,7 +59,7 @@ public class HttpExchangeInfo {
     boolean agentWget = false;
     StringMap cookieMap;
     
-    public HttpExchangeInfo(HttpExchange httpExchange) {
+    public Httpx(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
     }
     

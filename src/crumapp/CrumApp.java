@@ -21,14 +21,17 @@
 package crumapp;
 
 import com.sun.net.httpserver.HttpExchange;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.crypto.rsa.ECKeyStores;
+import vellum.crypto.rsa.RsaKeyStores;
 import vellum.httpserver.VellumHttpsServer;
+import vellum.util.Streams;
 
 /**
  *
@@ -48,18 +51,20 @@ public class CrumApp {
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
                 System.currentTimeMillis()).toCharArray();
-        KeyStore keyStore = ECKeyStores.createKeyStore("JKS", "crum", keyPassword, 365);
+        KeyStore keyStore = RsaKeyStores.createKeyStore("JKS", "crum", keyPassword, 365);
         SSLContext sslContext = SSLContexts.create(keyStore, keyPassword, 
                 new CrumTrustManager(this));
         httpsServer.init(sslContext);        
+        logger.info("initialized");
     }
 
     public void start() throws Exception {
         if (httpsServer != null) {
             httpsServer.start();
-            httpsServer.startContext("/", new CrumHttpHandler(this));
+            httpsServer.createContext("/", new CrumHttpHandler(this));
             logger.info("HTTPS server started");
         }
+        logger.info("started");
     }
 
     public void stop() throws Exception {
@@ -82,8 +87,23 @@ public class CrumApp {
         }
     }
 
-    public void handle(HttpExchange httpExchange) {
+    public void handle(HttpExchange httpExchange) throws IOException {
         String path = httpExchange.getRequestURI().getPath();
-        logger.info("path", path);
+        logger.info("path {}", path);
+        String text = Streams.readString(httpExchange.getRequestBody());
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch >= ' ') {
+                System.out.print(ch);
+            } else {
+                System.out.print((int) ch);
+            }
+        }
+        String[] lines = text.trim().split("\r");
+        for (int i = 0; i < lines.length; i++) {
+            //System.out.println(lines[0].trim());
+        }
+        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        httpExchange.close();                
     }
 }

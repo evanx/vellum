@@ -48,7 +48,7 @@ public class CrumTrustManager implements X509TrustManager {
     public void checkClientTrusted(X509Certificate[] certs, String authType) 
         throws CertificateException {
         String dname = certs[0].getSubjectDN().getName();
-        logger.info("checkClientTrusted " + dname);
+        logger.info("checkClientTrusted {}", dname);
     }
 
     @Override
