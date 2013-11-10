@@ -22,10 +22,10 @@ package crumapp;
 
 import com.sun.net.httpserver.HttpExchange;
 import javax.net.ssl.SSLContext;
+import localca.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.httpserver.VellumHttpsServer;
-import vellum.security.DefaultKeyStores;
 
 /**
  *
@@ -43,7 +43,7 @@ public class CrumApp {
         config.init();
         storage.init();
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
-        SSLContext sslContext = DefaultKeyStores.createSSLContext(
+        SSLContext sslContext = SSLContexts.create(config.getProperties("ssl"), 
                 new CrumTrustManager(this));
         httpsServer.init(sslContext);
         

@@ -58,5 +58,20 @@ public class SystemProperties {
     public static boolean getBoolean(String name) {
         return Boolean.getBoolean(name);
     }
-    
+
+    public static char[] getPassword(String name, char[] defaultValue) {
+        String string = System.getProperty(name);
+        if (string == null) {
+            return defaultValue;
+        }
+        return string.toCharArray();        
+    }
+
+    public static char[] getPassword(String name) {
+        String string = System.getProperty(name);
+        if (string == null) {
+            return System.console().readPassword(name);
+        }
+        return string.toCharArray();        
+    }    
 }

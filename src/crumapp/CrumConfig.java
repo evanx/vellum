@@ -32,7 +32,8 @@ import vellum.util.SystemProperties;
  */
 public class CrumConfig {
     Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
-    String confFileName = SystemProperties.getString(
+    ExtendedProperties systemProperties = new ExtendedProperties(System.getProperties());
+    String confFileName = systemProperties.getString(
             "crum.conf", "conf/crum.conf");
     ConfigDocument configDocument;
             
@@ -42,8 +43,13 @@ public class CrumConfig {
     public ExtendedProperties getProperties(String prefix) {
         ExtendedProperties properties = new ExtendedProperties();
         if (prefix.equals("httpsServer")) {
-            properties.put("port", 443);
+            properties.put("port", 8443);
+        } else if (prefix.equals("ssl")) {
+            char[] pass = systemProperties.getPassword("ssl.pass");
+            properties.put("keyStoreLocation", "keystores/crum.jks");
+            properties.put("pass", pass);
         }
+        logger.info("getProperties {} {}", prefix, properties);
         return properties;
     }
 }

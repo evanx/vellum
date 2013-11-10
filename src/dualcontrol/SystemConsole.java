@@ -20,9 +20,6 @@
  */
 package dualcontrol;
 
-import dualcontrol.*;
-import java.io.PrintWriter;
-
 /**
  *
  * @author evan.summers

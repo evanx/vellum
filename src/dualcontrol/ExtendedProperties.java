@@ -21,12 +21,15 @@
 package dualcontrol;
 
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class ExtendedProperties extends Properties {
+    static Logger logger = LoggerFactory.getLogger(ExtendedProperties.class);
 
     public ExtendedProperties() {
         super();
@@ -63,12 +66,15 @@ public class ExtendedProperties extends Properties {
         return propertyValue;
     } 
     
-    public int getInt(String propertyName) {
-        String propertyString = super.getProperty(propertyName);
-        if (propertyString == null) {
-            throw new RuntimeException("Missing -D property: " + propertyName);
+    public int getInt(String name) {
+        Object value = get(name);
+        if (value == null) {
+            throw new RuntimeException("Missing -D property: " + name);
         }
-        return Integer.parseInt(propertyString);
+        if (value instanceof Number) {
+            return ((Number) value).intValue();
+        }
+        return Integer.parseInt(value.toString());
     }
     
     public int getInt(String propertyName, int defaultValue) {
@@ -97,11 +103,22 @@ public class ExtendedProperties extends Properties {
         throw new RuntimeException("Property value is not boolean: " + propertyName);
     }
     
-    public char[] getPassword(String propertyName, char[] defaultValue) {
-        String string = super.getProperty(propertyName);
-        if (string == null) {
-            return defaultValue;
+    public char[] getPassword(String name) {
+        return getPassword(name, new SystemConsole());
+    }    
+    
+    public char[] getPassword(String propertyName, MockableConsole console) {
+        Object object = super.get(propertyName);
+        if (object == null) {
+            return console.readPassword(propertyName);
         }
-        return string.toCharArray();
-    }
+        logger.info("getPassword {} {}", propertyName, object.getClass().getName());        
+        if (object instanceof String) {
+            return object.toString().toCharArray();
+        }
+        if (object instanceof char[]) {
+            return (char[]) object;
+        }
+        throw new RuntimeException("Unhandled password property type: " + propertyName);
+    }        
 }

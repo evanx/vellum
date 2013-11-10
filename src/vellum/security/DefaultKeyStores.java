@@ -36,7 +36,7 @@ public class DefaultKeyStores {
     static final char[] keyStorePassword = 
             System.getProperty("javax.net.ssl.keyStorePassword").toCharArray();
     static final char[] keyPassword = 
-            System.getProperty("javax.net.ssl.keyStorePassword").toCharArray();
+            System.getProperty("javax.net.ssl.keyPassword").toCharArray();
     static final String trustStoreLocation = 
             System.getProperty("javax.net.ssl.trustStore");
     static final char[] trustStorePassword = 
@@ -92,5 +92,6 @@ public class DefaultKeyStores {
         sslContext.init(keyManagerFactory.getKeyManagers(), trustManagers, new SecureRandom());
         return sslContext;
     }
+
     
 }

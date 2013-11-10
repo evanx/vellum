@@ -34,7 +34,8 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -42,7 +43,7 @@ import org.apache.log4j.Logger;
  */
 public class SSLContexts {
 
-    static Logger logger = Logger.getLogger(SSLContexts.class);
+    static Logger logger = LoggerFactory.getLogger(SSLContexts.class);
 
     public static X509TrustManager createTrustManager(KeyStore trustStore) 
             throws GeneralSecurityException {
@@ -99,6 +100,14 @@ public class SSLContexts {
         return sslContext;
     }
 
+    public static SSLContext create(ExtendedProperties properties, 
+            X509TrustManager trustManager) throws GeneralSecurityException, IOException {
+        char[] pass = properties.getPassword("pass");
+        KeyStore keyStore = KeyStores.loadKeyStore(properties.getString("keyStoreType", "JKS"),
+                properties.getString("keyStoreLocation"), pass);
+        return create(keyStore, pass, trustManager);
+    }
+    
     public static SSLContext create(KeyStore keyStore, char[] keyPass,
             X509TrustManager trustManager) throws GeneralSecurityException {
         return create(keyStore, keyPass, new X509TrustManager[] {trustManager});
@@ -113,5 +122,4 @@ public class SSLContexts {
                 new SecureRandom());
         return sslContext;
     }
-    
 }

@@ -21,6 +21,7 @@
 package localca;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -39,7 +40,7 @@ public class KeyStores {
     static Logger logger = LoggerFactory.getLogger(KeyStores.class);
     
     public static KeyStore loadKeyStore(String type, String filePath, char[] keyStorePassword) 
-        throws Exception {
+        throws GeneralSecurityException, IOException {
         KeyStore keyStore = KeyStore.getInstance(type);
         FileInputStream inputStream = new FileInputStream(filePath);
         keyStore.load(inputStream, keyStorePassword);
