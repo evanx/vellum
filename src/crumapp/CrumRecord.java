@@ -37,11 +37,13 @@ import vellum.type.ComparableTuple;
 public class CrumRecord {
     static Logger logger = LoggerFactory.getLogger(CrumRecord.class);
     static Pattern subjectCronPattern = Pattern.compile("^Subject: Cron <(\\S+)@(\\S+)> (.*)$");
+    static Pattern headPattern = Pattern.compile("^[a-zA-Z]+: .*$");
 
     List<String> lineList = new ArrayList();
     AlertType alertType;
     String alertString;
-            
+    StatusType statusType;
+    
     String fromLine;
     String subjectLine;
     String contentTypeLine;
@@ -85,6 +87,10 @@ public class CrumRecord {
         }        
     }
 
+    public void setStatusType(StatusType statusType) {
+        this.statusType = statusType;
+    }
+    
     public void setAlertType(AlertType alertType) {
         this.alertType = alertType;
     }
@@ -92,12 +98,25 @@ public class CrumRecord {
     public List<String> getLineList() {
         return lineList;
     }
-        
+     
+    public boolean equals(CrumRecord other) {
+        if (lineList.size() != other.lineList.size()) {
+            return false;
+        }
+        for (int i = 0; i < lineList.size(); i++) {
+            if (headPattern.matcher(lineList.get(i)).find()
+                    && !lineList.get(i).equals(other.lineList.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     @Override
     public String toString() {
         return Arrays.toString(new Object[] {username, hostname, source, subject, 
-            contentType, lineList.size(), alertType});
-    }
+            contentType, lineList.size(), statusType, alertType});
+    }    
     
     public static CrumRecord parse(String text) throws IOException {
         CrumRecord record = new CrumRecord();
@@ -112,6 +131,8 @@ public class CrumRecord {
                 record.setSubjectLine(line);
             } else if (line.startsWith("Content-Type: ")) {
                 record.setContentTypeLine(line);
+            } else if (line.startsWith("Status: ")) {
+                record.parseStatusType(line.substring(8));
             } else if (line.startsWith("Alert: ")) {
                 record.parseAlertType(line.substring(7));
             } else if (!inHeader) {
@@ -121,6 +142,14 @@ public class CrumRecord {
             }
         }
         return record;
+    }
+    
+    private void parseStatusType(String string) {
+        try {
+            statusType = StatusType.valueOf(string);
+        } catch (Exception e) {
+            logger.warn("parseStatusType {}: {}", string, e.getMessage());
+        }
     }
     
     private void parseAlertType(String string) {
