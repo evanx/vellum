@@ -29,7 +29,7 @@ public class CrumHttpHandler implements HttpHandler {
         String path = httpExchange.getRequestURI().getPath();
         logger.info("path {}", path);
         try {
-            CrumRecord record = CrumRecord.parse(Streams.readString(
+            StatusRecord record = StatusRecord.parse(Streams.readString(
                     httpExchange.getRequestBody()));
             logger.info("record {}", record);            
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);

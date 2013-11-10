@@ -20,8 +20,10 @@
  */
 package crumapp;
 
+import dualcontrol.ExtendedProperties;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.SSLContext;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import vellum.crypto.rsa.RsaKeyStores;
 import vellum.httpserver.VellumHttpsServer;
 import vellum.type.ComparableTuple;
+import vellum.util.Streams;
 
 /**
  *
@@ -41,12 +44,17 @@ public class CrumApp {
     Logger logger = LoggerFactory.getLogger(getClass());
     CrumConfig config = new CrumConfig();
     CrumStorage storage = new CrumStorage();
+    ExtendedProperties properties; 
+    String scriptName;
     Thread serverThread;
     VellumHttpsServer httpsServer;
-    Map<ComparableTuple, CrumRecord> recordMap = new HashMap();
+    Map<ComparableTuple, StatusRecord> recordMap = new HashMap();
+    Map<ComparableTuple, AlertRecord> alertMap = new HashMap();
     
     public void init() throws Exception {
         config.init();
+        properties = config.getProperties();
+        scriptName = properties.getString("scriptName", null);
         storage.init();
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
@@ -86,17 +94,41 @@ public class CrumApp {
         return storage;
     }
     
-    synchronized void add(CrumRecord record) {
-        CrumRecord previous = recordMap.put(record.getKey(), record);
-        if (previous != null) {
-            if (record.isAlertable(previous)) {
-                alert(record);
+    synchronized void add(StatusRecord statusRecord) {
+        StatusRecord previous = recordMap.put(statusRecord.getKey(), statusRecord);
+        if (previous == null) {
+            alertMap.put(statusRecord.getKey(), new AlertRecord(statusRecord));
+        } else {
+            AlertRecord alertRecord = alertMap.get(statusRecord.getKey());
+            logger.info("add {}", Arrays.toString(new Object[] {
+                    alertRecord.getStatusRecord().getStatusType(), 
+                    previous.getStatusType(), statusRecord.getStatusType()}));
+            if (statusRecord.isAlertable(previous, alertRecord)) {
+                alert(statusRecord, previous, alertRecord);
+                alertMap.put(statusRecord.getKey(), new AlertRecord(statusRecord));
             }
         }
     }
     
-    synchronized void alert(CrumRecord record) {
-        logger.info("ALERT {}", record.toString());       
+    synchronized void alert(StatusRecord statusRecord, StatusRecord previous,
+            AlertRecord previousAlert) {
+        logger.info("ALERT {}", statusRecord.toString());
+        if (scriptName != null) {
+            try {
+                exec(scriptName, "CRUM_STATUS=" + statusRecord.getStatusType());
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+            }
+        }
+    }
+    
+    
+    public void exec(String command, String ... envp) throws Exception {
+        Process process = Runtime.getRuntime().exec(command, envp);
+        logger.info("process started: " + command);
+        int exitCode = process.waitFor();
+        logger.info("process completed {}", exitCode);
+        logger.info("output\n {}\n", Streams.readString(process.getInputStream()));
     }
     
     public static void main(String[] args) throws Exception {

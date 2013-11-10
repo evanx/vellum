@@ -39,6 +39,12 @@ public class CrumConfig {
     public void init() {        
     }
 
+    public ExtendedProperties getProperties() {
+        ExtendedProperties properties = new ExtendedProperties();
+        properties.put("alertScript", "script/alert.sh");
+        return properties;
+    }
+    
     public ExtendedProperties getProperties(String prefix) {
         ExtendedProperties properties = new ExtendedProperties();
         if (prefix.equals("httpsServer")) {

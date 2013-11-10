@@ -34,8 +34,8 @@ import vellum.type.ComparableTuple;
  * 
  * @author evan.summers
  */
-public class CrumRecord {
-    static Logger logger = LoggerFactory.getLogger(CrumRecord.class);
+public class StatusRecord {
+    static Logger logger = LoggerFactory.getLogger(StatusRecord.class);
     static Pattern subjectCronPattern = Pattern.compile("^Subject: Cron <(\\S+)@(\\S+)> (.*)$");
     static Pattern headPattern = Pattern.compile("^[a-zA-Z]+: .*$");
 
@@ -44,9 +44,6 @@ public class CrumRecord {
     String alertString;
     StatusType statusType;
     long timestamp = System.currentTimeMillis();
-    long alertTimestamp;
-    CrumRecord alert;
-    CrumRecord previous;
     
     String fromLine;
     String subjectLine;
@@ -66,14 +63,6 @@ public class CrumRecord {
         return timestamp;
     }
 
-    public void setAlertTimestamp(long alertTimestamp) {
-        this.alertTimestamp = alertTimestamp;
-    }
-
-    public long getAlertTimestamp() {
-        return alertTimestamp;
-    }
-    
     public void setFromLine(String fromLine) {
         this.fromLine = fromLine;
         String fromCronPattern = "^From: ([a-z]+) \\(Cron Daemon\\)$";
@@ -127,7 +116,7 @@ public class CrumRecord {
         return lineList;
     }
 
-    public boolean isLinesChanged(CrumRecord other) {
+    public boolean isLinesChanged(StatusRecord other) {
         if (lineList.size() != other.lineList.size()) {
             return true;
         }
@@ -146,13 +135,12 @@ public class CrumRecord {
             statusType, alertType, alertString});
     }    
     
-    public static CrumRecord parse(String text) throws IOException {
-        CrumRecord record = new CrumRecord();
+    public static StatusRecord parse(String text) throws IOException {
+        StatusRecord record = new StatusRecord();
         boolean inHeader = true;
         String[] lines = text.split("\n");
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i].trim();
-            System.out.println(line);
             if (line.startsWith("From: ")) {
                 record.setFromLine(line);
             } else if (line.startsWith("Subject: ")) {
@@ -193,7 +181,7 @@ public class CrumRecord {
         }
     }       
 
-    public boolean isAlertable(CrumRecord previous) {
+    public boolean isAlertable(StatusRecord previous, AlertRecord alert) {
         if (alertType == AlertType.ALWAYS) {            
             return false;
         }
@@ -204,22 +192,19 @@ public class CrumRecord {
         if (previous == null) {
             return false;
         }
-        this.previous = previous;
-        if (previous.alert == null) {
-            alert = this;
-            return false;
-        }
-        this.alert = previous.alert;
         if (alertType == AlertType.OUTPUT_CHANGED) {
             if (isLinesChanged(previous)) {
                 return true;
             }
         } else if (alertType == AlertType.STATUS_CHANGED) {
-            if (statusType == alert.statusType) {
+            if (!statusType.isAlertable()) {
                 return false;
-            } else if (statusType == previous.statusType) {
+            } else if (statusType != previous.statusType) {
+                return false;
+            } else if (statusType == alert.getStatusRecord().getStatusType()) {
+                return false;
+            } else {
                 return true;
-            } else {                
             }
         } else {            
         }
