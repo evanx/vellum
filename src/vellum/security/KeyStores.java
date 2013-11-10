@@ -121,6 +121,5 @@ public class KeyStores {
                     trustStore.getCertificate(alias));
         }
         return clientCertificateMap;
-    }
-    
+    }    
 }

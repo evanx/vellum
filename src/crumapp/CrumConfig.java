@@ -18,30 +18,32 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.lifecycle;
+package crumapp;
 
+import dualcontrol.ExtendedProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import vellum.config.ConfigDocument;
+import vellum.util.SystemProperties;
 
 /**
- *
+ * 
  * @author evan.summers
  */
-public class Main {
-    
-    public static void main(String[] args, Initialisable instance) {
-        try {
-            instance.init();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
+public class CrumConfig {
+    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
+    String confFileName = SystemProperties.getString(
+            "crum.conf", "conf/crum.conf");
+    ConfigDocument configDocument;
+            
+    public void init() {        
     }
 
-    public static void main(String[] args, ConfigMapInitialisable instance, ConfigDocument configMap) {
-        try {
-            instance.init(configMap);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+    public ExtendedProperties getProperties(String prefix) {
+        ExtendedProperties properties = new ExtendedProperties();
+        if (prefix.equals("httpsServer")) {
+            properties.put("port", 443);
         }
+        return properties;
     }
-    
 }

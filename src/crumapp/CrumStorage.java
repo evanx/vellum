@@ -18,30 +18,19 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.lifecycle;
+package crumapp;
 
-import vellum.config.ConfigDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 
  * @author evan.summers
  */
-public class Main {
+public class CrumStorage {
+    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
     
-    public static void main(String[] args, Initialisable instance) {
-        try {
-            instance.init();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-    }
-
-    public static void main(String[] args, ConfigMapInitialisable instance, ConfigDocument configMap) {
-        try {
-            instance.init(configMap);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
+    public void init() {        
     }
     
 }

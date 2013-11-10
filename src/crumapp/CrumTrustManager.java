@@ -18,40 +18,42 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.httpserver;
+package crumapp;
 
-import dualcontrol.ExtendedProperties;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.X509TrustManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
-public class HttpServerConfig {
-    int port;
-    boolean enabled;
-    boolean clientAuth;
-            
-    public HttpServerConfig(ExtendedProperties props) {
-        this(props.getInt("port"),
-                props.getBoolean("clientAuth", false),
-                props.getBoolean("enabled", true));
-    }
-    
-    public HttpServerConfig(int port, boolean clientAuth, boolean enabled) {
-        this.port = port;
-        this.clientAuth = clientAuth;
-        this.enabled = enabled;
+public class CrumTrustManager implements X509TrustManager {
+
+    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
+    CrumApp app;
+
+    public CrumTrustManager(CrumApp app) {
+        this.app = app;
     }
 
-    public int getPort() {
-        return port;
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return new X509Certificate[0];
     }
 
-    public boolean isClientAuth() {
-        return clientAuth;
+    @Override
+    public void checkClientTrusted(X509Certificate[] certs, String authType) 
+        throws CertificateException {
+        String dname = certs[0].getSubjectDN().getName();
+        logger.info("checkClientTrusted " + dname);
     }
-    
-    public boolean isEnabled() {
-        return enabled;
-    }  
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] certs, String authType) 
+        throws CertificateException {
+        throw new CertificateException();
+    }
 }

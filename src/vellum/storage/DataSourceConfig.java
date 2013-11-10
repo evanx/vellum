@@ -4,7 +4,7 @@
  */
 package vellum.storage;
 
-import vellum.config.PropertiesStringMap;
+import vellum.config.ConfigMap;
 
 /**
  *
@@ -22,7 +22,7 @@ public class DataSourceConfig {
     public DataSourceConfig() {
     }
 
-    public DataSourceConfig(PropertiesStringMap props) {
+    public DataSourceConfig(ConfigMap props) {
         this(props.getString("driver"),
                 props.getString("url"),
                 props.getString("user"),

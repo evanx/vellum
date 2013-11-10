@@ -10,13 +10,13 @@ import vellum.type.ComparableTuple;
  *
  * @author evan.summers
  */
-public class ConfigEntry {
+public class ConfigSection {
     final String type;
     final String name;
     final ComparableTuple key;
-    final PropertiesStringMap properties = new PropertiesStringMap();
+    final ConfigMap properties = new ConfigMap();
 
-    public ConfigEntry(String type, String name) {
+    public ConfigSection(String type, String name) {
         this.type = type;
         this.name = name;
         this.key = ComparableTuple.newInstance(type, name);
@@ -34,7 +34,7 @@ public class ConfigEntry {
         return name;
     }
 
-    public PropertiesStringMap getProperties() {
+    public ConfigMap getProperties() {
         return properties;
     }
     
