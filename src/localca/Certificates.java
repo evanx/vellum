@@ -48,7 +48,6 @@ import sun.security.x509.CertificateVersion;
 import sun.security.x509.CertificateX509Key;
 import sun.security.x509.KeyUsageExtension;
 import sun.security.x509.X500Name;
-import sun.security.x509.X500Signer;
 import sun.security.x509.X509CertImpl;
 import sun.security.x509.X509CertInfo;
 
@@ -96,8 +95,7 @@ public class Certificates {
         Signature signature = Signature.getInstance(sigAlgName);
         signature.initSign(privateKey);
         X500Name subject = new X500Name(cert.getSubjectDN().toString());
-        X500Signer signer = new X500Signer(signature, subject);
-        request.encodeAndSign(signer);
+        request.encodeAndSign(subject, signature);
         return request;
     }
     

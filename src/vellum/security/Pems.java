@@ -20,7 +20,6 @@
  */
 package vellum.security;
 
-import com.sun.net.ssl.internal.pkcs12.PKCS12KeyStore;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -29,6 +28,7 @@ import java.security.cert.X509Certificate;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 import sun.security.pkcs.PKCS10;
+import sun.security.pkcs12.PKCS12KeyStore;
 import sun.security.provider.X509Factory;
 import sun.security.x509.X509CertImpl;
 import vellum.exception.Exceptions;
