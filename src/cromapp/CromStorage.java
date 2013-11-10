@@ -18,37 +18,23 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package crumapp;
+package cromapp;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.type.ComparableTuple;
 
 /**
  * 
  * @author evan.summers
  */
-public class AlertRecord {
-    static Logger logger = LoggerFactory.getLogger(AlertRecord.class);
-    long timestamp = System.currentTimeMillis();
-    StatusRecord statusRecord;
-
-    public AlertRecord(StatusRecord statusRecord) {
-        this.statusRecord = statusRecord;
+public class CromStorage {
+    Logger logger = LoggerFactory.getLogger(CromHttpHandler.class);
+    
+    public void init() {        
     }
     
-    public StatusRecord getStatusRecord() {
-        return statusRecord;
+    public void store(String client, String source, String text) {
+        
     }
-
-    public long getTimestamp() {
-        return timestamp;
-    }    
+    
 }
-

@@ -18,42 +18,37 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package crumapp;
+package cromapp;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.type.ComparableTuple;
 
 /**
- *
+ * 
  * @author evan.summers
  */
-public class CrumTrustManager implements X509TrustManager {
+public class AlertRecord {
+    static Logger logger = LoggerFactory.getLogger(AlertRecord.class);
+    long timestamp = System.currentTimeMillis();
+    StatusRecord statusRecord;
 
-    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
-    CrumApp app;
-
-    public CrumTrustManager(CrumApp app) {
-        this.app = app;
+    public AlertRecord(StatusRecord statusRecord) {
+        this.statusRecord = statusRecord;
+    }
+    
+    public StatusRecord getStatusRecord() {
+        return statusRecord;
     }
 
-    @Override
-    public X509Certificate[] getAcceptedIssuers() {
-        return new X509Certificate[0];
-    }
-
-    @Override
-    public void checkClientTrusted(X509Certificate[] certs, String authType) 
-        throws CertificateException {
-        String dname = certs[0].getSubjectDN().getName();
-        logger.info("checkClientTrusted {}", dname);
-    }
-
-    @Override
-    public void checkServerTrusted(X509Certificate[] certs, String authType) 
-        throws CertificateException {
-        throw new CertificateException();
-    }
+    public long getTimestamp() {
+        return timestamp;
+    }    
 }
+

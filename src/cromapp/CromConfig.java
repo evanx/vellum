@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package crumapp;
+package cromapp;
 
 import dualcontrol.ExtendedProperties;
 import org.slf4j.Logger;
@@ -29,11 +29,11 @@ import vellum.config.ConfigDocument;
  * 
  * @author evan.summers
  */
-public class CrumConfig {
-    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
+public class CromConfig {
+    Logger logger = LoggerFactory.getLogger(CromHttpHandler.class);
     ExtendedProperties systemProperties = new ExtendedProperties(System.getProperties());
     String confFileName = systemProperties.getString(
-            "crum.conf", "conf/crum.conf");
+            "crum.conf", "conf/crom.conf");
     ConfigDocument configDocument;
             
     public void init() {        
@@ -50,7 +50,7 @@ public class CrumConfig {
         if (prefix.equals("httpsServer")) {
             properties.put("port", 8443);
         } else if (prefix.equals("ssl")) {
-            char[] pass = systemProperties.getPassword("crum.ssl.pass");
+            char[] pass = systemProperties.getPassword("crom.ssl.pass");
             properties.put("keyStoreLocation", "keystores/crum.jks");
             properties.put("pass", pass);
         }

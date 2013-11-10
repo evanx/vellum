@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package crumapp;
+package cromapp;
 
 import dualcontrol.ExtendedProperties;
 import java.security.KeyStore;
@@ -43,11 +43,11 @@ import vellum.util.Streams;
  *
  * @author evan.summers
  */
-public class CrumApp implements Runnable {
+public class CromApp implements Runnable {
 
     Logger logger = LoggerFactory.getLogger(getClass());
-    CrumConfig config = new CrumConfig();
-    CrumStorage storage = new CrumStorage();
+    CromConfig config = new CromConfig();
+    CromStorage storage = new CromStorage();
     ExtendedProperties properties; 
     String alertScript;
     Thread serverThread;
@@ -64,9 +64,9 @@ public class CrumApp implements Runnable {
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
                 System.currentTimeMillis()).toCharArray();
-        KeyStore keyStore = RsaKeyStores.createKeyStore("JKS", "crum", keyPassword, 365);
+        KeyStore keyStore = RsaKeyStores.createKeyStore("JKS", "crom", keyPassword, 365);
         SSLContext sslContext = SSLContexts.create(keyStore, keyPassword, 
-                new CrumTrustManager(this));
+                new CromTrustManager(this));
         httpsServer.init(sslContext);        
         logger.info("initialized");
     }
@@ -75,11 +75,11 @@ public class CrumApp implements Runnable {
         executorService.schedule(this, 3, TimeUnit.MINUTES);
         if (httpsServer != null) {
             httpsServer.start();
-            httpsServer.createContext("/", new CrumHttpHandler(this));
+            httpsServer.createContext("/", new CromHttpHandler(this));
             logger.info("HTTPS server started");
         }
         logger.info("started");
-        if (config.systemProperties.getBoolean("crum.test")) {
+        if (config.systemProperties.getBoolean("crom.test")) {
             test();
         }
     }
@@ -97,7 +97,7 @@ public class CrumApp implements Runnable {
         executorService.shutdown();
     }
 
-    public CrumStorage getStorage() {
+    public CromStorage getStorage() {
         return storage;
     }
     
@@ -123,10 +123,10 @@ public class CrumApp implements Runnable {
         if (alertScript != null) {
             try {
                 exec(alertScript, 
-                        "CRUM_FROM=" + statusRecord.getFrom(),
-                        "CRUM_SUBJECT=" + statusRecord.getSubject(),
-                        "CRUM_STATUS=" + statusRecord.getStatusType(),
-                        "CRUM_ALERT=" + statusRecord.getAlertString()
+                        "CROM_FROM=" + statusRecord.getFrom(),
+                        "CROM_SUBJECT=" + statusRecord.getSubject(),
+                        "CROM_STATUS=" + statusRecord.getStatusType(),
+                        "CROM_ALERT=" + statusRecord.getAlertString()
                         );
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
@@ -139,10 +139,10 @@ public class CrumApp implements Runnable {
         if (alertScript != null) {
             try {
                 exec(alertScript, 
-                        "CRUM_FROM=" + statusRecord.getFrom(),
-                        "CRUM_STATUS=ELAPSED",
-                        "CRUM_SUBJECT=" + statusRecord.getSubject(),
-                        "CRUM_ALERT=" + statusRecord.getAlertString()
+                        "CROM_FROM=" + statusRecord.getFrom(),
+                        "CROM_STATUS=ELAPSED",
+                        "CROM_SUBJECT=" + statusRecord.getSubject(),
+                        "CROM_ALERT=" + statusRecord.getAlertString()
                         );
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
@@ -161,7 +161,7 @@ public class CrumApp implements Runnable {
     
     public static void main(String[] args) throws Exception {
         try {
-            CrumApp app = new CrumApp();
+            CromApp app = new CromApp();
             app.init();
             app.start();
         } catch (Exception e) {

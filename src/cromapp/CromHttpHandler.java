@@ -1,7 +1,7 @@
 /*
  * Source https://code.google.com/p/vellum by @evanxsummers
  */
-package crumapp;
+package cromapp;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -15,12 +15,12 @@ import vellum.util.Streams;
  *
  * @author evan.summers
  */
-public class CrumHttpHandler implements HttpHandler {
+public class CromHttpHandler implements HttpHandler {
 
-    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
-    CrumApp app;
+    Logger logger = LoggerFactory.getLogger(CromHttpHandler.class);
+    CromApp app;
     
-    public CrumHttpHandler(CrumApp app) {
+    public CromHttpHandler(CromApp app) {
         this.app = app;
     }
     
