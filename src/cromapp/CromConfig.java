@@ -21,6 +21,12 @@
 package cromapp;
 
 import dualcontrol.ExtendedProperties;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,26 +39,29 @@ public class CromConfig {
     Logger logger = LoggerFactory.getLogger(CromHttpHandler.class);
     ExtendedProperties systemProperties = new ExtendedProperties(System.getProperties());
     String confFileName = systemProperties.getString("crom.conf", "conf/crom.conf");
-
-    public void init() {
+    ExtendedProperties appProperties = new ExtendedProperties(System.getProperties());
+    Pattern pattern = Pattern.compile("\\s*(\\w+):\\s*[\"']*([/|\\w|.]+)[\"';,]*");
+    
+    public void init() throws FileNotFoundException, IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(confFileName));
+        while (true) {
+            String line = reader.readLine();
+            if (line == null) {
+                return;
+            }
+            Matcher matcher = pattern.matcher(line);
+            if (matcher.find()) {
+                appProperties.put(matcher.group(1), matcher.group(2));
+                logger.info("{} {}", matcher.group(1), matcher.group(2));
+            }
+        }
     }
 
     public ExtendedProperties getProperties() {
-        ExtendedProperties appProperties = new ExtendedProperties();
-        appProperties.put("alertScript", "scripts/alert.sh");
         return appProperties;
     }
 
     public ExtendedProperties getProperties(String prefix) {
-        ExtendedProperties properties = new ExtendedProperties();
-        if (prefix.equals("httpsServer")) {
-            properties.put("port", 8443);
-        } else if (prefix.equals("ssl")) {
-            char[] pass = systemProperties.getPassword("crom.ssl.pass");
-            properties.put("keyStoreLocation", "keystores/crom.jks");
-            properties.put("pass", pass);
-        }
-        logger.info("getProperties {} {}", prefix, properties);
-        return properties;
+        return appProperties;
     }
 }
