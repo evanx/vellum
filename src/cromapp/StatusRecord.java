@@ -72,9 +72,13 @@ public class StatusRecord {
         username = fromLine.replaceAll(fromCronPattern, "$1");
         from = username;
     }
-
+    
     public String getFrom() {
         return from;
+    }
+
+    public String getSource() {
+        return source;
     }
     
     public void parseSubjectLine(String subjectLine) {

@@ -47,9 +47,8 @@ public class CromApp implements Runnable {
 
     Logger logger = LoggerFactory.getLogger(getClass());
     CromConfig config = new CromConfig();
+    CromProperties properties = new CromProperties();
     CromStorage storage = new CromStorage();
-    ExtendedProperties properties; 
-    String alertScript;
     Thread serverThread;
     VellumHttpsServer httpsServer;
     Map<ComparableTuple, StatusRecord> recordMap = new HashMap();
@@ -58,8 +57,7 @@ public class CromApp implements Runnable {
     
     public void init() throws Exception {
         config.init();
-        properties = config.getProperties();
-        alertScript = properties.getString("alertScript", null);
+        properties.init(config.getProperties());
         storage.init();
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
@@ -120,10 +118,11 @@ public class CromApp implements Runnable {
     synchronized void alertChanged(StatusRecord statusRecord, StatusRecord previous,
             AlertRecord previousAlert) {
         logger.info("ALERT {}", statusRecord.toString());
-        if (alertScript != null) {
+        if (properties.getAlertScript() != null) {
             try {
-                exec(alertScript, 
+                exec(properties.getAlertScript(), 
                         "CROM_FROM=" + statusRecord.getFrom(),
+                        "CROM_SOURCE=" + statusRecord.getSource(),
                         "CROM_SUBJECT=" + statusRecord.getSubject(),
                         "CROM_STATUS=" + statusRecord.getStatusType(),
                         "CROM_ALERT=" + statusRecord.getAlertString()
@@ -136,10 +135,11 @@ public class CromApp implements Runnable {
 
     synchronized void alertElapsed(StatusRecord statusRecord) {
         logger.info("ALERT {}", statusRecord.toString());
-        if (alertScript != null) {
+        if (properties.getAlertScript() != null) {
             try {
-                exec(alertScript, 
+                exec(properties.getAlertScript(), 
                         "CROM_FROM=" + statusRecord.getFrom(),
+                        "CROM_SOURCE=" + statusRecord.getSource(),
                         "CROM_STATUS=ELAPSED",
                         "CROM_SUBJECT=" + statusRecord.getSubject(),
                         "CROM_ALERT=" + statusRecord.getAlertString()
@@ -156,7 +156,7 @@ public class CromApp implements Runnable {
         logger.info("process started: " + command);
         int exitCode = process.waitFor();
         logger.info("process completed {}", exitCode);
-        logger.info("output\n {}\n", Streams.readString(process.getInputStream()));
+        logger.info("output\n{}\n", Streams.readString(process.getInputStream()));
     }
     
     public static void main(String[] args) throws Exception {
