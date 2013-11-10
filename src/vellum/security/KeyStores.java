@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
-import vellum.crypto.ec.GenECPair;
+import vellum.crypto.rsa.GenECPair;
 import vellum.crypto.genkeypair.GenKeyPair;
 import vellum.exception.Exceptions;
 import vellum.logr.Logr;
