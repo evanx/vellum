@@ -120,9 +120,6 @@ public class CrumRecord {
                 inHeader = false;
             }
         }
-        if (record.getLineList().size() > 0) {
-            logger.info("first {}", record.getLineList().get(0));
-        }
         return record;
     }
     
