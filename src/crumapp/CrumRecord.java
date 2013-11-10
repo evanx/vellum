@@ -27,14 +27,33 @@ import org.slf4j.LoggerFactory;
  * 
  * @author evan.summers
  */
-public class CrumStorage {
-    Logger logger = LoggerFactory.getLogger(CrumHttpHandler.class);
+public class CrumRecord {
+    Logger logger = LoggerFactory.getLogger(CrumRecord.class);
     
-    public void init() {        
+    String fromLine;
+    String subjectLine;
+    String contentTypeLine;
+
+    public void setFromLine(String fromLine) {
+        this.fromLine = fromLine;
+        String pattern = "From: [a-z]* (Cron Daemon)";
+        logger.info("fromLine [{}] {}", fromLine, pattern);
+        if (fromLine.matches(pattern)) {
+            logger.info("fromLine {}", fromLine);
+        }
+    }
+
+    public void setSubjectLine(String subjectLine) {
+        this.subjectLine = subjectLine;
+    }
+
+    public void setContentTypeLine(String contentTypeLine) {
+        this.contentTypeLine = contentTypeLine;
     }
     
-    public void store(String client, String source, String text) {
-        
+    @Override
+    public String toString() {
+        return subjectLine;
     }
     
 }

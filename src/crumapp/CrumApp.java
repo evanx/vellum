@@ -91,19 +91,32 @@ public class CrumApp {
         String path = httpExchange.getRequestURI().getPath();
         logger.info("path {}", path);
         String text = Streams.readString(httpExchange.getRequestBody());
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch >= ' ') {
-                System.out.print(ch);
+        String[] lines = text.trim().split("\n");
+        String from = null;
+        String subject = null;
+        String contentType = null;
+        boolean inHeader = true;
+        for (int i = 0; i < lines.length; i++) {
+            System.out.println(lines[i].trim());
+            if (lines[i].trim().length() == 0) {
+                inHeader = false;
+                System.out.println("--");
+            } else if (inHeader) {
             } else {
-                System.out.print((int) ch);
+            }
+            if (lines[i].startsWith("From: ")) {
+                from = lines[i];
+            } else if (lines[i].startsWith("Subject: ")) {
+                subject = lines[i];
+            } else if (lines[i].startsWith("Content-Type: ")) {
+                contentType = lines[i];
+            } else {                
             }
         }
-        String[] lines = text.trim().split("\r");
-        for (int i = 0; i < lines.length; i++) {
-            //System.out.println(lines[0].trim());
-        }
+        System.out.println(from);
+        System.out.println(subject);
+        System.out.println(contentType);
         httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-        httpExchange.close();                
+        httpExchange.close();
     }
 }
