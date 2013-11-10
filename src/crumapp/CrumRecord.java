@@ -43,6 +43,10 @@ public class CrumRecord {
     AlertType alertType;
     String alertString;
     StatusType statusType;
+    long timestamp = System.currentTimeMillis();
+    long alertTimestamp;
+    CrumRecord alert;
+    CrumRecord previous;
     
     String fromLine;
     String subjectLine;
@@ -56,6 +60,18 @@ public class CrumRecord {
     
     public ComparableTuple getKey() {
         return ComparableTuple.create(username, hostname, source);
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setAlertTimestamp(long alertTimestamp) {
+        this.alertTimestamp = alertTimestamp;
+    }
+
+    public long getAlertTimestamp() {
+        return alertTimestamp;
     }
     
     public void setFromLine(String fromLine) {
@@ -90,32 +106,44 @@ public class CrumRecord {
     public void setStatusType(StatusType statusType) {
         this.statusType = statusType;
     }
+
+    public StatusType getStatusType() {
+        return statusType;
+    }
     
     public void setAlertType(AlertType alertType) {
         this.alertType = alertType;
+    }
+
+    public AlertType getAlertType() {
+        return alertType;
+    }
+
+    public String getAlertString() {
+        return alertString;
     }
     
     public List<String> getLineList() {
         return lineList;
     }
-     
-    public boolean equals(CrumRecord other) {
+
+    public boolean isLinesChanged(CrumRecord other) {
         if (lineList.size() != other.lineList.size()) {
-            return false;
+            return true;
         }
         for (int i = 0; i < lineList.size(); i++) {
-            if (headPattern.matcher(lineList.get(i)).find()
+            if (!headPattern.matcher(lineList.get(i)).find()
                     && !lineList.get(i).equals(other.lineList.get(i))) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     @Override
     public String toString() {
         return Arrays.toString(new Object[] {username, hostname, source, subject, 
-            contentType, lineList.size(), statusType, alertType});
+            statusType, alertType, alertString});
     }    
     
     public static CrumRecord parse(String text) throws IOException {
@@ -164,4 +192,38 @@ public class CrumRecord {
             logger.warn("parseAlertType {}: {}", string, e.getMessage());
         }
     }       
+
+    public boolean isAlertable(CrumRecord previous) {
+        if (alertType == AlertType.ALWAYS) {            
+            return false;
+        }
+        if (alertType == AlertType.PATTERN) {
+        } else if (alertType == AlertType.NOT_OK) {
+        } else if (alertType == AlertType.ERROR) {
+        }
+        if (previous == null) {
+            return false;
+        }
+        this.previous = previous;
+        if (previous.alert == null) {
+            alert = this;
+            return false;
+        }
+        this.alert = previous.alert;
+        if (alertType == AlertType.OUTPUT_CHANGED) {
+            if (isLinesChanged(previous)) {
+                return true;
+            }
+        } else if (alertType == AlertType.STATUS_CHANGED) {
+            if (statusType == alert.statusType) {
+                return false;
+            } else if (statusType == previous.statusType) {
+                return true;
+            } else {                
+            }
+        } else {            
+        }
+        return false;
+    }
 }
+

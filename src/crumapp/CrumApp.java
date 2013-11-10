@@ -87,7 +87,16 @@ public class CrumApp {
     }
     
     synchronized void add(CrumRecord record) {
-        recordMap.put(record.getKey(), record);
+        CrumRecord previous = recordMap.put(record.getKey(), record);
+        if (previous != null) {
+            if (record.isAlertable(previous)) {
+                alert(record);
+            }
+        }
+    }
+    
+    synchronized void alert(CrumRecord record) {
+        logger.info("ALERT {}", record.toString());       
     }
     
     public static void main(String[] args) throws Exception {
