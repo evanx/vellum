@@ -33,7 +33,7 @@ public class CrumHttpHandler implements HttpHandler {
                     httpExchange.getRequestBody()));
             logger.info("record {}", record);            
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-            app.add(record);
+            app.putRecord(record);
         } catch (Exception e) {
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);            
         }

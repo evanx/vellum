@@ -26,11 +26,15 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.crypto.rsa.RsaKeyStores;
+import vellum.datatype.Millis;
 import vellum.httpserver.VellumHttpsServer;
 import vellum.type.ComparableTuple;
 import vellum.util.Streams;
@@ -39,22 +43,23 @@ import vellum.util.Streams;
  *
  * @author evan.summers
  */
-public class CrumApp {
+public class CrumApp implements Runnable {
 
     Logger logger = LoggerFactory.getLogger(getClass());
     CrumConfig config = new CrumConfig();
     CrumStorage storage = new CrumStorage();
     ExtendedProperties properties; 
-    String scriptName;
+    String alertScript;
     Thread serverThread;
     VellumHttpsServer httpsServer;
     Map<ComparableTuple, StatusRecord> recordMap = new HashMap();
     Map<ComparableTuple, AlertRecord> alertMap = new HashMap();
+    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     
     public void init() throws Exception {
         config.init();
         properties = config.getProperties();
-        scriptName = properties.getString("scriptName", null);
+        alertScript = properties.getString("alertScript", null);
         storage.init();
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
@@ -67,6 +72,7 @@ public class CrumApp {
     }
 
     public void start() throws Exception {
+        executorService.schedule(this, 3, TimeUnit.MINUTES);
         if (httpsServer != null) {
             httpsServer.start();
             httpsServer.createContext("/", new CrumHttpHandler(this));
@@ -88,34 +94,56 @@ public class CrumApp {
         if (httpsServer != null) {
             httpsServer.stop();
         }
+        executorService.shutdown();
     }
 
     public CrumStorage getStorage() {
         return storage;
     }
     
-    synchronized void add(StatusRecord statusRecord) {
+    synchronized void putRecord(StatusRecord statusRecord) {
         StatusRecord previous = recordMap.put(statusRecord.getKey(), statusRecord);
         if (previous == null) {
             alertMap.put(statusRecord.getKey(), new AlertRecord(statusRecord));
         } else {
             AlertRecord alertRecord = alertMap.get(statusRecord.getKey());
-            logger.info("add {}", Arrays.toString(new Object[] {
+            logger.info("putRecord {}", Arrays.toString(new Object[] {
                     alertRecord.getStatusRecord().getStatusType(), 
                     previous.getStatusType(), statusRecord.getStatusType()}));
             if (statusRecord.isAlertable(previous, alertRecord)) {
-                alert(statusRecord, previous, alertRecord);
+                alertChanged(statusRecord, previous, alertRecord);
                 alertMap.put(statusRecord.getKey(), new AlertRecord(statusRecord));
             }
         }
     }
     
-    synchronized void alert(StatusRecord statusRecord, StatusRecord previous,
+    synchronized void alertChanged(StatusRecord statusRecord, StatusRecord previous,
             AlertRecord previousAlert) {
         logger.info("ALERT {}", statusRecord.toString());
-        if (scriptName != null) {
+        if (alertScript != null) {
             try {
-                exec(scriptName, "CRUM_STATUS=" + statusRecord.getStatusType());
+                exec(alertScript, 
+                        "CRUM_FROM=" + statusRecord.getFrom(),
+                        "CRUM_SUBJECT=" + statusRecord.getSubject(),
+                        "CRUM_STATUS=" + statusRecord.getStatusType(),
+                        "CRUM_ALERT=" + statusRecord.getAlertString()
+                        );
+            } catch (Exception e) {
+                logger.warn(e.getMessage(), e);
+            }
+        }
+    }
+
+    synchronized void alertElapsed(StatusRecord statusRecord) {
+        logger.info("ALERT {}", statusRecord.toString());
+        if (alertScript != null) {
+            try {
+                exec(alertScript, 
+                        "CRUM_FROM=" + statusRecord.getFrom(),
+                        "CRUM_STATUS=ELAPSED",
+                        "CRUM_SUBJECT=" + statusRecord.getSubject(),
+                        "CRUM_ALERT=" + statusRecord.getAlertString()
+                        );
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
             }
@@ -138,6 +166,20 @@ public class CrumApp {
             app.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
+        }
+    }
+
+    @Override
+    public void run() {
+        for (StatusRecord statusRecord : recordMap.values()) {
+            AlertRecord alertRecord = alertMap.get(statusRecord.getKey());
+            if (alertRecord != null && alertRecord.getStatusRecord() != statusRecord &&
+                    statusRecord.getPeriodMillis() != 0) {
+                long period = Millis.elapsed(statusRecord.getTimestamp());
+                if (period > statusRecord.getPeriodMillis() && 
+                        period - statusRecord.getPeriodMillis() > Millis.fromMinutes(5)) {                                  alertElapsed(statusRecord);
+                }                                    
+            }
         }
     }
 }

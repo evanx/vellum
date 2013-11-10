@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.datatype.Millis;
 import vellum.type.ComparableTuple;
 
 /**
@@ -44,6 +45,7 @@ public class StatusRecord {
     String alertString;
     StatusType statusType;
     long timestamp = System.currentTimeMillis();
+    long periodMillis;
     
     String fromLine;
     String subjectLine;
@@ -54,6 +56,7 @@ public class StatusRecord {
     String username; 
     String hostname; 
     String source; 
+    String period; 
     
     public ComparableTuple getKey() {
         return ComparableTuple.create(username, hostname, source);
@@ -67,9 +70,14 @@ public class StatusRecord {
         this.fromLine = fromLine;
         String fromCronPattern = "^From: ([a-z]+) \\(Cron Daemon\\)$";
         username = fromLine.replaceAll(fromCronPattern, "$1");
+        from = username;
     }
 
-    public void setSubjectLine(String subjectLine) {
+    public String getFrom() {
+        return from;
+    }
+    
+    public void parseSubjectLine(String subjectLine) {
         this.subjectLine = subjectLine;
         Matcher matcher = subjectCronPattern.matcher(subjectLine);
         if (matcher.find()) {
@@ -77,12 +85,13 @@ public class StatusRecord {
             hostname = matcher.group(2);
             source = matcher.group(3);
             subject = source;
+            from = username + '@' + hostname;
         } else {
             subject = subjectLine.substring(9);
         }
     }
 
-    public void setContentTypeLine(String contentTypeLine) {
+    public void parseContentTypeLine(String contentTypeLine) {
         this.contentTypeLine = contentTypeLine;
         int index = contentTypeLine.indexOf(";");
         if (index > 14) {
@@ -92,6 +101,10 @@ public class StatusRecord {
         }        
     }
 
+    public String getSubject() {
+        return subject;
+    }
+        
     public void setStatusType(StatusType statusType) {
         this.statusType = statusType;
     }
@@ -111,7 +124,11 @@ public class StatusRecord {
     public String getAlertString() {
         return alertString;
     }
-    
+
+    public long getPeriodMillis() {
+        return periodMillis;
+    }
+        
     public List<String> getLineList() {
         return lineList;
     }
@@ -132,7 +149,7 @@ public class StatusRecord {
     @Override
     public String toString() {
         return Arrays.toString(new Object[] {username, hostname, source, subject, 
-            statusType, alertType, alertString});
+            statusType, alertType, alertString, Millis.format(periodMillis)});
     }    
     
     public static StatusRecord parse(String text) throws IOException {
@@ -144,13 +161,15 @@ public class StatusRecord {
             if (line.startsWith("From: ")) {
                 record.setFromLine(line);
             } else if (line.startsWith("Subject: ")) {
-                record.setSubjectLine(line);
+                record.parseSubjectLine(line);
             } else if (line.startsWith("Content-Type: ")) {
-                record.setContentTypeLine(line);
+                record.parseContentTypeLine(line);
             } else if (line.startsWith("Status: ")) {
                 record.parseStatusType(line.substring(8));
             } else if (line.startsWith("Alert: ")) {
                 record.parseAlertType(line.substring(7));
+            } else if (line.startsWith("Period: ")) {
+                record.parsePeriod(line.substring(8));
             } else if (!inHeader) {
                 record.getLineList().add(line);
             } else if (line.length() == 0) {
@@ -209,6 +228,10 @@ public class StatusRecord {
         } else {            
         }
         return false;
+    }
+
+    private void parsePeriod(String string) {
+        periodMillis = Millis.parse(string);
     }
 }
 

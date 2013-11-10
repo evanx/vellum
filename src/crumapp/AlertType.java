@@ -10,6 +10,7 @@ package crumapp;
  */
 public enum AlertType {
     NOT_OK,
+    WARN,
     ERROR,
     PATTERN,
     STATUS_CHANGED,

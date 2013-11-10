@@ -41,7 +41,7 @@ public class CrumConfig {
 
     public ExtendedProperties getProperties() {
         ExtendedProperties properties = new ExtendedProperties();
-        properties.put("alertScript", "script/alert.sh");
+        properties.put("alertScript", "scripts/alert.sh");
         return properties;
     }
     
