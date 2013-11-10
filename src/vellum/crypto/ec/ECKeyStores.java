@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.crypto.rsa;
+package vellum.crypto.ec;
 
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;

@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.crypto.rsa;
+package vellum.crypto.genkeypair;
 
 import java.security.PrivateKey;
 import java.util.Date;
