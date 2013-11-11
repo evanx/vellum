@@ -35,8 +35,8 @@ public class Exec<T> {
     private final static Logger logger = Logger.getLogger(Exec.class);
     private int exitCode; 
     
-    public String exec(String command) throws Exception {
-        Process process = Runtime.getRuntime().exec(command);
+    public String exec(String command, String ... envp) throws Exception {
+        Process process = Runtime.getRuntime().exec(command, envp);
         logger.info("process started: " + command);
         exitCode = process.waitFor();
         logger.info("process completed");
