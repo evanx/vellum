@@ -26,7 +26,7 @@ import vellum.config.ConfigMap;
  *
  * @author evan.summers
  */
-public interface ConfigDocumentInitialisable {
-    public void init(ConfigMap configDocument) throws Exception;
+public interface ConfigMapInitialisable {
+    public void init(ConfigMap configMap) throws Exception;
     
 }

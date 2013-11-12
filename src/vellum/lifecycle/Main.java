@@ -36,7 +36,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args, ConfigDocumentInitialisable instance, ConfigMap configMap) {
+    public static void main(String[] args, ConfigMapInitialisable instance, ConfigMap configMap) {
         try {
             instance.init(configMap);
         } catch (Exception e) {
