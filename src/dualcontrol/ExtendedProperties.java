@@ -20,6 +20,7 @@
  */
 package dualcontrol;
 
+import java.util.HashMap;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,10 @@ public class ExtendedProperties extends Properties {
 
     public ExtendedProperties() {
         super();
+    }
+
+    public ExtendedProperties(HashMap map) {
+        super.putAll(map);
     }
     
     public ExtendedProperties(Properties properties) {

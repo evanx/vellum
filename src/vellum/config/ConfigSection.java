@@ -36,7 +36,5 @@ public class ConfigSection {
 
     public ConfigMap getProperties() {
         return properties;
-    }
-    
-    
+    }    
 }
