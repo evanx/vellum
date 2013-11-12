@@ -18,8 +18,8 @@ public class ConfigParser {
     Logr logger = LogrFactory.getLogger(ConfigParser.class);
     InputStream inputStream;
     BufferedReader reader;
-    ConfigSection configEntry;
-    ConfigDocument configMap = new ConfigDocument();
+    ConfigEntry configEntry;
+    ConfigMap configMap = new ConfigMap();
     String line;
     String type;
     String name;
@@ -65,7 +65,7 @@ public class ConfigParser {
         if (headerParser.parse(line)) {
             type = headerParser.getType();
             name = headerParser.getName();
-            configEntry = new ConfigSection(type, name);
+            configEntry = new ConfigEntry(type, name);
             if (configMap.containsKey(configEntry.getKey())) {
                 throw new ConfigParserException(ConfigExceptionType.DUPLICATE, lineCount, type, name, line);
             }
@@ -106,17 +106,17 @@ public class ConfigParser {
         blockStarted = false;
     }
 
-    public ConfigDocument getConfigMap() {
+    public ConfigMap getConfigMap() {
         return configMap;
     }
 
-    public static ConfigDocument parseConfFile(String path) throws Exception {
+    public static ConfigMap parseConfFile(String path) throws Exception {
         String confFileName = Systems.getPath(path);
         File confFile = new File(confFileName);
         return parse(new FileInputStream(confFile));
     }
     
-    public static ConfigDocument parse(InputStream stream) throws Exception {
+    public static ConfigMap parse(InputStream stream) throws Exception {
         ConfigParser parser = new ConfigParser();
         parser.init(stream);
         return parser.getConfigMap();

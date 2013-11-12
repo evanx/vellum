@@ -20,13 +20,13 @@
  */
 package vellum.lifecycle;
 
-import vellum.config.ConfigDocument;
+import vellum.config.ConfigMap;
 
 /**
  *
  * @author evan.summers
  */
-public interface ConfigMapInitialisable {
-    public void init(ConfigDocument configMap) throws Exception;
+public interface ConfigDocumentInitialisable {
+    public void init(ConfigMap configDocument) throws Exception;
     
 }

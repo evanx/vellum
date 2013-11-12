@@ -20,7 +20,7 @@
  */
 package vellum.lifecycle;
 
-import vellum.config.ConfigDocument;
+import vellum.config.ConfigMap;
 
 /**
  *
@@ -36,7 +36,7 @@ public class Main {
         }
     }
 
-    public static void main(String[] args, ConfigMapInitialisable instance, ConfigDocument configMap) {
+    public static void main(String[] args, ConfigDocumentInitialisable instance, ConfigMap configMap) {
         try {
             instance.init(configMap);
         } catch (Exception e) {

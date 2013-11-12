@@ -21,7 +21,7 @@
 package vellum.httpserver;
 
 import dualcontrol.ExtendedProperties;
-import java.util.HashMap;
+import vellum.config.ConfigProperties;
 
 /**
  *
@@ -32,6 +32,12 @@ public class HttpServerConfig {
     boolean enabled;
     boolean clientAuth;
 
+    public HttpServerConfig(ConfigProperties props) {
+        this(props.getInt("port"),
+                props.getBoolean("clientAuth", false),
+                props.getBoolean("enabled", true));
+    }
+    
     public HttpServerConfig(ExtendedProperties props) {
         this(props.getInt("port"),
                 props.getBoolean("clientAuth", false),

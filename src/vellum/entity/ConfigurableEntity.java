@@ -4,7 +4,7 @@
  */
 package vellum.entity;
 
-import vellum.config.ConfigMap;
+import vellum.config.ConfigProperties;
 
 /**
  *
@@ -12,5 +12,5 @@ import vellum.config.ConfigMap;
  */
 public interface ConfigurableEntity<C> extends IdEntity, Named {
     public void setName(String name);
-    public void config(C context, ConfigMap properties);
+    public void config(C context, ConfigProperties properties);
 }
