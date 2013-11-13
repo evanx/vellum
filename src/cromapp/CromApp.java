@@ -48,7 +48,6 @@ public class CromApp implements Runnable {
     CromConfig config = new CromConfig();
     CromProperties properties = new CromProperties();
     CromStorage storage = new CromStorage();
-    Thread serverThread;
     VellumHttpsServer httpsServer;
     Map<ComparableTuple, StatusRecord> recordMap = new HashMap();
     Map<ComparableTuple, AlertRecord> alertMap = new HashMap();
