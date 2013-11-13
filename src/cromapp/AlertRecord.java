@@ -20,15 +20,8 @@
  */
 package cromapp;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.type.ComparableTuple;
 
 /**
  * 
@@ -38,7 +31,8 @@ public class AlertRecord {
     static Logger logger = LoggerFactory.getLogger(AlertRecord.class);
     long timestamp = System.currentTimeMillis();
     StatusRecord statusRecord;
-
+    String status;
+    
     public AlertRecord(StatusRecord statusRecord) {
         this.statusRecord = statusRecord;
     }
@@ -50,5 +44,13 @@ public class AlertRecord {
     public long getTimestamp() {
         return timestamp;
     }    
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }        
 }
 

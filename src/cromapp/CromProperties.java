@@ -27,13 +27,19 @@ import dualcontrol.ExtendedProperties;
  * @author evan.summers
  */
 public class CromProperties {
-    String alertScript;
-
+    String alertScript = "scripts/alert.sh";
+    int periodMinutes = 5;
+    
     public void init(ExtendedProperties properties) {
-        alertScript = properties.getString("alertScript", null);
+        alertScript = properties.getString("alertScript", alertScript);
+        periodMinutes = properties.getInt("periodMinutes", periodMinutes);
     }
 
     public String getAlertScript() {
         return alertScript;
+    }        
+
+    public int getPeriodMinutes() {
+        return periodMinutes;
     }        
 }

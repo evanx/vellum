@@ -12,7 +12,8 @@ public enum StatusType {
     OK,
     WARNING,
     CRITICAL,
-    UNKNOWN;
+    UNKNOWN,
+    ELAPSED;
 
     public boolean isAlertable() {
         return (this == OK || this == CRITICAL);

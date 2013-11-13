@@ -204,7 +204,8 @@ public class StatusRecord {
         }
     }       
 
-    public boolean isAlertable(StatusRecord previous, AlertRecord alert) {
+    public boolean isAlertable(StatusRecord previousStatus, 
+            AlertRecord previousAlert) {
         if (alertType == AlertType.ALWAYS) {            
             return false;
         }
@@ -212,19 +213,19 @@ public class StatusRecord {
         } else if (alertType == AlertType.NOT_OK) {
         } else if (alertType == AlertType.ERROR) {
         }
-        if (previous == null) {
+        if (previousStatus == null) {
             return false;
         }
         if (alertType == AlertType.OUTPUT_CHANGED) {
-            if (isLinesChanged(previous)) {
+            if (isLinesChanged(previousStatus)) {
                 return true;
             }
         } else if (alertType == AlertType.STATUS_CHANGED) {
             if (!statusType.isAlertable()) {
                 return false;
-            } else if (statusType != previous.statusType) {
+            } else if (statusType != previousStatus.statusType) {
                 return false;
-            } else if (statusType == alert.getStatusRecord().getStatusType()) {
+            } else if (statusType == previousAlert.getStatusRecord().getStatusType()) {
                 return false;
             } else {
                 return true;

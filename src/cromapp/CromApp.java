@@ -20,7 +20,6 @@
  */
 package cromapp;
 
-import dualcontrol.ExtendedProperties;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -100,49 +99,49 @@ public class CromApp implements Runnable {
     }
     
     synchronized void putRecord(StatusRecord statusRecord) {
-        StatusRecord previous = recordMap.put(statusRecord.getKey(), statusRecord);
-        if (previous == null) {
+        StatusRecord previousRecord = recordMap.put(statusRecord.getKey(), statusRecord);
+        if (previousRecord == null) {
             alertMap.put(statusRecord.getKey(), new AlertRecord(statusRecord));
         } else {
-            AlertRecord alertRecord = alertMap.get(statusRecord.getKey());
+            AlertRecord previousAlert = alertMap.get(statusRecord.getKey());
             logger.info("putRecord {}", Arrays.toString(new Object[] {
-                    alertRecord.getStatusRecord().getStatusType(), 
-                    previous.getStatusType(), statusRecord.getStatusType()}));
-            if (statusRecord.isAlertable(previous, alertRecord)) {
-                alertChanged(statusRecord, previous, alertRecord);
-                alertMap.put(statusRecord.getKey(), new AlertRecord(statusRecord));
+                    previousAlert.getStatusRecord().getStatusType(), 
+                    previousRecord.getStatusType(), statusRecord.getStatusType()}));
+            if (statusRecord.isAlertable(previousRecord, previousAlert)) {
+                AlertRecord alertRecord = new AlertRecord(statusRecord);
+                alert(statusRecord);
+                alertMap.put(statusRecord.getKey(), alertRecord);
             }
         }
     }
     
-    synchronized void alertChanged(StatusRecord statusRecord, StatusRecord previous,
-            AlertRecord previousAlert) {
-        logger.info("ALERT {}", statusRecord.toString());
-        if (properties.getAlertScript() != null) {
-            try {
-                exec(properties.getAlertScript(), 
-                        "CROM_FROM=" + statusRecord.getFrom(),
-                        "CROM_SOURCE=" + statusRecord.getSource(),
-                        "CROM_SUBJECT=" + statusRecord.getSubject(),
-                        "CROM_STATUS=" + statusRecord.getStatusType(),
-                        "CROM_ALERT=" + statusRecord.getAlertString()
-                        );
-            } catch (Exception e) {
-                logger.warn(e.getMessage(), e);
+    @Override
+    public void run() {
+        for (StatusRecord statusRecord : recordMap.values()) {
+            AlertRecord previousAlert = alertMap.get(statusRecord.getKey());
+            if (previousAlert != null && previousAlert.getStatusRecord() != statusRecord &&
+                    statusRecord.getPeriodMillis() != 0) {
+                long period = Millis.elapsed(statusRecord.getTimestamp());
+                if (period > statusRecord.getPeriodMillis() && 
+                        period - statusRecord.getPeriodMillis() > 
+                        Millis.fromMinutes(properties.getPeriodMinutes())) {
+                        statusRecord.setStatusType(StatusType.ELAPSED);
+                        alert(statusRecord);
+                }                                    
             }
         }
     }
-
-    synchronized void alertElapsed(StatusRecord statusRecord) {
+    
+    synchronized void alert(StatusRecord statusRecord) {
         logger.info("ALERT {}", statusRecord.toString());
         if (properties.getAlertScript() != null) {
             try {
                 exec(properties.getAlertScript(), 
-                        "CROM_FROM=" + statusRecord.getFrom(),
-                        "CROM_SOURCE=" + statusRecord.getSource(),
-                        "CROM_STATUS=ELAPSED",
-                        "CROM_SUBJECT=" + statusRecord.getSubject(),
-                        "CROM_ALERT=" + statusRecord.getAlertString()
+                        "from=" + statusRecord.getFrom(),
+                        "source=" + statusRecord.getSource(),
+                        "status=" + statusRecord.getStatusType().name(),
+                        "subject=" + statusRecord.getSubject(),
+                        "alert=" + statusRecord.getAlertString()
                         );
             } catch (Exception e) {
                 logger.warn(e.getMessage(), e);
@@ -166,20 +165,6 @@ public class CromApp implements Runnable {
             app.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
-        }
-    }
-
-    @Override
-    public void run() {
-        for (StatusRecord statusRecord : recordMap.values()) {
-            AlertRecord alertRecord = alertMap.get(statusRecord.getKey());
-            if (alertRecord != null && alertRecord.getStatusRecord() != statusRecord &&
-                    statusRecord.getPeriodMillis() != 0) {
-                long period = Millis.elapsed(statusRecord.getTimestamp());
-                if (period > statusRecord.getPeriodMillis() && 
-                        period - statusRecord.getPeriodMillis() > Millis.fromMinutes(5)) {                                  alertElapsed(statusRecord);
-                }                                    
-            }
         }
     }
 }
