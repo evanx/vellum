@@ -88,7 +88,7 @@ public class CromApp implements Runnable {
 
     public void stop() throws Exception {
         if (httpsServer != null) {
-            httpsServer.stop();
+            httpsServer.shutdown();
         }
         executorService.shutdown();
     }

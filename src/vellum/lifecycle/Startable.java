@@ -26,6 +26,6 @@ package vellum.lifecycle;
  */
 public interface Startable {
     public void start() throws Exception;
-    public boolean stop();
+    public boolean shutdown();
 
 }

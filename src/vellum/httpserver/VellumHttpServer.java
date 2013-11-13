@@ -91,7 +91,7 @@ public class VellumHttpServer implements Startable {
     }
 
     @Override
-    public boolean stop() {
+    public boolean shutdown() {
         if (httpServer != null) {
             httpServer.stop(0); 
             executor.shutdown();
