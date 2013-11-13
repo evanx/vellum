@@ -24,7 +24,7 @@ package vellum.lifecycle;
  *
  * @author evan.summers
  */
-public interface Startable extends Shutdownable {
-    public void start() throws Exception;
+public interface Shutdownable {
+    public boolean shutdown();
 
 }
