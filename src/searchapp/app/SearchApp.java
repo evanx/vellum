@@ -20,11 +20,13 @@
  */
 package searchapp.app;
 
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
 import searchapp.util.ShutdownHttpHandler;
 import searchapp.util.JsonConfigParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import searchapp.util.EphemeralSSLContexts;
+import searchapp.util.EphemeralSSLContext;
 import vellum.httpserver.VellumHttpsServer;
 import vellum.lifecycle.Shutdownable;
 
@@ -45,7 +47,7 @@ public class SearchApp implements Shutdownable {
         properties.init(config.getProperties());
         storage.init();
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
-        httpsServer.init(new EphemeralSSLContexts().create(getClass().getSimpleName()));
+        httpsServer.init(new EphemeralSSLContext().create(properties.getDomainName()));
         logger.info("initialized");
     }
 
@@ -57,6 +59,17 @@ public class SearchApp implements Shutdownable {
             logger.info("HTTPS server started");
         }
         logger.info("started");
+        if (properties.isTest()) {
+            test();
+        }
+    }
+    
+    private void test() throws Exception {
+        HttpsURLConnection connection = (HttpsURLConnection) 
+                new URL("https://localhost:8443/shutdown").openConnection();        
+        connection.setSSLSocketFactory(new EphemeralSSLContext().create("client").
+                getSocketFactory());
+        connection.connect();
     }
     
     @Override
@@ -79,5 +92,5 @@ public class SearchApp implements Shutdownable {
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }
-    }
+    }                
 }

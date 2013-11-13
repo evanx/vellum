@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author evan.summers
  */
 public class SearchStorage {
-    Logger logger = LoggerFactory.getLogger(SearchHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(SearchStorage.class);
     
     public void init() {        
     }

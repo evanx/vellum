@@ -38,7 +38,7 @@ import searchapp.app.SearchHttpHandler;
  */
 public class JsonConfigParser {
 
-    Logger logger = LoggerFactory.getLogger(SearchHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(JsonConfigParser.class);
     ExtendedProperties properties = new ExtendedProperties(System.getProperties());
     Pattern keyValuePattern = Pattern.compile("\\s*(\\w+):\\s*[\"']*([/|\\w|.]+)[\"';,]*");
 

@@ -33,7 +33,7 @@ import searchapp.app.SearchHttpHandler;
  */
 public class OpenTrustManager implements X509TrustManager {
 
-    Logger logger = LoggerFactory.getLogger(SearchHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(OpenTrustManager.class);
 
     public OpenTrustManager() {
     }
@@ -53,6 +53,7 @@ public class OpenTrustManager implements X509TrustManager {
     @Override
     public void checkServerTrusted(X509Certificate[] certs, String authType) 
         throws CertificateException {
-        throw new CertificateException();
+        String dname = certs[0].getSubjectDN().getName();
+        logger.info("checkServerTrusted {}", dname);
     }
 }

@@ -27,11 +27,18 @@ import dualcontrol.ExtendedProperties;
  * @author evan.summers
  */
 public class SearchProperties {
+    ExtendedProperties properties;
     String confFileName = "search.conf";
     int port = 8443;
+    boolean test = true;
+    String domainName = "localhost";
     
     public void init(ExtendedProperties properties) {
+        this.properties = properties;
         port = properties.getInt("port", port);
+        test = properties.getBoolean("test", test);
+        if (test) {            
+        }
     }
     
     public String getConfFileName() {
@@ -41,4 +48,13 @@ public class SearchProperties {
     public int getPort() {
         return port;
     }    
+
+    public boolean isTest() {
+        return test;
+    }        
+
+    public String getDomainName() {
+        return domainName;
+    }
+    
 }

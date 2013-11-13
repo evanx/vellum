@@ -31,9 +31,9 @@ import vellum.crypto.rsa.RsaKeyStores;
  * 
  * @author evan.summers
  */
-public class EphemeralSSLContexts {
+public class EphemeralSSLContext {
 
-    public EphemeralSSLContexts() {
+    public EphemeralSSLContext() {
     }
     
     public SSLContext create(String commonName) throws Exception {
