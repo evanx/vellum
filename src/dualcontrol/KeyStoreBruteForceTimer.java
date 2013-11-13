@@ -60,13 +60,13 @@ public class KeyStoreBruteForceTimer extends Thread implements Cloneable, Runnab
     }
 
     public KeyStoreBruteForceTimer(String[] args) throws Exception {
-        this.threadCount = Integer.parseInt(args[0]);
-        this.maximumCount = Integer.parseInt(args[1]);
-        this.keyStoreLocation = args[2];
-        this.keyStoreType = args[3];
-        this.keyStorePass = args[4].toCharArray();
-        this.alias = args[5];
-        this.keyPass = args[6].toCharArray();
+        threadCount = Integer.parseInt(args[0]);
+        maximumCount = Integer.parseInt(args[1]);
+        keyStoreLocation = args[2];
+        keyStoreType = args[3];
+        keyStorePass = args[4].toCharArray();
+        alias = args[5];
+        keyPass = args[6].toCharArray();
         keyStore = DualControlKeyStores.loadLocalKeyStore(keyStoreLocation, 
                 keyStoreType, keyStorePass);
     }
@@ -75,7 +75,6 @@ public class KeyStoreBruteForceTimer extends Thread implements Cloneable, Runnab
         logger.info("keyStoreLocation " + keyStoreLocation);
         logger.info("alias " + alias);
         logger.info("keyPass " + new String(keyPass));
-        logger.info("generatePassword " + new String(generateRandomPassword(passwordLength)));
         List<KeyStoreBruteForceTimer> threadList = new ArrayList();
         long nanos = System.nanoTime();
         for (int i = 0; i < threadCount; i++) {
@@ -86,7 +85,7 @@ public class KeyStoreBruteForceTimer extends Thread implements Cloneable, Runnab
         for (KeyStoreBruteForceTimer thread : threadList) {
             thread.join();
             if (thread.exception != null) {
-                logger.error(thread.exception);
+                logger.error(thread.exception.getMessage(), thread.exception);
             } else {
                 logger.info(thread.result);
             }
@@ -122,7 +121,9 @@ public class KeyStoreBruteForceTimer extends Thread implements Cloneable, Runnab
                 if (i%500 == 0) password = keyPass;
                 logger.trace("key " + keyStore.getKey(alias, password).getAlgorithm());
             } catch (Exception e) {
-                errorMessageSet.add(e.getMessage());
+                if (e.getMessage() != null) {
+                    errorMessageSet.add(e.getMessage());
+                }
                 exceptionCount++;
             }
         }
