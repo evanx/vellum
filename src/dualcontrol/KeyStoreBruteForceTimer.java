@@ -21,9 +21,9 @@
 package dualcontrol;
 
 import java.security.KeyStore;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 import org.apache.log4j.Logger;
@@ -34,53 +34,56 @@ import vellum.datatype.Nanos;
  *
  * @author evan.summers
  */
-public class JceksBruteForceTimer extends Thread implements Cloneable, Runnable {
-    private final static Logger logger = Logger.getLogger(JceksBruteForceTimer.class);
+public class KeyStoreBruteForceTimer extends Thread implements Cloneable, Runnable {
+    private final static Logger logger = Logger.getLogger(KeyStoreBruteForceTimer.class);
     private static int passwordLength = Integer.getInteger("passwordLength", 8);
-    private Random random;
-    private Set<String> errorMessageSet;
+    private SecureRandom random = new SecureRandom();
+    private Set<String> errorMessageSet = new TreeSet();
+    private int threadCount;
     private int maximumCount;
     private String keyStoreLocation;
+    private String keyStoreType;
     private char[] keyStorePass;
     private String alias;
     private char[] keyPass;
     private Exception exception;
     private String result; 
+    private KeyStore keyStore;
     
     public static void main(String[] args) throws Exception {
-        if (args.length != 6) {
-            System.err.println("usage: threads count keystore storepass alias keypass"); 
+        if (args.length != 7) {
+            System.err.println("usage: threads count keystore storetype storepass alias keypass"); 
         } else {
-            new JceksBruteForceTimer(Integer.parseInt(args[1]), args[2], args[3].toCharArray(),
-                    args[4], args[5].toCharArray()).start(Integer.parseInt(args[0]));
+            
+            new KeyStoreBruteForceTimer(args).start(args);
         }
     }
 
-    public JceksBruteForceTimer(int maximumCount, String keyStoreLocation, char[] keyStorePass, 
-            String alias, char[] keyPass) {
-        this.random = new Random();
-        this.errorMessageSet = new TreeSet();
-        this.maximumCount = maximumCount;
-        this.keyStoreLocation = keyStoreLocation;
-        this.keyStorePass = keyStorePass;
-        this.alias = alias;
-        this.keyPass = keyPass;
+    public KeyStoreBruteForceTimer(String[] args) throws Exception {
+        this.threadCount = Integer.parseInt(args[0]);
+        this.maximumCount = Integer.parseInt(args[1]);
+        this.keyStoreLocation = args[2];
+        this.keyStoreType = args[3];
+        this.keyStorePass = args[4].toCharArray();
+        this.alias = args[5];
+        this.keyPass = args[6].toCharArray();
+        keyStore = DualControlKeyStores.loadLocalKeyStore(keyStoreLocation, 
+                keyStoreType, keyStorePass);
     }
 
-    void start(int threadCount) throws Exception {
+    void start(String[] args) throws Exception {  
         logger.info("keyStoreLocation " + keyStoreLocation);
         logger.info("alias " + alias);
         logger.info("keyPass " + new String(keyPass));
         logger.info("generatePassword " + new String(generateRandomPassword(passwordLength)));
-        List<JceksBruteForceTimer> threadList = new ArrayList();
+        List<KeyStoreBruteForceTimer> threadList = new ArrayList();
         long nanos = System.nanoTime();
         for (int i = 0; i < threadCount; i++) {
-            JceksBruteForceTimer thread = new JceksBruteForceTimer(maximumCount, 
-                    keyStoreLocation, keyStorePass, alias, keyPass);
+            KeyStoreBruteForceTimer thread = new KeyStoreBruteForceTimer(args);
             thread.start();
             threadList.add(thread);
         }
-        for (JceksBruteForceTimer thread : threadList) {
+        for (KeyStoreBruteForceTimer thread : threadList) {
             thread.join();
             if (thread.exception != null) {
                 logger.error(thread.exception);
@@ -108,8 +111,6 @@ public class JceksBruteForceTimer extends Thread implements Cloneable, Runnable 
     }
     
     void call() throws Exception {
-        KeyStore keyStore = DualControlKeyStores.loadLocalKeyStore(keyStoreLocation, 
-                "JCEKS", keyStorePass);
         long correctNanos = System.nanoTime();
         keyStore.getKey(alias, keyPass);
         correctNanos = Nanos.elapsed(correctNanos);
