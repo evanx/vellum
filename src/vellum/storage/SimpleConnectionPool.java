@@ -52,7 +52,8 @@ public class SimpleConnectionPool implements ConnectionPool {
         if (connectionEntry == null) {
             try {
                 Connection connection = DriverManager.getConnection(
-                        dataSourceInfo.getUrl(), dataSourceInfo.getUser(), dataSourceInfo.getPassword());
+                        dataSourceInfo.getUrl(), dataSourceInfo.getUser(), 
+                        dataSourceInfo.getPassword());
                 connectionEntry = new ConnectionEntry(connection);
             } catch (SQLException e) {
                 throw new StorageRuntimeException(StorageExceptionType.CONNECTION_ERROR, e);
