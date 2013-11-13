@@ -20,6 +20,8 @@
  */
 package vellum.crypto.genkeypair;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.util.Date;
 import java.security.cert.X509Certificate;
@@ -50,7 +52,7 @@ public class GenKeyPair {
     }
     
     public void generate(String dname, Date notBefore, long validity, TimeUnit timeUnit) 
-            throws Exception {
+            throws GeneralSecurityException, IOException {
         this.dname = dname;
         this.notBefore = notBefore;
         notAfter = new Date(notBefore.getTime() + timeUnit.toMillis(validity));

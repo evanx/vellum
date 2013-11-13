@@ -20,8 +20,12 @@
  */
 package searchapp.util;
 
+import java.io.IOException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.Arrays;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
 import vellum.crypto.rsa.RsaKeyStores;
@@ -36,7 +40,7 @@ public class EphemeralSSLContext {
     public EphemeralSSLContext() {
     }
     
-    public SSLContext create(String commonName) throws Exception {
+    public SSLContext create(String commonName) throws GeneralSecurityException, IOException {
         char[] keyPassword = new EphemeralPasswords().create();
         try {
             KeyStore keyStore = RsaKeyStores.createKeyStore("JKS",
@@ -47,4 +51,11 @@ public class EphemeralSSLContext {
             Arrays.fill(keyPassword, (char) 0);
         }
     }
+
+    public HttpsURLConnection createConnection(String clientName, URL url) 
+            throws IOException, Exception {
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();        
+        connection.setSSLSocketFactory(create(clientName).getSocketFactory());
+        return connection;
+    }    
 }

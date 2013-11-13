@@ -20,6 +20,8 @@
  */
 package vellum.crypto.rsa;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -32,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class RsaKeyStores {    
     
     public static KeyStore createKeyStore(String type, String commonName, char[] keyPassword,
-            int validityDays) throws Exception {
+            int validityDays) throws GeneralSecurityException, IOException {
         KeyStore keyStore = KeyStore.getInstance(type);
         keyStore.load(null, null);
         GenRsaPair keyPair = new GenRsaPair();

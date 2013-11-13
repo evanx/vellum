@@ -65,10 +65,8 @@ public class SearchApp implements Shutdownable {
     }
     
     private void test() throws Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) 
-                new URL("https://localhost:8443/shutdown").openConnection();        
-        connection.setSSLSocketFactory(new EphemeralSSLContext().create("client").
-                getSocketFactory());
+        HttpsURLConnection connection = new EphemeralSSLContext().createConnection(
+                "client", new URL("https://localhost:8443/shutdown"));
         connection.connect();
     }
     

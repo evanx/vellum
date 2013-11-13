@@ -32,7 +32,7 @@ public class EphemeralPasswords {
     public EphemeralPasswords() {
     }
     
-    public char[] create() throws Exception {
+    public char[] create() {
         return Long.toString(new SecureRandom().nextLong() & 
                 System.currentTimeMillis()).toCharArray();
         
