@@ -31,6 +31,6 @@ import searchapp.util.storage.TemporaryStorage;
  */
 public class TemporaryMatchesStorage extends TemporaryStorage<Matches> 
         implements MatchesStorage {
-    Logger logger = LoggerFactory.getLogger(TemporaryMatchesStorage.class);
+    static Logger logger = LoggerFactory.getLogger(TemporaryMatchesStorage.class);
     
 }

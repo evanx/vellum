@@ -31,6 +31,6 @@ import searchapp.util.storage.TemporaryStorage;
  */
 public class TemporaryConnectionStorage extends TemporaryStorage<ConnectionEntity> 
         implements ConnectionStorage {
-    Logger logger = LoggerFactory.getLogger(TemporaryConnectionStorage.class);
+    static Logger logger = LoggerFactory.getLogger(TemporaryConnectionStorage.class);
     
 }

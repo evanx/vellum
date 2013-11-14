@@ -11,6 +11,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import searchapp.entity.ConnectionEntity;
 import searchapp.entity.Match;
 
@@ -20,6 +22,7 @@ import searchapp.entity.Match;
  */
 public class SearchConnection {
 
+    static Logger logger = LoggerFactory.getLogger(SearchConnection.class);
     ConnectionEntity connectionEntity;
     Connection connection;
     DatabaseMetaData databaseMetaData;
@@ -37,24 +40,22 @@ public class SearchConnection {
         this.connection = connectionEntity.getConnection();
         try {
             databaseMetaData = connection.getMetaData();
-            ResultSet resultSet = databaseMetaData.getCatalogs();
-            while (resultSet.next()) {    
-                searchCatalog(resultSet.getString("CATALOG_NAME"));
-            }
+            searchCatalog(connection.getCatalog(), "PUBLIC");
             return matches;
         } finally {
             connection.close();
         }
     }
 
-    private void searchCatalog(String catalog) throws SQLException {
-        ResultSet resultSet = databaseMetaData.getTables(catalog, null, null, null);
+    private void searchCatalog(String catalog, String schema) throws SQLException {
+        ResultSet resultSet = databaseMetaData.getTables(catalog, schema, null, null);
         while (resultSet.next()) {
             searchTable(resultSet.getString("TABLE_NAME"));
         }
     }
 
     private void searchTable(String tableName) throws SQLException {
+        logger.info("searchTable: {}", tableName);
         String sql = "select * from " + tableName;
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
@@ -75,7 +76,7 @@ public class SearchConnection {
             throws SQLException {
         List<String> columnList = new ArrayList();
         for (int i = 1; i < metaData.getColumnCount(); i++) {
-            if (isSearchableType(metaData.getColumnType(i))) {
+            if (metaData.getColumnClassName(i).equals(String.class.getName())) {
                 columnList.add(metaData.getColumnName(i));
             }
         }
