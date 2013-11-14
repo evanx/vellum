@@ -25,6 +25,6 @@ package vellum.lifecycle;
  * @author evan.summers
  */
 public interface Shutdownable {
-    public boolean shutdown();
+    public void shutdown();
 
 }

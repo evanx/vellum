@@ -1,7 +1,7 @@
 /*
  * Source https://code.google.com/p/vellum by @evanxsummers
  */
-package searchapp.util;
+package searchapp.util.httphandler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -29,12 +29,11 @@ public class ShutdownHttpHandler implements HttpHandler {
         try {
             if (httpExchange.getRemoteAddress().getAddress().equals(
                     InetAddress.getLocalHost())) {
-                if (app.shutdown()) {
-                    httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                    return;
-                }
+                app.shutdown();
+                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);                
+            } else {
+                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             }
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);

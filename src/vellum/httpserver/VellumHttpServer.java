@@ -91,12 +91,10 @@ public class VellumHttpServer implements Startable {
     }
 
     @Override
-    public boolean shutdown() {
+    public void shutdown() {
         if (httpServer != null) {
             httpServer.stop(0); 
             executor.shutdown();
-            return true;
         }  
-        return false;
     }
 }

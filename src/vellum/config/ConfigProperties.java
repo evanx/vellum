@@ -4,9 +4,9 @@
  */
 package vellum.config;
 
+import dualcontrol.ExtendedProperties;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import vellum.datatype.Millis;
 import vellum.logr.Logr;
@@ -19,11 +19,11 @@ import vellum.util.DefaultDateFormats;
  *
  * @author evan.summers
  */
-public class ConfigProperties extends HashMap<String, String> {
+public class ConfigProperties extends ExtendedProperties {
     Logr logger = LogrFactory.getLogger(ConfigProperties.class);
     
     private String get(String name) {
-        String string = super.get(name);
+        String string = super.getString(name, null);
         logger.trace("get", name, string);
         return string;
     }

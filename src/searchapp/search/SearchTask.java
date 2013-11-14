@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import searchapp.entity.ConnectionEntity;
-import searchapp.entity.MatchEntity;
+import searchapp.entity.Match;
 
 /**
  *
@@ -16,7 +16,7 @@ public class SearchTask {
     
     Collection<ConnectionEntity> connections;
     String searchString;
-    Collection<MatchEntity> matches = new ArrayList();
+    Collection<Match> matches = new ArrayList();
     
     public SearchTask(Collection<ConnectionEntity> connections, String searchString) {
         this.searchString = searchString;
@@ -26,8 +26,6 @@ public class SearchTask {
     public void search() throws SQLException {
         for (ConnectionEntity connectionEntity: connections) {
             matches.addAll(new SearchConnection(connectionEntity, searchString).search());
-        }
-        
-    }
-        
+        }        
+    }        
 }

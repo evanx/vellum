@@ -4,7 +4,7 @@
  */
 package vellum.storage;
 
-import vellum.config.ConfigProperties;
+import dualcontrol.ExtendedProperties;
 
 /**
  *
@@ -22,7 +22,7 @@ public class DataSourceConfig {
     public DataSourceConfig() {
     }
 
-    public DataSourceConfig(ConfigProperties props) {
+    public DataSourceConfig(ExtendedProperties props) {
         this(props.getString("driver"),
                 props.getString("url"),
                 props.getString("user"),
@@ -31,7 +31,8 @@ public class DataSourceConfig {
                 props.getInt("poolSize", 0));
     }
     
-    public DataSourceConfig(String driver, String url, String user, String password, boolean enabled, Integer poolSize) {
+    public DataSourceConfig(String driver, String url, String user, String password, 
+            boolean enabled, Integer poolSize) {
         this.driver = driver;
         this.url = url;
         this.user = user;

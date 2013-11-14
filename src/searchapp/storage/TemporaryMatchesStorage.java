@@ -18,21 +18,19 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package searchapp.app;
+package searchapp.storage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import searchapp.entity.Matches;
+import searchapp.util.storage.TemporaryStorage;
 
 /**
  * 
  * @author evan.summers
  */
-public class SearchStorage {
-    Logger logger = LoggerFactory.getLogger(SearchStorage.class);
-    
-    public void init() {        
-    }
-    
-    
+public class TemporaryMatchesStorage extends TemporaryStorage<Matches> 
+        implements MatchesStorage {
+    Logger logger = LoggerFactory.getLogger(TemporaryMatchesStorage.class);
     
 }

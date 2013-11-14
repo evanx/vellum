@@ -18,12 +18,20 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.datatype;
+package searchapp.storage;
+
+import searchapp.storage.ConnectionStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import searchapp.entity.ConnectionEntity;
+import searchapp.util.storage.TemporaryStorage;
 
 /**
- *
+ * 
  * @author evan.summers
  */
-public interface EntityCache<K extends Comparable> {
-    public <E> E get(Class<E> type, K key);
+public class TemporaryConnectionStorage extends TemporaryStorage<ConnectionEntity> 
+        implements ConnectionStorage {
+    Logger logger = LoggerFactory.getLogger(TemporaryConnectionStorage.class);
+    
 }

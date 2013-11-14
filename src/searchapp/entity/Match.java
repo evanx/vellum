@@ -5,16 +5,16 @@ package searchapp.entity;
  *
  * @author evans
  */
-public class MatchEntity {
+public class Match {
     private String connectionName;
     private String tableName;
     private String columnName;
     private Long rowId;
 
-    public MatchEntity() {
+    public Match() {
     }
     
-    public MatchEntity(String connectionName, String tableName, String columnName, Long rowId) {
+    public Match(String connectionName, String tableName, String columnName, Long rowId) {
         this.connectionName = connectionName;
         this.tableName = tableName;
         this.columnName = columnName;

@@ -18,42 +18,42 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package searchapp.util;
+package searchapp.storage;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.X509TrustManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import searchapp.app.SearchHttpHandler;
+import java.sql.Connection;
+import java.sql.SQLException;
+import org.h2.tools.Server;
+import searchapp.storage.ConnectionStorage;
+import searchapp.storage.MatchesStorage;
 
 /**
  *
  * @author evan.summers
  */
-public class OpenTrustManager implements X509TrustManager {
-
-    Logger logger = LoggerFactory.getLogger(OpenTrustManager.class);
-
-    public OpenTrustManager() {
+public class MockSearchStorage extends TemporaryConnectionStorage implements SearchStorage {
+    Server h2Server;
+    ConnectionStorage connectionStorage = new TemporaryConnectionStorage();
+    MatchesStorage matchesStorage = new TemporaryMatchesStorage();
+    
+    @Override
+    public void init() throws Exception {
+        h2Server = Server.createTcpServer().start();
     }
 
     @Override
-    public X509Certificate[] getAcceptedIssuers() {
-        return new X509Certificate[0];
+    public void shutdown() {
+        if (h2Server != null) {
+            h2Server.stop();
+        }
     }
 
     @Override
-    public void checkClientTrusted(X509Certificate[] certs, String authType) 
-        throws CertificateException {
-        String dname = certs[0].getSubjectDN().getName();
-        logger.info("checkClientTrusted {}", dname);
+    public ConnectionStorage getConnectionStorage() {
+        return connectionStorage;
     }
 
     @Override
-    public void checkServerTrusted(X509Certificate[] certs, String authType) 
-        throws CertificateException {
-        String dname = certs[0].getSubjectDN().getName();
-        logger.info("checkServerTrusted {}", dname);
+    public MatchesStorage getMatchesStorage() {
+        return matchesStorage;
     }
 }

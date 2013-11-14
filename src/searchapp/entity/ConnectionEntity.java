@@ -3,12 +3,13 @@ package searchapp.entity;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import searchapp.util.storage.AbstractEntity;
 
 /**
  *
  * @author evans
  */
-public class ConnectionEntity {
+public class ConnectionEntity extends AbstractEntity {
 
     private String connectionName;
     private String url;
@@ -25,6 +26,10 @@ public class ConnectionEntity {
         this.password = password;
     }
 
+    public String getKey() {
+        return connectionName;
+    }
+    
     public String getConnectionName() {
         return connectionName;
     }

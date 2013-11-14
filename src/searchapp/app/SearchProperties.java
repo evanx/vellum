@@ -21,24 +21,23 @@
 package searchapp.app;
 
 import dualcontrol.ExtendedProperties;
+import vellum.storage.DataSourceConfig;
 
 /**
  *
  * @author evan.summers
  */
 public class SearchProperties {
-    ExtendedProperties properties;
-    String confFileName = "search.conf";
-    int port = 8443;
-    boolean test = true;
-    String domainName = "localhost";
+    private String confFileName = "search.conf";
+    private int port = 8443;
+    private boolean test = true;
+    private String domainName = "localhost";
+    private DataSourceConfig dataSourceConfig;
     
     public void init(ExtendedProperties properties) {
-        this.properties = properties;
         port = properties.getInt("port", port);
         test = properties.getBoolean("test", test);
-        if (test) {            
-        }
+        dataSourceConfig = new DataSourceConfig(properties);
     }
     
     public String getConfFileName() {
@@ -56,5 +55,8 @@ public class SearchProperties {
     public String getDomainName() {
         return domainName;
     }
-    
+
+    public DataSourceConfig getDataSourceConfig() {
+        return dataSourceConfig;
+    }            
 }

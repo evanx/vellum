@@ -32,16 +32,16 @@ import vellum.type.ComparableTuple;
 public class SimpleEntityCache implements EntityCache<Comparable> {
     Map<Comparable, Object> map = new HashMap();
 
-    public static Comparable getComparable(Class type, Comparable id) {
-        return new ComparableTuple(new Comparable[] {type.getName(), id});
+    public static Comparable getComparable(Class type, Comparable key) {
+        return new ComparableTuple(new Comparable[] {type.getName(), key});
     }
     
-    public <V> void put(Comparable id, V value) {
-        map.put(getComparable(value.getClass(), id), value);
+    public <E> E put(Comparable key, E entity) {
+        return (E) map.put(getComparable(entity.getClass(), key), entity);
     }
     
-    public <V> V get(Class<V> type, Comparable id) {
-        return (V) map.get(getComparable(type, id));
+    public <E> E get(Class<E> type, Comparable key) {
+        return (E) map.get(getComparable(type, key));
         
     }
 }

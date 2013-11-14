@@ -20,13 +20,15 @@
  */
 package searchapp.app;
 
+import searchapp.storage.SearchStorage;
+import searchapp.storage.MockSearchStorage;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
-import searchapp.util.ShutdownHttpHandler;
-import searchapp.util.JsonConfigParser;
+import searchapp.util.httphandler.ShutdownHttpHandler;
+import searchapp.util.config.JsonConfigParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import searchapp.util.EphemeralSSLContext;
+import searchapp.util.ssl.EphemeralSSLContext;
 import vellum.httpserver.VellumHttpsServer;
 import vellum.lifecycle.Shutdownable;
 
@@ -39,28 +41,24 @@ public class SearchApp implements Shutdownable {
     Logger logger = LoggerFactory.getLogger(getClass());
     JsonConfigParser config = new JsonConfigParser();
     SearchProperties properties = new SearchProperties();
-    SearchStorage storage = new SearchStorage();
+    SearchStorage storage;
     VellumHttpsServer httpsServer;
     
     public void init() throws Exception {
         config.init(properties.getConfFileName());
-        properties.init(config.getProperties());
-        storage.init();
+        properties.init(config.getProperties());        
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         httpsServer.init(new EphemeralSSLContext().create(properties.getDomainName()));
-        logger.info("initialized");
-    }
-
-    public void start() throws Exception {
-        if (httpsServer != null) {
-            httpsServer.start();
-            httpsServer.createContext("/", new SearchHttpHandler(this));
-            httpsServer.createContext("/shutdown", new ShutdownHttpHandler(this));
-            logger.info("HTTPS server started");
-        }
+        httpsServer.start();
+        httpsServer.createContext("/", new SearchHttpHandler(this));
+        httpsServer.createContext("/shutdown", new ShutdownHttpHandler(this));
+        logger.info("HTTPS server started");
         logger.info("started");
         if (properties.isTest()) {
+            storage = new MockSearchStorage();
             test();
+        } else {
+            throw new Exception("Production mode not implemented yet");
         }
     }
     
@@ -71,11 +69,9 @@ public class SearchApp implements Shutdownable {
     }
     
     @Override
-    public boolean shutdown() {
-        if (httpsServer != null) {
-            return httpsServer.shutdown();
-        }
-        return true;
+    public void shutdown() {
+        httpsServer.shutdown();
+        storage.shutdown();
     }
 
     public SearchStorage getStorage() {
@@ -86,7 +82,6 @@ public class SearchApp implements Shutdownable {
         try {
             SearchApp app = new SearchApp();
             app.init();
-            app.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
         }

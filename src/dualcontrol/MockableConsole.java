@@ -29,4 +29,5 @@ public interface MockableConsole {
     public char[] readPassword(String prompt, Object ... args);
     
     public void println(String message);
+    
 }

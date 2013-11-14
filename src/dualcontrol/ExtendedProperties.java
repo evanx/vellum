@@ -58,7 +58,7 @@ public class ExtendedProperties extends Properties {
     public String getString(String propertyName) {
         String propertyValue = super.getProperty(propertyName);
         if (propertyValue == null) {
-            throw new RuntimeException("Missing -D property: " + propertyName);
+            throw new RuntimeException("Missing property: " + propertyName);
         }
         return propertyValue;
     } 
@@ -74,7 +74,7 @@ public class ExtendedProperties extends Properties {
     public int getInt(String name) {
         Object value = get(name);
         if (value == null) {
-            throw new RuntimeException("Missing -D property: " + name);
+            throw new RuntimeException("Missing property: " + name);
         }
         if (value instanceof Number) {
             return ((Number) value).intValue();

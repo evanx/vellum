@@ -18,12 +18,20 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.datatype;
+package searchapp.util.storage;
 
 /**
- *
+ * 
  * @author evan.summers
  */
-public interface EntityCache<K extends Comparable> {
-    public <E> E get(Class<E> type, K key);
+public interface Storage<E extends AbstractEntity> {
+    
+    public boolean insert(E entity);
+    
+    public boolean update(E entity);
+    
+    public boolean delete(Comparable key);
+    
+    public <E> E select(Comparable key);    
+    
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import searchapp.entity.ConnectionEntity;
-import searchapp.entity.MatchEntity;
+import searchapp.entity.Match;
 
 /**
  *
@@ -23,7 +23,7 @@ public class SearchConnection {
     ConnectionEntity connectionEntity;
     Connection connection;
     DatabaseMetaData databaseMetaData;
-    Collection<MatchEntity> matches = new ArrayList();
+    Collection<Match> matches = new ArrayList();
     String catalog;
     String table;
     String searchString;
@@ -33,7 +33,7 @@ public class SearchConnection {
         this.searchString = searchString;
     }
     
-    public Collection<MatchEntity> search() throws SQLException {
+    public Collection<Match> search() throws SQLException {
         this.connection = connectionEntity.getConnection();
         try {
             databaseMetaData = connection.getMetaData();
@@ -64,7 +64,7 @@ public class SearchConnection {
             for (String columnName : columnList) {
                 String string = resultSet.getString(columnName);
                 if (string.contains(searchString)) {
-                    matches.add(new MatchEntity(connectionEntity.getConnectionName(),
+                    matches.add(new Match(connectionEntity.getConnectionName(),
                             tableName, columnName, resultSet.getLong(rowIdColumnName)));
                 }
             }
@@ -99,6 +99,5 @@ public class SearchConnection {
     public static boolean isRowIdType(int type) {
         return type == Types.INTEGER || type == Types.BIGINT;
     }
-    
     
 }
