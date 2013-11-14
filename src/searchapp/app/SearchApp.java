@@ -25,7 +25,7 @@ import searchapp.storage.MockSearchStorage;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import searchapp.util.httphandler.ShutdownHttpHandler;
-import searchapp.util.config.JsonConfigParser;
+import searchapp.util.config.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.util.ssl.EphemeralSSLContext;
@@ -39,33 +39,26 @@ import vellum.lifecycle.Shutdownable;
 public class SearchApp implements Shutdownable {
 
     Logger logger = LoggerFactory.getLogger(getClass());
-    JsonConfigParser config = new JsonConfigParser();
-    SearchProperties properties = new SearchProperties();
+    JsonConfig config = new JsonConfig();
     SearchStorage storage;
     VellumHttpsServer httpsServer;
     
     public void init() throws Exception {
-        config.init(properties.getConfFileName());
-        properties.init(config.getProperties());        
+        config.init("search");
         httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
-        httpsServer.init(new EphemeralSSLContext().create(properties.getDomainName()));
+        httpsServer.init(new EphemeralSSLContext().create(
+                config.getProperties().getString("domain", "localhost")));
         httpsServer.start();
         httpsServer.createContext("/", new SearchHttpHandler(this));
         httpsServer.createContext("/shutdown", new ShutdownHttpHandler(this));
         logger.info("HTTPS server started");
         logger.info("started");
-        if (properties.isTest()) {
+        if (config.getProperties().getBoolean("testing", true)) {
             storage = new MockSearchStorage();
-            test();
+            new SearchAppTest(this).test();
         } else {
             throw new Exception("Production mode not implemented yet");
         }
-    }
-    
-    private void test() throws Exception {
-        HttpsURLConnection connection = new EphemeralSSLContext().createConnection(
-                "client", new URL("https://localhost:8443/shutdown"));
-        connection.connect();
     }
     
     @Override

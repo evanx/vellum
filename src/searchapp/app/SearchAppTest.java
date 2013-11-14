@@ -18,41 +18,35 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.httpserver;
+package searchapp.app;
 
-import dualcontrol.ExtendedProperties;
-import vellum.config.ConfigProperties;
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import searchapp.entity.ConnectionEntity;
+import searchapp.util.ssl.EphemeralSSLContext;
 
 /**
  *
  * @author evan.summers
  */
-public class HttpServerConfig {
-    int port;
-    boolean enabled;
-    boolean clientAuth;
+public class SearchAppTest {
 
-    public HttpServerConfig(ExtendedProperties props) {
-        this(props.getInt("port"),
-                props.getBoolean("clientAuth", false),
-                props.getBoolean("enabled", true));
-    }
-    
-    public HttpServerConfig(int port, boolean clientAuth, boolean enabled) {
-        this.port = port;
-        this.clientAuth = clientAuth;
-        this.enabled = enabled;
-    }
+    Logger logger = LoggerFactory.getLogger(getClass());
+    SearchApp app;
 
-    public int getPort() {
-        return port;
+    public SearchAppTest(SearchApp app) {
+        this.app = app;
     }
-
-    public boolean isClientAuth() {
-        return clientAuth;
-    }
-    
-    public boolean isEnabled() {
-        return enabled;
-    }  
+        
+    public void test() throws Exception {
+        app.getStorage().getConnectionStorage().insert(
+                new ConnectionEntity("connection1", "org.h2.Driver", "jdbc:h2:mem:", "sa", null)
+                );
+        logger.info("select {}", app.getStorage().getConnectionStorage().select("connection1"));
+        HttpsURLConnection connection = new EphemeralSSLContext().createConnection(
+                "client", new URL("https://localhost:8443/shutdown"));
+        connection.connect();
+    }                
 }

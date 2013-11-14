@@ -18,19 +18,44 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package searchapp.storage;
+package vellum.httpserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import searchapp.entity.ConnectionEntity;
-import searchapp.util.storage.TemporaryStorage;
+import dualcontrol.ExtendedProperties;
 
 /**
- * 
+ *
  * @author evan.summers
  */
-public class TemporaryConnectionStorage extends TemporaryStorage<ConnectionEntity> 
-        implements ConnectionStorage {
-    Logger logger = LoggerFactory.getLogger(TemporaryConnectionStorage.class);
+public class HttpsServerConfig {
+    int port;
+    boolean enabled = true;
+    boolean clientAuth = false;
+
+    public HttpsServerConfig(ExtendedProperties props) {
+        this(props.getInt("port", 8443),
+                props.getBoolean("clientAuth", false),
+                props.getBoolean("enabled", true));
+    }
     
+    public HttpsServerConfig(int port) {
+        this.port = port;
+    }
+
+    public HttpsServerConfig(int port, boolean clientAuth, boolean enabled) {
+        this.port = port;
+        this.clientAuth = clientAuth;
+        this.enabled = enabled;
+    }
+    
+    public int getPort() {
+        return port;
+    }
+
+    public boolean isClientAuth() {
+        return clientAuth;
+    }
+    
+    public boolean isEnabled() {
+        return enabled;
+    }  
 }

@@ -29,22 +29,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import searchapp.app.SearchHttpHandler;
 
 /**
  * @TODO implement properly using GSON for different sections for different prefixes
  * 
  * @author evan.summers
  */
-public class JsonConfigParser {
+public class JsonConfig {
 
-    Logger logger = LoggerFactory.getLogger(JsonConfigParser.class);
+    Logger logger = LoggerFactory.getLogger(JsonConfig.class);
     ExtendedProperties properties = new ExtendedProperties(System.getProperties());
     Pattern keyValuePattern = Pattern.compile("\\s*(\\w+):\\s*[\"']*([/|\\w|.]+)[\"';,]*");
 
     
-    public void init(String confFileName) throws FileNotFoundException, IOException {
-        confFileName = properties.getString(confFileName, confFileName);
+    public void init(String prefix) throws FileNotFoundException, IOException {
+        String confFileName = properties.getString(prefix + ".conf", prefix + ".conf");
         BufferedReader reader = new BufferedReader(new FileReader(confFileName));
         while (true) {
             String line = reader.readLine();
