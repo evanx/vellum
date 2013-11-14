@@ -20,10 +20,9 @@
  */
 package searchapp.app;
 
+import searchapp.test.SearchAppTest;
 import searchapp.storage.SearchStorage;
 import searchapp.storage.MockSearchStorage;
-import java.net.URL;
-import javax.net.ssl.HttpsURLConnection;
 import searchapp.util.httphandler.ShutdownHttpHandler;
 import searchapp.util.config.JsonConfig;
 import org.slf4j.Logger;
@@ -38,7 +37,7 @@ import vellum.lifecycle.Shutdownable;
  */
 public class SearchApp implements Shutdownable {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    static Logger logger = LoggerFactory.getLogger(SearchApp.class);
     JsonConfig config = new JsonConfig();
     SearchStorage storage;
     VellumHttpsServer httpsServer;
