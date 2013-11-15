@@ -71,6 +71,9 @@ public class SearchAppTest {
                 logger.info("match: {}", match);
             }
         }
+    }
+
+    public void shutdown() throws Exception {
         HttpsURLConnection urlConnection = new EphemeralSSLContext().createConnection(
                 "client", new URL("https://localhost:8443/shutdown"));
         urlConnection.connect();
