@@ -79,7 +79,7 @@ public class SearchConnection {
             throws SQLException {
         List<String> columnList = new ArrayList();
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
-            logger.debug("check {} {}", metaData.getColumnName(i), 
+            logger.trace("check {} {}", metaData.getColumnName(i), 
                     metaData.getColumnClassName(i));
             if (metaData.getColumnClassName(i).equals(String.class.getName())) {
                 columnList.add(metaData.getColumnName(i));

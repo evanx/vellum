@@ -63,7 +63,8 @@ public class SearchAppTest {
                     connectionEntity.getConnectionName() + ".sql"));
             logger.info("catalog {}", connection.getCatalog());
             print(connection.getMetaData().getColumns(
-                    connection.getCatalog(), "PUBLIC", "%", "%"));
+                    connection.getCatalog(), "PUBLIC", "%", "%"),
+                    "(TABLE_NAME|COLUMN_NAME)");
             logger.info("select {}", app.getStorage().getConnectionStorage().select(
                     connectionEntity.getConnectionName()));
             for (Match match : new SearchConnection(connectionEntity, "Evan").search()) {
@@ -75,17 +76,18 @@ public class SearchAppTest {
         urlConnection.connect();
     }                
     
-    private void print(ResultSet resultSet) throws SQLException {
+    private void print(ResultSet resultSet, String pattern) throws SQLException {
         ResultSetMetaData metaData = resultSet.getMetaData();
-        List<String> columnNames = new ArrayList();
+        List<String> allColumnNames = new ArrayList();
         for (int i = 1; i < metaData.getColumnCount(); i++) {
-            columnNames.add(metaData.getColumnName(i));
+            allColumnNames.add(metaData.getColumnName(i));
         }
-        logger.info("columns: {}", columnNames);
+        logger.info("columns: {}", allColumnNames);
         while (resultSet.next()) {
             List columns = new ArrayList();
             for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                if (metaData.getColumnClassName(i).equals(String.class.getName())) {
+                if (metaData.getColumnClassName(i).equals(String.class.getName()) &&
+                        metaData.getColumnName(i).matches(pattern)) {
                     columns.add(resultSet.getObject(i));
                 }
             }
