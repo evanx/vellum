@@ -1,12 +1,46 @@
-<!doctype html>
-<html ng-app>
+
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="favicon.png">
+    <title>Search App</title>
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="navbar.css" rel="stylesheet">
   </head>
+
   <body>
-    <div>
-      <label>Search</label>
-      <input type="text" ng-model="searchString" placeholder="Search">
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Search</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+          </ul>
+        </div>
+      </div>
+
+      <div class="jumbotron">
+        <h2>Welcome</h2>
+            <form class="form-horizontal" id="login-form">
+                <input type="text" ng-model="searchString" placeholder="Search">
+                <button type="button" class="btn">Search</button>
+            </form>
+      </div>
+
     </div>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
   </body>
 </html>
+

@@ -50,6 +50,7 @@ public class WebHttpHandler implements HttpHandler {
         try {
             byte[] bytes = cache.get(path);
             if (bytes == null) {
+                logger.info("get {}", webPath + path);
                 InputStream resourceStream = getClass().getResourceAsStream(
                         webPath + path);
                 bytes = Streams.readBytes(resourceStream);

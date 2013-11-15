@@ -20,6 +20,7 @@
  */
 package searchapp.app;
 
+import localca.SSLContexts;
 import searchapp.test.SearchAppTest;
 import searchapp.storage.SearchStorage;
 import searchapp.storage.MockSearchStorage;
@@ -28,7 +29,6 @@ import searchapp.util.config.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.util.httphandler.WebHttpHandler;
-import searchapp.util.ssl.EphemeralSSLContext;
 import vellum.httpserver.VellumHttpsServer;
 import vellum.lifecycle.Shutdownable;
 
@@ -45,20 +45,20 @@ public class SearchApp implements Shutdownable {
 
     public void init() throws Exception {
         config.init("search");
-        httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
-        httpsServer.init(new EphemeralSSLContext().create(
-                config.getProperties().getString("domain", "localhost")));
-        httpsServer.start();
-        httpsServer.createContext("/web", new WebHttpHandler("/searchapp/web"));
+        httpsServer = new VellumHttpsServer();
+        httpsServer.init(config.getProperties("httpsServer"));
         httpsServer.createContext("/search", new SearchHttpHandler(this));
         httpsServer.createContext("/shutdown", new ShutdownHttpHandler(this));
+        httpsServer.createContext("/", new WebHttpHandler("/searchapp/web/"));
         logger.info("HTTPS server started");
         logger.info("started");
-        if (config.getProperties().getBoolean("testing", true)) {
+        if (config.getProperties().getBoolean("developing", true)) {
             storage = new MockSearchStorage();
-            SearchAppTest test = new SearchAppTest(this);
-            test.test();
-            test.shutdown();
+            if (config.getProperties().getBoolean("testing", false)) {
+                SearchAppTest test = new SearchAppTest(this);
+                test.test();
+                test.shutdown();
+            }
         } else {
             throw new Exception("Production mode not implemented yet");
         }

@@ -34,7 +34,7 @@ import searchapp.app.SearchApp;
 import searchapp.entity.ConnectionEntity;
 import searchapp.entity.Match;
 import searchapp.search.SearchConnection;
-import searchapp.util.ssl.EphemeralSSLContext;
+import ephemeral.EphemeralSSLContext;
 import vellum.util.Streams;
 
 /**

@@ -18,7 +18,7 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.ssl;
+package ephemeral;
 
 import java.security.SecureRandom;
 

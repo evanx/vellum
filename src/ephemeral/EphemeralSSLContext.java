@@ -18,8 +18,9 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.ssl;
+package ephemeral;
 
+import localca.OpenTrustManager;
 import java.io.IOException;
 import java.net.URL;
 import java.security.GeneralSecurityException;

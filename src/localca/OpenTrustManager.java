@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package searchapp.util.ssl;
+package localca;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

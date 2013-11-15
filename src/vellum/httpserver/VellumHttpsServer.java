@@ -28,32 +28,31 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
+import localca.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellum.lifecycle.Startable;
+import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
 
 /**
  *
  * @author evan.summers
  */
-public class VellumHttpsServer implements Startable {
+public class VellumHttpsServer implements Shutdownable {
     Logger logger = LoggerFactory.getLogger(VellumHttpsServer.class);
     SSLContext sslContext;
     HttpsServer httpsServer;
     ExtendedProperties properties;     
     ThreadPoolExecutor executor;
     
-    public VellumHttpsServer(ExtendedProperties properties) {
-        this.properties = properties;
+    public VellumHttpsServer() {
     }
 
-    public void init(SSLContext sslContext) throws Exception {
-        this.sslContext = sslContext;
+    public void init(ExtendedProperties properties) throws Exception {
+        init(properties, SSLContexts.create(properties));
     }
-    
-    @Override
-    public void start() throws Exception {
+
+    public void init(ExtendedProperties properties, SSLContext sslContext) throws Exception {
         int port = properties.getInt("port");
         boolean needClientAuth = properties.getBoolean("needClientAuth", false);
         executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
@@ -64,7 +63,7 @@ public class VellumHttpsServer implements Startable {
                 createHttpsConfigurator(sslContext, needClientAuth));
         httpsServer.setExecutor(executor);
         httpsServer.start();
-        logger.info("start {}", port);
+        logger.info("init {}", port);
     }
 
     public void createContext(String contextName, HttpHandler httpHandler) {
@@ -78,4 +77,5 @@ public class VellumHttpsServer implements Startable {
             executor.shutdown();
         }  
     }
+
 }

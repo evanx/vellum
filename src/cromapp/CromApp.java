@@ -57,23 +57,19 @@ public class CromApp implements Runnable {
         config.init();
         properties.init(config.getProperties());
         storage.init();
-        httpsServer = new VellumHttpsServer(config.getProperties("httpsServer"));
         char[] keyPassword = Long.toString(new SecureRandom().nextLong() & 
                 System.currentTimeMillis()).toCharArray();
         KeyStore keyStore = RsaKeyStores.createKeyStore("JKS", "crom", keyPassword, 365);
         SSLContext sslContext = SSLContexts.create(keyStore, keyPassword, 
                 new CromTrustManager(this));
-        httpsServer.init(sslContext);        
+        httpsServer = new VellumHttpsServer();
+        httpsServer.init(config.getProperties("httpsServer"), sslContext);
+        httpsServer.createContext("/", new CromHttpHandler(this));
         logger.info("initialized");
     }
 
     public void start() throws Exception {
         executorService.schedule(this, 3, TimeUnit.MINUTES);
-        if (httpsServer != null) {
-            httpsServer.start();
-            httpsServer.createContext("/", new CromHttpHandler(this));
-            logger.info("HTTPS server started");
-        }
         logger.info("started");
         if (config.systemProperties.getBoolean("crom.test")) {
             test();

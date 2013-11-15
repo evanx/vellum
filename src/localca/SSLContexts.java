@@ -45,14 +45,30 @@ public class SSLContexts {
 
     static Logger logger = LoggerFactory.getLogger(SSLContexts.class);
 
-    public static X509TrustManager createTrustManager(KeyStore trustStore) 
+    public static X509TrustManager createTrustManager(KeyStore trustStore)
             throws GeneralSecurityException {
-            return new ExplicitTrustManager(trustStore);    
+        if (trustStore == null) {
+            return new OpenTrustManager();
+        } else {
+            return new ExplicitTrustManager(trustStore);
+        }
     }
-    
+
+    public static SSLContext create(ExtendedProperties properties) throws Exception {        
+        String keyStoreLocation = properties.getString("keyStore");
+        char[] pass = properties.getPassword("pass");
+        String trustStoreLocation = properties.getString("trustStore", null);
+        if (trustStoreLocation == null) {
+            return create(keyStoreLocation, pass);
+        } else {
+            return create(keyStoreLocation, pass, trustStoreLocation);
+        }
+    }
+
     public static SSLContext create(String sslPrefix, Properties properties,
             MockableConsole console) throws Exception {
         ExtendedProperties props = new ExtendedProperties(properties);
+        sslPrefix = props.getString(sslPrefix, sslPrefix);
         sslPrefix = props.getString(sslPrefix, sslPrefix);
         String keyStoreLocation = props.getString(sslPrefix + ".keyStore");
         if (keyStoreLocation == null) {
@@ -73,6 +89,13 @@ public class SSLContexts {
         return sslContext;
     }
 
+    public static SSLContext create(String keyStoreLocation, char[] pass) 
+            throws GeneralSecurityException, IOException {
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(new FileInputStream(keyStoreLocation), pass);
+        return create(keyStore, pass, new OpenTrustManager());
+    }
+    
     public static SSLContext create(String keyStoreLocation, char[] pass,
             String trustStoreLocation) throws GeneralSecurityException, IOException {
         return create(keyStoreLocation, pass, pass, trustStoreLocation, pass);
@@ -84,7 +107,7 @@ public class SSLContexts {
         KeyStore keyStore = KeyStore.getInstance("JKS");
         keyStore.load(new FileInputStream(keyStoreLocation), keyStorePassword);
         KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword);
+        trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword);   
         return create(keyStore, keyPass, createTrustManager(trustStore));
     }
 
