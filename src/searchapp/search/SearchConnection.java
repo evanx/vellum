@@ -37,17 +37,20 @@ public class SearchConnection {
     }
     
     public Collection<Match> search() throws SQLException {
+        logger.info("search: connection {}, string {}", 
+                connectionEntity.getConnectionName(), searchString);
         this.connection = connectionEntity.getConnection();
         try {
             databaseMetaData = connection.getMetaData();
-            searchCatalog(connection.getCatalog(), "PUBLIC");
+            search(connection.getCatalog(), "PUBLIC");
             return matches;
         } finally {
             connection.close();
         }
     }
 
-    private void searchCatalog(String catalog, String schema) throws SQLException {
+    private void search(String catalog, String schema) throws SQLException {
+        logger.info("search: catalog {}, schema {}", catalog, schema);
         ResultSet resultSet = databaseMetaData.getTables(catalog, schema, null, null);
         while (resultSet.next()) {
             searchTable(resultSet.getString("TABLE_NAME"));
@@ -55,18 +58,18 @@ public class SearchConnection {
     }
 
     private void searchTable(String tableName) throws SQLException {
-        logger.info("searchTable: {}", tableName);
         String sql = "select * from " + tableName;
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
         List<String> columnList = getSearchableColumns(resultSet.getMetaData());
+        logger.info("searchTable: {} {}", tableName, columnList);
         String rowIdColumnName = getRowIdColumnName(resultSet.getMetaData());
         while (resultSet.next()) {
             for (String columnName : columnList) {
                 String string = resultSet.getString(columnName);
                 if (string.contains(searchString)) {
                     matches.add(new Match(connectionEntity.getConnectionName(),
-                            tableName, columnName, resultSet.getLong(rowIdColumnName)));
+                            tableName, columnName, string, resultSet.getLong(rowIdColumnName)));
                 }
             }
         }
@@ -75,7 +78,9 @@ public class SearchConnection {
     public static List<String> getSearchableColumns(ResultSetMetaData metaData) 
             throws SQLException {
         List<String> columnList = new ArrayList();
-        for (int i = 1; i < metaData.getColumnCount(); i++) {
+        for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            logger.debug("check {} {}", metaData.getColumnName(i), 
+                    metaData.getColumnClassName(i));
             if (metaData.getColumnClassName(i).equals(String.class.getName())) {
                 columnList.add(metaData.getColumnName(i));
             }

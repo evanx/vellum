@@ -21,10 +21,11 @@
 package searchapp.storage;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.util.HashMap;
+import java.util.Map;
 import org.h2.tools.Server;
-import searchapp.storage.ConnectionStorage;
-import searchapp.storage.MatchesStorage;
+import searchapp.entity.ConnectionEntity;
 
 /**
  *
@@ -34,6 +35,7 @@ public class MockSearchStorage extends TemporaryConnectionStorage implements Sea
     Server h2Server;
     ConnectionStorage connectionStorage = new TemporaryConnectionStorage();
     MatchesStorage matchesStorage = new TemporaryMatchesStorage();
+    Map<String, Connection> connectionMap = new HashMap();
     
     @Override
     public void init() throws Exception {

@@ -16,7 +16,8 @@ public class ConnectionEntity extends AbstractEntity {
     private String url;
     private String user;
     private String password;
-
+    private transient Connection connection;
+    
     public ConnectionEntity() {
     }
     
@@ -43,6 +44,9 @@ public class ConnectionEntity extends AbstractEntity {
     }
     
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
+        if (connection == null) {
+            connection = DriverManager.getConnection(url, user, password);
+        }
+        return connection;
     }
 }

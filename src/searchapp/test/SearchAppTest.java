@@ -46,23 +46,29 @@ public class SearchAppTest {
     static Logger logger = LoggerFactory.getLogger(SearchAppTest.class);
     SearchApp app;
 
-    ConnectionEntity connection1 = new ConnectionEntity("connection1",
-            "org.h2.Driver", "jdbc:h2:mem:", "sa", null);
+    ConnectionEntity[] connectionEntities = {
+        new ConnectionEntity("connection1", "org.h2.Driver", "jdbc:h2:mem:", "sa", null),
+        new ConnectionEntity("connection2", "org.h2.Driver", "jdbc:h2:mem:", "sa", null)
+    };
 
     public SearchAppTest(SearchApp app) {
         this.app = app;
     }
         
     public void test() throws Exception {
-        app.getStorage().getConnectionStorage().insert(connection1);
-        Connection connection = connection1.getConnection();
-        connection.createStatement().execute(Streams.readResourceString(getClass(), "test.sql"));
-        logger.info("catalog {}", connection.getCatalog());
-        print(connection.getMetaData().getColumns(
-                connection.getCatalog(), "PUBLIC", "%", "%"));
-        logger.info("select {}", app.getStorage().getConnectionStorage().select("connection1"));
-        for (Match match : new SearchConnection(connection1, "Evan").search()) {
-            logger.info("match: {}", match);
+        for (ConnectionEntity connectionEntity : connectionEntities) {
+            app.getStorage().getConnectionStorage().insert(connectionEntity);
+            Connection connection = connectionEntity.getConnection();
+            connection.createStatement().execute(Streams.readResourceString(getClass(),
+                    connectionEntity.getConnectionName() + ".sql"));
+            logger.info("catalog {}", connection.getCatalog());
+            print(connection.getMetaData().getColumns(
+                    connection.getCatalog(), "PUBLIC", "%", "%"));
+            logger.info("select {}", app.getStorage().getConnectionStorage().select(
+                    connectionEntity.getConnectionName()));
+            for (Match match : new SearchConnection(connectionEntity, "Evan").search()) {
+                logger.info("match: {}", match);
+            }
         }
         HttpsURLConnection urlConnection = new EphemeralSSLContext().createConnection(
                 "client", new URL("https://localhost:8443/shutdown"));
@@ -78,7 +84,7 @@ public class SearchAppTest {
         logger.info("columns: {}", columnNames);
         while (resultSet.next()) {
             List columns = new ArrayList();
-            for (int i = 1; i < metaData.getColumnCount(); i++) {
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
                 if (metaData.getColumnClassName(i).equals(String.class.getName())) {
                     columns.add(resultSet.getObject(i));
                 }
