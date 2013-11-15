@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.png">
     <title>Search App</title>
-    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap-3.0.2/css/bootstrap.css" rel="stylesheet">
     <link href="navbar.css" rel="stylesheet">
   </head>
 
@@ -30,17 +30,18 @@
 
       <div class="jumbotron">
         <h2>Welcome</h2>
-            <form class="form-horizontal" id="login-form">
-                <input type="text" ng-model="searchString" placeholder="Search">
+            <div class="form-group">
+                <input type="text" class="form-control" 
+                       ng-model="searchString" placeholder="Search">
                 <button type="button" class="btn">Search</button>
-            </form>
+            </div>
       </div>
 
     </div>
 
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap-3.0.2/js/bootstrap.min.js"></script>
+    <script src="js/angular-1.2.0.min.js"></script>
   </body>
 </html>
 

@@ -20,7 +20,6 @@
  */
 package searchapp.app;
 
-import localca.SSLContexts;
 import searchapp.test.SearchAppTest;
 import searchapp.storage.SearchStorage;
 import searchapp.storage.MockSearchStorage;
