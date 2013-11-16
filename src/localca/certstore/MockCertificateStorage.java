@@ -50,7 +50,7 @@ public class MockCertificateStorage implements CertificateStorage {
             throws CertificateStorageException {
         if (map.containsKey(commonName)) {
             throw new CertificateStorageException(CertificateStorageExceptionType.ALREADY_EXISTS,
-                    commonName);            
+                    commonName);      
         }
         try {
             map.put(commonName, new StoredCertificate(commonName,
@@ -66,11 +66,11 @@ public class MockCertificateStorage implements CertificateStorage {
             throws CertificateStorageException {
         if (!map.containsKey(commonName)) {
             throw new CertificateStorageException(CertificateStorageExceptionType.NOT_FOUND,
-                    commonName);            
+                    commonName);      
         }
         if (map.get(commonName).getEncoded() != null) {
             throw new CertificateStorageException(CertificateStorageExceptionType.ALREADY_SET,
-                    commonName);            
+                    commonName);      
         }
         try {
             map.put(commonName, new StoredCertificate(commonName,
@@ -86,7 +86,7 @@ public class MockCertificateStorage implements CertificateStorage {
             throws CertificateStorageException {
         if (!map.containsKey(commonName)) {
             throw new CertificateStorageException(CertificateStorageExceptionType.NOT_FOUND,
-                    commonName);            
+                    commonName);      
         }
         try {
             map.put(commonName, new StoredCertificate(commonName,
@@ -101,7 +101,7 @@ public class MockCertificateStorage implements CertificateStorage {
     public X509Certificate load(String commonName) throws CertificateStorageException {
         if (!map.containsKey(commonName)) {
             throw new CertificateStorageException(CertificateStorageExceptionType.NOT_FOUND,
-                    commonName);            
+                    commonName);      
         }
         if (map.get(commonName).getEncoded() == null) {
             return null;
@@ -110,7 +110,7 @@ public class MockCertificateStorage implements CertificateStorage {
             return new X509CertImpl(Base64.decodeBase64(map.get(commonName).getEncoded()));
         } catch (CertificateException e) {
             throw new CertificateStorageException(e, 
-                    CertificateStorageExceptionType.DECODING_ERROR, commonName);            
+                    CertificateStorageExceptionType.DECODING_ERROR, commonName);      
         }
         
     }    
@@ -119,7 +119,7 @@ public class MockCertificateStorage implements CertificateStorage {
     public boolean isEnabled(String commonName) throws CertificateStorageException {
         if (!map.containsKey(commonName)) {
             throw new CertificateStorageException(CertificateStorageExceptionType.NOT_FOUND,
-                    commonName);            
+                    commonName);      
         }
         return map.get(commonName).isEnabled();
     }

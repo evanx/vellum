@@ -31,11 +31,11 @@ public class CromHttpHandler implements HttpHandler {
         try {
             StatusRecord record = StatusRecord.parse(Streams.readString(
                     httpExchange.getRequestBody()));
-            logger.info("record {}", record);            
+            logger.info("record {}", record);      
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             app.putRecord(record);
         } catch (Exception e) {
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);            
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);      
         }
         httpExchange.close();
     }

@@ -47,7 +47,7 @@ public class ShutdownHttpHandler implements HttpHandler {
             if (httpExchange.getRemoteAddress().getAddress().equals(
                     InetAddress.getLocalHost())) {
                 app.shutdown();
-                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);                
+                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);          
             } else {
                 httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             }

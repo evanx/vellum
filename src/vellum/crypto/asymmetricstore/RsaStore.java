@@ -59,7 +59,7 @@ public class RsaStore {
             throw new Exception("Invalid version");
         }
         if (!dis.readUTF().equals(alg)) {
-            throw new Exception("Invalid algorithm");    
+            throw new Exception("Invalid algorithm");
         }
         transform = dis.readUTF();
         if (!dis.readUTF().equals(type)) {

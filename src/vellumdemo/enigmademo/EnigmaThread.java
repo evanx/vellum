@@ -13,7 +13,7 @@ import vellum.logr.LogrFactory;
  * @author evan.summers
  */
 public class EnigmaThread extends Thread {
-    static Logr logger = LogrFactory.getLogger(EnigmaThread.class);    
+    static Logr logger = LogrFactory.getLogger(EnigmaThread.class);
     EnigmaSocket enigmaSocket;
     
     public EnigmaThread(Socket clientSocket) {

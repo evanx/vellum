@@ -34,7 +34,7 @@ public class CryptonomicalClient extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            cryptoSocket.close();    
+            cryptoSocket.close();
         }
     }
     

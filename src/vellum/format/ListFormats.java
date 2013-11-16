@@ -41,7 +41,7 @@ public class ListFormats {
     String delimiter = COMMA_DELIMITER;
     String quote = DOUBLE_QUOTE;
     boolean displayable = false;
-    boolean verbose = false;    
+    boolean verbose = false;
     
     private ListFormats(boolean displayable, String delimiter) {
         this.displayable = displayable;

@@ -44,7 +44,7 @@ public class Bytes {
     
     public static String formatHex(byte[] bytes) {
         if (bytes == null) {
-            return "null{}";    
+            return "null{}";
         }
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < bytes.length; i++) {

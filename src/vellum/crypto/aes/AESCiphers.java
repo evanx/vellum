@@ -32,7 +32,7 @@ import vellum.crypto.api.BytesCipher;
  */
 public class AESCiphers {
     private static String keyAlg = "AES";
-    private static final String cipherTransform = "AES/CBC/PKCS5Padding";    
+    private static final String cipherTransform = "AES/CBC/PKCS5Padding";
     
     public static SecretKey generateKey(int keySize) 
             throws GeneralSecurityException {

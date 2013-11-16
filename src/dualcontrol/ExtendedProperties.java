@@ -117,7 +117,7 @@ public class ExtendedProperties extends Properties {
         if (object == null) {
             return console.readPassword(key);
         }
-        logger.info("getPassword {} {}", key, object.getClass().getName());        
+        logger.info("getPassword {} {}", key, object.getClass().getName());  
         if (object instanceof String) {
             return object.toString().toCharArray();
         }

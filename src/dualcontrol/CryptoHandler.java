@@ -94,7 +94,7 @@ public class CryptoHandler {
             logger.debug("iv " + Base64.encodeBase64String(ivBytes));
             IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
             long startTime = System.nanoTime();
-            cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);    
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
             this.dataBytes = cipher.doFinal(dataString.getBytes());
             logger.info("encrypt time nanos " + Nanos.elapsed(startTime));
             write(ivBytes, dataBytes);

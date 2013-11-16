@@ -50,7 +50,7 @@ public class StringMap extends HashMap<String, String> {
         if (object == null) {
             return super.put(key, null);
         } else {
-            return super.put(key, object.toString());    
+            return super.put(key, object.toString());
         }
     }
 

@@ -21,8 +21,8 @@ public class CryptonomicalSocket {
     Socket socket;
     InputStream inputStream;
     OutputStream outputStream;
-    AsymmetricCipher asymmetricCipher;    
-    SymmetricCipher symmetricCipher = new SymmetricCipher();    
+    AsymmetricCipher asymmetricCipher;
+    SymmetricCipher symmetricCipher = new SymmetricCipher();
     boolean encrypt = false;
 
     public CryptonomicalSocket(Socket socket) {

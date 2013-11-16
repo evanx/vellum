@@ -36,7 +36,7 @@ public class EphemeralClientSSLContextFactory extends EphemeralSSLContextFactory
     
     public HttpsURLConnection createConnection(String clientName, URL url) 
             throws IOException, Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();        
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();  
         connection.setSSLSocketFactory(create(clientName).getSocketFactory());
         return connection;
     }    

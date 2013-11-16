@@ -8,26 +8,25 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.png">
-    <title>Search App</title>
+    <title>DemoApp</title>
     <link href="bootstrap-3.0.2/css/bootstrap.css" rel="stylesheet">
     <link href="navbar.css" rel="stylesheet">
   </head>
 
   <body>
 
-    <div class="container">
-
-      <!--
+  <div class="container">
       <div class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#">Search</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-          </ul>
-        </div>
+          <div class="navbar-header">
+              <a class="navbar-brand" href="#">DemoApp</a>
+          </div>
+          <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                  <li class="active link-all"><a href="#" id="link-search">Search</a></li>
+                  <li class="link-all"><a href="#" id="link-connections">Connections</a></li>
+              </ul>
+          </div>
       </div>
-      -->
 
       <div class="jumbotron page-all hide" id="page-search">
         <h2>Welcome</h2>
@@ -37,6 +36,9 @@
             </div>
       </div>
 
+      <div class="jumbotron page-all hide" id="page-connections">
+      </div>
+      
       <div class="jumbotron page-all hide" id="page-login">
         <p>Use "demo" for username and password.</p>
         <div class="row">
@@ -50,6 +52,7 @@
       </div>
       
     </div>
+  </div>
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/angular-1.2.0.min.js"></script>

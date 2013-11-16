@@ -35,7 +35,7 @@ import vellum.logr.LogrFactory;
 public class VellumLocalHttpServer {
     private Logr logger = LogrFactory.getLogger(VellumLocalHttpServer.class);
     HttpServer httpServer;
-    VellumLocalHttpServerConfig config;     
+    VellumLocalHttpServerConfig config; 
     ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(4));
     
     public VellumLocalHttpServer(VellumLocalHttpServerConfig config) {

@@ -55,7 +55,7 @@ public class Chars {
     public static byte[] getAsciiBytes(char[] chars) {
         byte[] array = new byte[chars.length];
         for (int i = 0; i < chars.length; i++) {
-            array[i] = (byte) chars[i];    
+            array[i] = (byte) chars[i];
         }
         return array;
     }   

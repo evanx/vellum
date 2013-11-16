@@ -61,7 +61,7 @@ public class CryptoClientDemo {
             System.err.printf("INFO CryptoClientDemo decrypted %s\n", new String(bytes)); 
         } else {
             System.out.printf("%s:%s\n", 
-                    Base64.encodeBase64String(ivBytes), Base64.encodeBase64String(bytes));    
+                    Base64.encodeBase64String(ivBytes), Base64.encodeBase64String(bytes));
         }
         socket.close();
     }

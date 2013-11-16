@@ -31,7 +31,7 @@ import javax.crypto.spec.IvParameterSpec;
  * @author evan.summers
  */
 public class BytesCipher implements VellumCipher {
-    private String cipherTransform;    
+    private String cipherTransform;
     private Key key;
     
     public BytesCipher(Key key, String cipherTransform) {

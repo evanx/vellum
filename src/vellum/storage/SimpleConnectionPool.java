@@ -22,7 +22,7 @@ public class SimpleConnectionPool implements ConnectionPool {
     int poolSize = 0;
     int takenCount = 0;
     int releasedCount = 0;
-    int validTimeoutSeconds = 2;    
+    int validTimeoutSeconds = 2;
 
     public SimpleConnectionPool(DataSourceConfig dataSourceInfo) {
         if (dataSourceInfo.getPoolSize() != null) {

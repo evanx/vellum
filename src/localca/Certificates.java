@@ -152,6 +152,6 @@ public class Certificates {
     private static boolean[] getKeyUsages(KeyUsageType keyUsage) {
         boolean[] array = new boolean[9];
         array[keyUsage.ordinal()] = true;
-        return array;        
+        return array;  
     }
 }

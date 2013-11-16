@@ -32,6 +32,6 @@ public interface Storage<E extends AbstractEntity> {
     
     public boolean delete(Comparable key);
     
-    public <E> E select(Comparable key);    
+    public <E> E select(Comparable key);
     
 }

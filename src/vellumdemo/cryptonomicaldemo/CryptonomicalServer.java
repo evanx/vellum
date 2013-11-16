@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 public class CryptonomicalServer extends Thread {
     ServerSocket serverSocket;
     boolean isRunning = true; 
-    AsymmetricCipher asymmetricCipher = new AsymmetricCipher();    
+    AsymmetricCipher asymmetricCipher = new AsymmetricCipher();
     
     public void bind(int port) throws IOException, NoSuchAlgorithmException {
         serverSocket = new ServerSocket(port);

@@ -123,7 +123,7 @@ public class HttpEchoServer {
             if (string == null) {
                 break;
             }
-            printer.println(string);    
+            printer.println(string);
             System.out.println(string);
         }
     }

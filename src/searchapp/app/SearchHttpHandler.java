@@ -30,7 +30,7 @@ public class SearchHttpHandler implements HttpHandler {
         try {
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         } catch (Exception e) {
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);            
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);      
         }
         httpExchange.close();
     }    

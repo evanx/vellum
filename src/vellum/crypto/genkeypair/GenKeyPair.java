@@ -39,7 +39,7 @@ public class GenKeyPair {
     String keyAlgName = "RSA";
     String sigAlgName = "SHA1WithRSA";
     int keySize = 2048;
-    String dname;    
+    String dname;
     Date notBefore;
     Date notAfter;
     CertAndKeyGen gen;

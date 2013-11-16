@@ -44,7 +44,7 @@ public class Utils {
     public static boolean isWhitespace(String string) {
         if (string == null || string.length() == 0) return false;
         for (char ch : string.toCharArray()) {
-            if (!isWhitespace(ch)) return false;    
+            if (!isWhitespace(ch)) return false;
         }
         return true;
     }
@@ -52,7 +52,7 @@ public class Utils {
     public static boolean isWord(String string) {
         if (string == null || string.length() == 0) return false;
         for (char ch : string.toCharArray()) {
-            if (!isWord(ch)) return false;    
+            if (!isWord(ch)) return false;
         }
         return true;
     }

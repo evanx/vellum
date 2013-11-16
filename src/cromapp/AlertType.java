@@ -15,7 +15,7 @@ public enum AlertType {
     PATTERN,
     STATUS_CHANGED,
     OUTPUT_CHANGED,
-    ALWAYS;    
+    ALWAYS;
     
     public static AlertType parse(String string) {
         for (AlertType type : values()) {

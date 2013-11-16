@@ -48,7 +48,7 @@ public class AesPbeStore implements PbeStore {
     private final int VERSION = 0xaebe0001;
     private String pbeAlg = "PBKDF2WithHmacSHA1";
     private String keyAlg = "AES";
-    private String cipherTransform = "AES/CBC/PKCS5Padding";    
+    private String cipherTransform = "AES/CBC/PKCS5Padding";
     private int saltLength = 32;
     private int iterationCount = 999999;
     private int keySize = 256;
@@ -121,7 +121,7 @@ public class AesPbeStore implements PbeStore {
         pbeKey = generateKey(password);
         logger.debug(Args.format(salt.length, iterationCount, keySize));
         if (!Arrays.equals(salt, decrypt(encryptedSalt))) {
-            throw new Exception("Invalid password");    
+            throw new Exception("Invalid password");
         }
         return decrypt(encryptedBytes);
     }
@@ -137,7 +137,7 @@ public class AesPbeStore implements PbeStore {
         if (iv != null) {
             cipher.init(Cipher.ENCRYPT_MODE, pbeKey, new IvParameterSpec(iv));
         } else {
-            cipher.init(Cipher.ENCRYPT_MODE, pbeKey);    
+            cipher.init(Cipher.ENCRYPT_MODE, pbeKey);
             AlgorithmParameters params = cipher.getParameters();
             iv = params.getParameterSpec(IvParameterSpec.class).getIV();
         }

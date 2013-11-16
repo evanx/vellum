@@ -64,7 +64,7 @@ public class SystemProperties {
         if (string == null) {
             return defaultValue;
         }
-        return string.toCharArray();        
+        return string.toCharArray();  
     }
 
     public static char[] getPassword(String name) {
@@ -72,6 +72,6 @@ public class SystemProperties {
         if (string == null) {
             return System.console().readPassword(name);
         }
-        return string.toCharArray();        
+        return string.toCharArray();  
     }    
 }

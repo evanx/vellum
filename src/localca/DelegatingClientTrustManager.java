@@ -58,6 +58,6 @@ public class DelegatingClientTrustManager implements X509TrustManager {
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) 
             throws CertificateException {
-        throw new CertificateException("Server authentication not supported");        
+        throw new CertificateException("Server authentication not supported");  
     }    
 }

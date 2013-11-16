@@ -47,7 +47,7 @@ public class VellumHttpsServer implements Shutdownable {
     Logger logger = LoggerFactory.getLogger(VellumHttpsServer.class);
     SSLContext sslContext;
     HttpsServer httpsServer;
-    ExtendedProperties properties;     
+    ExtendedProperties properties; 
     ThreadPoolExecutor executor;
     
     public VellumHttpsServer() {

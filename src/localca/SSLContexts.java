@@ -101,7 +101,7 @@ public class SSLContexts {
         KeyStore keyStore = KeyStore.getInstance("JKS");
         keyStore.load(new FileInputStream(keyStoreLocation), keyStorePassword);
         KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword);   
+        trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword); 
         return create(keyStore, keyPass, createTrustManager(trustStore));
     }
 

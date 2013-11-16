@@ -26,5 +26,5 @@ package vellum.datatype;
  * @author evan.summers
  */
 public interface Timestamped {
-    public long getTimestamp();    
+    public long getTimestamp();
 }
