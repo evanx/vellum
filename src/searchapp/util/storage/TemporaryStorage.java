@@ -37,7 +37,7 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     @Override
     public boolean insert(E entity) {
-        logger.info("insert {} {}", entity.getKey(), map.containsKey(entity.getKey()));
+        logger.info("insert {} {}", entity.getKey(), !map.containsKey(entity.getKey()));
         return map.put(entity.getKey(), entity) == null;
     }
 

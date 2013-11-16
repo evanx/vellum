@@ -86,9 +86,9 @@ public class VellumHttpsServer implements Shutdownable {
     }
     
     public static VellumHttpsServer start(ExtendedProperties properties, String webPath,
-            HttpHandlerFactory httpHandlerFactory) throws Exception {
+            String appContext, HttpHandlerFactory httpHandlerFactory) throws Exception {
         VellumHttpsServer server = new VellumHttpsServer();
-        server.start(properties, new DelegatingHttpHandler(httpHandlerFactory, 
+        server.start(properties, new DelegatingHttpHandler(appContext, httpHandlerFactory, 
                 new WebHttpHandler(webPath)));
         return server;
     }

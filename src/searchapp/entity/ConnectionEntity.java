@@ -48,8 +48,20 @@ public class ConnectionEntity extends AbstractEntity {
     public Map toMap() {
         Map map = new HashMap();
         map.put("connectionName", connectionName);
+        map.put("driver", driver);
+        map.put("url", url);
+        map.put("user", user);
+        map.put("password", password);
         return map;
     }
+
+    @Override
+    public String toString() {
+        return toMap().values().toString();
+    }
+    
+    
+    
     public Connection getConnection() throws SQLException {
         if (connection == null) {
             connection = DriverManager.getConnection(url, user, password);

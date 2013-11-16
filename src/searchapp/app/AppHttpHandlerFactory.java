@@ -8,6 +8,7 @@ import searchapp.handler.SearchHttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import searchapp.handler.DeleteConnectionHttpHandler;
+import searchapp.handler.SaveConnectionHttpHandler;
 import searchapp.util.httphandler.HttpHandlerFactory;
 import searchapp.util.httphandler.ShutdownHttpHandler;
 import vellum.logr.Logr;
@@ -32,11 +33,13 @@ public class AppHttpHandlerFactory implements HttpHandlerFactory {
         logger.info("path", path);
         if (path.equals("/shutdown")) {
             return new ShutdownHttpHandler(app);
-        } else if (path.equals("/connection/list")) {
+        } else if (path.equals("/app/connection/save")) {
+            return new SaveConnectionHttpHandler(app);
+        } else if (path.equals("/app/connection/list")) {
             return new ListConnectionsHttpHandler(app);
-        } else if (path.startsWith("/connection/delete/")) {
+        } else if (path.startsWith("/app/connection/delete/")) {
             return new DeleteConnectionHttpHandler(app);
-        } else if (path.equals("/search")) {
+        } else if (path.equals("/app/search")) {
             return new SearchHttpHandler(app);
         }
         return null;

@@ -23,6 +23,7 @@ package searchapp.util.httphandler;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 
@@ -32,20 +33,29 @@ import vellum.logr.LogrFactory;
  */
 public class DelegatingHttpHandler implements HttpHandler {
     Logr logger = LogrFactory.getLogger(DelegatingHttpHandler.class);
+    String context;
     HttpHandlerFactory factory;
     HttpHandler delegate;
-
-    public DelegatingHttpHandler(HttpHandlerFactory factory, HttpHandler delegate) {
+    
+    public DelegatingHttpHandler(String context, HttpHandlerFactory factory, HttpHandler delegate) {
+        this.context = context;
         this.factory = factory;
         this.delegate = delegate;
     }
     
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        HttpHandler handler = factory.getHandler(exchange);
-        if (handler != null) {
-            if (factory.filter(exchange)) {
-                handler.handle(exchange);
+        String path = exchange.getRequestURI().getPath();
+        if (path.startsWith(context)) {
+            HttpHandler handler = factory.getHandler(exchange);
+            if (handler != null) {
+                if (factory.filter(exchange)) {
+                    handler.handle(exchange);
+                }
+            } else {
+                logger.info("handler {} {}", context, path);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                exchange.close();
             }
         } else {
             delegate.handle(exchange);

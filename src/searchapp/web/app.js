@@ -17,33 +17,41 @@ var server = {
 
 var tbodyHtml = {};
 
+var unloadedCount = 1;
+
 function documentReady() {
    console.log('documentReady');
    $('.page-all').hide();
    $('.page-all').removeClass('hide');
    $('#page-login').show();
    $('#input-username').focus();
-   $('#button-login').click(loginSubmit);
-   $('#button-search').click(searchSubmit);
-   $('#link-search').click(searchNav);
-   $('#link-connections').click(connectionsNav);
-   $('#button-newConnection').click(newConnection);
+   $('#button-login').click(login);
+   $('#button-search').click(search);
+   $('#link-search').click(showSearch);
+   $('#link-connections').click(showConnections);
    tbodyHtml.connections = $('#tbody-connections').html();
 }
 
-function loginSubmit() {
+function load() {
+   $('#page-connection').load('connection.html', function() {
+      console.log('loaded', name);
+      unloadedCount--;
+   });
+
+}
+function login() {
    $('.page-all').hide();
    $('#page-search').show();
    var username = $('#input-username').val();
    console.log('login', username);
 }
 
-function searchSubmit() {
+function search() {
    var searchVal = $('#input-search').val();
    console.log('search', searchVal);
 }
 
-function searchNav() {
+function showSearch() {
    console.log('linkSearch');
    $('.link-all').removeClass('active');
    $('#link-search').parent('li').addClass('active');
@@ -51,15 +59,18 @@ function searchNav() {
    $('#page-search').show();
 }
 
-function connectionsNav() {
+function showConnections() {
    console.log('linkConnections');
    $('.link-all').removeClass('active');
    $('#link-connections').parent('li').addClass('active');
+   $('#page-connection').find('button.button-cancel').click(cancelConnectionForm);
+   $('#page-connection').find('button.button-save').click(saveConnectionForm);
+   $('#button-newConnection').click(newConnection);
    $('.page-all').hide();
    $('#page-connections').show();
    $('#tbody-connections').empty();
    server.post({
-      url: '/connection/list',
+      url: '/app/connection/list',
       success: function(res) {
          console.log(res);
          if (res.error) {
@@ -96,34 +107,81 @@ function connectionsNav() {
 
 function newConnection() {
    console.log('newConnection');
+   resetConnectionForm();
 }
+
+function editConnection(connection) {
+   console.log('editConnection', connection);
+   resetConnectionForm();
+}
+
+function resetConnectionForm() {
+   console.log('newConnection');
+   $('.page-all').hide();
+   $('#page-connection').show();
+   $('form.connection').find('input').val('');
+   $('form.connection').children('div').removeClass('has-error');
+   $('form.connection').submit(function() {
+      return false;
+   });
+   $('form.connection input').first().focus();
+}
+
 
 function deleteConnection(connection) {
    console.log('deleteConnection', connection);
    server.post({
-      url: '/connection/delete/' + connection.connectionName,
+      url: '/app/connection/delete/' + connection.connectionName,
       data: connection.connectionName,
       success: function(res) {
          console.log(res);
          if (res.error) {
          } else {
-            
+
          }
       }
-   });   
+   });
 }
 
-function editConnection(connection) {
-   console.log('editConnection', connection);
+function cancelConnectionForm() {
+   console.log('cancelConnection');
+   showConnections();
+}
+
+function saveConnectionForm() {
+   var data = $('form.connection').serialize();
+   console.log("saveConnectionForm", data);
+   if (validateFilled($('form.connection'))) {
+      saveConnection(data);
+   }
+}
+
+function validateFilled(form) {
+   var ok = true;
+   form.children().removeClass('has-error');
+   form.find('input').each(function() {
+      console.log("validate", this, $(this).val());
+      if (!$(this).val()) {
+         $(this).parent('div.form-group').addClass('has-error');
+         if (ok) {
+            $(this).focus();
+            ok = false;
+         }
+      }      
+   });
+   return ok;
+}
+
+function saveConnection(connection) {
+   console.log('saveConnection', connection);
    server.post({
-      url: '/connection/update/' + connection.connectionName,
+      url: '/app/connection/save',
       data: connection,
       success: function(res) {
          console.log(res);
          if (res.error) {
-         } else {            
+         } else {
          }
       }
-   });   
-   
+   });
 }
