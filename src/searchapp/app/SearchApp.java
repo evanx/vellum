@@ -41,15 +41,16 @@ public class SearchApp implements Shutdownable {
     VellumHttpsServer httpsServer;
 
     public void init() throws Exception {
-        config.init(getClass(), "search");
+        config.init(SearchAppTest.class, "search");
         httpsServer = VellumHttpsServer.start(config.getProperties("httpsServer"),
                 "/searchapp/web", new AppHttpHandlerFactory(this));
         logger.info("HTTPS server started");
         logger.info("started");
         if (config.getProperties().getBoolean("developing", true)) {
             storage = new MockSearchStorage();
+            SearchAppTest test = new SearchAppTest(this);
+            test.init();
             if (config.getProperties().getBoolean("testing", false)) {
-                SearchAppTest test = new SearchAppTest(this);
                 test.test();
                 test.shutdown();
             }

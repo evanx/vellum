@@ -20,6 +20,8 @@
  */
 package searchapp.util.storage;
 
+import java.util.Collection;
+
 /**
  * 
  * @author evan.summers
@@ -32,6 +34,8 @@ public interface Storage<E extends AbstractEntity> {
     
     public boolean delete(Comparable key);
     
-    public <E> E select(Comparable key);
+    public E select(Comparable key);
+
+    public Collection<E> selectCollection(String query);
     
 }

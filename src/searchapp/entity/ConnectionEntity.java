@@ -3,6 +3,8 @@ package searchapp.entity;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import searchapp.util.storage.AbstractEntity;
 
 /**
@@ -42,7 +44,12 @@ public class ConnectionEntity extends AbstractEntity {
     public String getDriver() {
         return driver;
     }
-    
+
+    public Map toMap() {
+        Map map = new HashMap();
+        map.put("connectionName", connectionName);
+        return map;
+    }
     public Connection getConnection() throws SQLException {
         if (connection == null) {
             connection = DriverManager.getConnection(url, user, password);

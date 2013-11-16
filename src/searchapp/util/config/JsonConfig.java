@@ -44,7 +44,8 @@ public class JsonConfig {
 
     Logger logger = LoggerFactory.getLogger(JsonConfig.class);
     ExtendedProperties properties = new ExtendedProperties(System.getProperties());
-    Pattern keyValuePattern = Pattern.compile("\\s*[\"']*(\\w+)[\"']*:\\s*[\"']*([/|\\w|.]+)[\"';,]*");
+    Pattern keyValuePattern = Pattern.compile(
+            "\\s*[\"']*(\\w+)[\"']*:\\s*[\"']*(\\w+[^\"';,]+)[\"';,]*");
 
     public void init(Class parent, String prefix) throws Exception {
         String confFileName = properties.getString(prefix + ".json", prefix + ".json");
@@ -67,7 +68,7 @@ public class JsonConfig {
             Matcher matcher = keyValuePattern.matcher(line);
             if (matcher.find()) {
                 properties.put(matcher.group(1), matcher.group(2));
-                logger.info("{} {}", matcher.group(1), matcher.group(2));
+                logger.info("parse {} \"{}\"", matcher.group(1), matcher.group(2));
             }
         }
     }

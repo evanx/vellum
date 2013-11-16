@@ -48,23 +48,23 @@ public class WebHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String path = httpExchange.getRequestURI().getPath();
-        if (httpExchange.getRequestURI().getPath().endsWith(".png")) {
-            httpExchange.getResponseHeaders().set("Content-type", "image/png");
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".html")) {
-            httpExchange.getResponseHeaders().set("Content-type", "text/html");
+        String contentType = "text/html";
+        if (httpExchange.getRequestURI().getPath().endsWith(".html")) {
+        } else if (httpExchange.getRequestURI().getPath().endsWith(".png")) {
+            contentType = "image/png";
         } else if (httpExchange.getRequestURI().getPath().endsWith(".css")) {
-            httpExchange.getResponseHeaders().set("Content-type", "text/css");
+            contentType = "text/css";
         } else if (httpExchange.getRequestURI().getPath().endsWith(".js")) {
-            httpExchange.getResponseHeaders().set("Content-type", "text/javascript");
+            contentType = "text/javascript";
         } else if (httpExchange.getRequestURI().getPath().endsWith(".txt")) {
-            httpExchange.getResponseHeaders().set("Content-type", "text/plain");
-        } else if (httpExchange.getRequestURI().getPath().endsWith(".html")) {
-            httpExchange.getResponseHeaders().set("Content-type", "text/html");
+            contentType = "text/plain";
+        } else if (path.endsWith(".woff")) {
+            contentType = "application/font-woff";
         } else {
-            httpExchange.getResponseHeaders().set("Content-type", "text/html");
             path = "app.html";
         }
         try {
+            httpExchange.getResponseHeaders().set("Content-type", contentType);
             byte[] bytes = cache.get(path);
             if (bytes == null) {
                 String resourcePath = webPath + '/' + path;

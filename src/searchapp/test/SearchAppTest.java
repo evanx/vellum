@@ -47,17 +47,22 @@ public class SearchAppTest {
     SearchApp app;
 
     ConnectionEntity[] connectionEntities = {
-        new ConnectionEntity("connection1", "org.h2.Driver", "jdbc:h2:mem:", "sa", null),
-        new ConnectionEntity("connection2", "org.h2.Driver", "jdbc:h2:mem:", "sa", null)
+        new ConnectionEntity("blogdb", "org.h2.Driver", "jdbc:h2:mem", "sa", null),
+        new ConnectionEntity("twitterdb", "org.h2.Driver", "jdbc:h2:mem", "sa", null)
     };
 
     public SearchAppTest(SearchApp app) {
         this.app = app;
     }
-        
-    public void test() throws Exception {
+
+    public void init() throws Exception {
         for (ConnectionEntity connectionEntity : connectionEntities) {
             app.getStorage().getConnectionStorage().insert(connectionEntity);
+        }
+    }
+    
+    public void test() throws Exception {
+        for (ConnectionEntity connectionEntity : connectionEntities) {
             Connection connection = connectionEntity.getConnection();
             connection.createStatement().execute(Streams.readResourceString(getClass(),
                     connectionEntity.getConnectionName() + ".sql"));
