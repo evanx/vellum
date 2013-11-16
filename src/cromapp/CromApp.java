@@ -63,8 +63,8 @@ public class CromApp implements Runnable {
         SSLContext sslContext = SSLContexts.create(keyStore, keyPassword, 
                 new CromTrustManager(this));
         httpsServer = new VellumHttpsServer();
-        httpsServer.init(config.getProperties("httpsServer"), sslContext);
-        httpsServer.createContext("/", new CromHttpHandler(this));
+        httpsServer.start(config.getProperties("httpsServer"), sslContext, 
+                new CromHttpHandler(this));
         logger.info("initialized");
     }
 

@@ -31,6 +31,10 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import searchapp.util.httphandler.DelegatingHttpHandler;
+import searchapp.util.httphandler.FilteringHttpHandler;
+import searchapp.util.httphandler.HttpHandlerFactory;
+import searchapp.util.httphandler.WebHttpHandler;
 import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
 
@@ -39,6 +43,7 @@ import vellum.security.HttpsConfiguratorFactory;
  * @author evan.summers
  */
 public class VellumHttpsServer implements Shutdownable {
+
     Logger logger = LoggerFactory.getLogger(VellumHttpsServer.class);
     SSLContext sslContext;
     HttpsServer httpsServer;
@@ -48,11 +53,12 @@ public class VellumHttpsServer implements Shutdownable {
     public VellumHttpsServer() {
     }
 
-    public void init(ExtendedProperties properties) throws Exception {
-        init(properties, new EphemeralSSLContextFactory().create(properties));
+    public void start(ExtendedProperties properties, HttpHandler handler) throws Exception {
+        start(properties, new EphemeralSSLContextFactory().create(properties), handler);
     }
-
-    public void init(ExtendedProperties properties, SSLContext sslContext) throws Exception {
+    
+    public void start(ExtendedProperties properties, SSLContext sslContext,
+            HttpHandler handler) throws Exception {
         int port = properties.getInt("port", 8443);
         boolean needClientAuth = properties.getBoolean("needClientAuth", false);
         executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
@@ -62,6 +68,7 @@ public class VellumHttpsServer implements Shutdownable {
         httpsServer.setHttpsConfigurator(HttpsConfiguratorFactory.
                 createHttpsConfigurator(sslContext, needClientAuth));
         httpsServer.setExecutor(executor);
+        httpsServer.createContext("/", handler);
         httpsServer.start();
         logger.info("init {}", port);
     }
@@ -77,4 +84,13 @@ public class VellumHttpsServer implements Shutdownable {
             executor.shutdown();
         }  
     }
+    
+    public static VellumHttpsServer start(ExtendedProperties properties, String webPath,
+            HttpHandlerFactory httpHandlerFactory) throws Exception {
+        VellumHttpsServer server = new VellumHttpsServer();
+        server.start(properties, new DelegatingHttpHandler(httpHandlerFactory, 
+                new WebHttpHandler(webPath)));
+        return server;
+    }
+    
 }

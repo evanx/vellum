@@ -18,40 +18,32 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.storage;
+package searchapp.util.httphandler;
 
-import java.util.HashMap;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import searchapp.entity.ConnectionEntity;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import java.io.IOException;
+import vellum.logr.Logr;
+import vellum.logr.LogrFactory;
 
 /**
  *
  * @author evan.summers
  */
-public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
+public class FilteringHttpHandler implements HttpHandler {
+    Logr logger = LogrFactory.getLogger(FilteringHttpHandler.class);
+    HttpFilter filter;
+    HttpHandler delegate;
 
-    Logger logger = LoggerFactory.getLogger(TemporaryStorage.class);
-    Map<Comparable, E> map = new HashMap();
-
-    @Override
-    public boolean insert(E entity) {
-        return map.put(entity.getKey(), entity) == null;
+    public FilteringHttpHandler(HttpFilter filter, HttpHandler delegate) {
+        this.filter = filter;
+        this.delegate = delegate;
     }
-
+       
     @Override
-    public boolean update(E entity) {
-        return map.put(entity.getKey(), entity) != null;
-    }
-
-    @Override
-    public boolean delete(Comparable key) {
-        return map.remove(key) != null;
-    }
-
-    @Override
-    public <E> E select(Comparable key) {
-        return (E) map.get(key);
+    public void handle(HttpExchange exchange) throws IOException {
+        if (filter.filter(exchange)) {
+            delegate.handle(exchange);
+        }
     }
 }

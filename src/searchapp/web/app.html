@@ -17,7 +17,7 @@
 
     <div class="container">
 
-      <!-- Static navbar -->
+      <!--
       <div class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
           <a class="navbar-brand" href="#">Search</a>
@@ -27,22 +27,34 @@
           </ul>
         </div>
       </div>
+      -->
 
-      <div class="jumbotron">
+      <div class="jumbotron page-all hide" id="page-search">
         <h2>Welcome</h2>
             <div class="form-group">
-                <input type="text" class="form-control" 
-                       ng-model="searchString" placeholder="Search">
-                <button type="button" class="btn">Search</button>
+                <input type="text" class="form-control" id="input-search" placeholder="Search">
+                <button type="button" class="btn" id="button-search">Search</button>
             </div>
       </div>
 
+      <div class="jumbotron page-all hide" id="page-login">
+        <p>Use "demo" for username and password.</p>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group">        
+                    <input type="text" class="form-control" id="input-username" placeholder="Username">
+                    <input type="text" class="form-control" id="input-password" placeholder="Password">
+                    <button type="button" class="btn" id="button-login">Login</button>
+                </div>
+            </div>
+      </div>
+      
     </div>
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/angular-1.2.0.min.js"></script>
     <script src="bootstrap-3.0.2/js/bootstrap.min.js"></script>
-    <script src="searchapp.js"></script>
+    <script src="app.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             documentReady();
