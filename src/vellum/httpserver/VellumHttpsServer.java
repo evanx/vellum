@@ -23,12 +23,12 @@ package vellum.httpserver;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsServer;
 import dualcontrol.ExtendedProperties;
+import ephemeral.EphemeralSSLContextFactory;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
-import localca.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.lifecycle.Shutdownable;
@@ -49,11 +49,11 @@ public class VellumHttpsServer implements Shutdownable {
     }
 
     public void init(ExtendedProperties properties) throws Exception {
-        init(properties, SSLContexts.create(properties));
+        init(properties, new EphemeralSSLContextFactory().create(properties));
     }
 
     public void init(ExtendedProperties properties, SSLContext sslContext) throws Exception {
-        int port = properties.getInt("port");
+        int port = properties.getInt("port", 8443);
         boolean needClientAuth = properties.getBoolean("needClientAuth", false);
         executor = new ThreadPoolExecutor(4, 8, 0, TimeUnit.MILLISECONDS, 
             new ArrayBlockingQueue<Runnable>(4));
@@ -77,5 +77,4 @@ public class VellumHttpsServer implements Shutdownable {
             executor.shutdown();
         }  
     }
-
 }

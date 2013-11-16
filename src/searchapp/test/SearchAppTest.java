@@ -20,6 +20,7 @@
  */
 package searchapp.test;
 
+import ephemeral.EphemeralClientSSLContextFactory;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,7 +35,6 @@ import searchapp.app.SearchApp;
 import searchapp.entity.ConnectionEntity;
 import searchapp.entity.Match;
 import searchapp.search.SearchConnection;
-import ephemeral.EphemeralSSLContext;
 import vellum.util.Streams;
 
 /**
@@ -74,7 +74,7 @@ public class SearchAppTest {
     }
 
     public void shutdown() throws Exception {
-        HttpsURLConnection urlConnection = new EphemeralSSLContext().createConnection(
+        HttpsURLConnection urlConnection = new EphemeralClientSSLContextFactory().createConnection(
                 "client", new URL("https://localhost:8443/shutdown"));
         urlConnection.connect();
     }                

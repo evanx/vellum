@@ -20,6 +20,7 @@
  */
 package ephemeral;
 
+import dualcontrol.ExtendedProperties;
 import localca.OpenTrustManager;
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +30,7 @@ import java.util.Arrays;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
+import static localca.SSLContexts.create;
 import vellum.crypto.rsa.RsaKeyStores;
 
 /**
@@ -36,11 +38,27 @@ import vellum.crypto.rsa.RsaKeyStores;
  * 
  * @author evan.summers
  */
-public class EphemeralSSLContext {
+public class EphemeralSSLContextFactory {
 
-    public EphemeralSSLContext() {
+    public EphemeralSSLContextFactory() {
     }
     
+    public SSLContext create(ExtendedProperties properties) 
+            throws Exception {        
+        String keyStoreLocation = properties.getString("keyStore", null);
+        if (keyStoreLocation == null) {
+            return create(properties.getString("domain", "localhost"));
+        } else {
+            char[] pass = properties.getPassword("pass");
+            String trustStoreLocation = properties.getString("trustStore", null);
+            if (trustStoreLocation == null) {
+                return create(keyStoreLocation, pass);
+            } else {
+                return create(keyStoreLocation, pass, trustStoreLocation);
+            }
+        }
+    }
+        
     public SSLContext create(String commonName) throws GeneralSecurityException, IOException {
         char[] keyPassword = new EphemeralPasswords().create();
         try {
@@ -53,10 +71,4 @@ public class EphemeralSSLContext {
         }
     }
 
-    public HttpsURLConnection createConnection(String clientName, URL url) 
-            throws IOException, Exception {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();        
-        connection.setSSLSocketFactory(create(clientName).getSocketFactory());
-        return connection;
-    }    
 }

@@ -54,17 +54,6 @@ public class SSLContexts {
         }
     }
 
-    public static SSLContext create(ExtendedProperties properties) throws Exception {        
-        String keyStoreLocation = properties.getString("keyStore");
-        char[] pass = properties.getPassword("pass");
-        String trustStoreLocation = properties.getString("trustStore", null);
-        if (trustStoreLocation == null) {
-            return create(keyStoreLocation, pass);
-        } else {
-            return create(keyStoreLocation, pass, trustStoreLocation);
-        }
-    }
-
     public static SSLContext create(String sslPrefix, Properties properties,
             MockableConsole console) throws Exception {
         ExtendedProperties props = new ExtendedProperties(properties);
