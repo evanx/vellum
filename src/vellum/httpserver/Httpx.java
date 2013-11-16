@@ -48,7 +48,7 @@ import vellum.util.Strings;
 public class Httpx {
     
     Logr logger = LogrFactory.getLogger(getClass());
-    HttpExchange exchange;
+    HttpExchange httpExchange;
     PrintStream out;
     StringMap parameterMap;
     String urlQuery;
@@ -60,30 +60,30 @@ public class Httpx {
     StringMap cookieMap;
     
     public Httpx(HttpExchange httpExchange) {
-        this.exchange = httpExchange;
+        this.httpExchange = httpExchange;
     }
     
     public String getRemoteHostName() {
-        return exchange.getRemoteAddress().getHostName();
+        return httpExchange.getRemoteAddress().getHostName();
     }
 
     public String getQuery() {
-        return exchange.getRequestURI().getQuery();
+        return httpExchange.getRequestURI().getQuery();
     }
     
     public String getPath() {
-        return exchange.getRequestURI().getPath();
+        return httpExchange.getRequestURI().getPath();
     }
 
     public String[] getPathArgs() {
         if (args == null) {
-            args = exchange.getRequestURI().getPath().substring(1).split("/");
+            args = httpExchange.getRequestURI().getPath().substring(1).split("/");
         }
         return args;
     }
 
     public String getLastPathArg() {
-        String path = exchange.getRequestURI().getPath();
+        String path = httpExchange.getRequestURI().getPath();
         int index = path.lastIndexOf("/");
         if (index > 0) {
             return path.substring(index + 1);
@@ -97,7 +97,7 @@ public class Httpx {
 
     public String getRequestBody() {
         if (requestBody == null) {
-            requestBody = Streams.readString(exchange.getRequestBody());
+            requestBody = Streams.readString(httpExchange.getRequestBody());
         }
         return requestBody;
     }
@@ -117,11 +117,11 @@ public class Httpx {
     
     private void parseParameterMap() {
         parameterMap = new StringMap();
-        urlQuery = exchange.getRequestURI().getQuery();
-        if (exchange.getRequestMethod().equals("POST")) {
-            urlQuery = Streams.readString(exchange.getRequestBody());
+        urlQuery = httpExchange.getRequestURI().getQuery();
+        if (httpExchange.getRequestMethod().equals("POST")) {
+            urlQuery = Streams.readString(httpExchange.getRequestBody());
         }
-        logger.info("parseParameterMap", exchange.getRequestMethod());
+        logger.info("parseParameterMap", httpExchange.getRequestMethod());
         if (urlQuery == null) {
             return;
         }
@@ -160,7 +160,7 @@ public class Httpx {
     
     public void clearCookie(Collection<String> keys) {
         for (String key : keys) {
-            exchange.getResponseHeaders().add("Set-cookie", 
+            httpExchange.getResponseHeaders().add("Set-cookie", 
                     String.format("%s=; Expires=Thu, 01 Jan 1970 00:00:00 GMT", key));
             
         }
@@ -179,7 +179,7 @@ public class Httpx {
             if (version != null) {
                 builder.append("; Version=").append(version);
             }
-            exchange.getResponseHeaders().add("Set-cookie", builder.toString());
+            httpExchange.getResponseHeaders().add("Set-cookie", builder.toString());
         }
     }
 
@@ -211,7 +211,7 @@ public class Httpx {
         
     public List<String> parseFirstRequestHeader(String key) {
         logger.info("parseFirstRequestHeader", key);
-        String text = exchange.getRequestHeaders().getFirst(key);
+        String text = httpExchange.getRequestHeaders().getFirst(key);
         if (text != null) {
             List<String> list = new ArrayList();
             for (String string : text.split(";")) {
@@ -224,8 +224,8 @@ public class Httpx {
         
     public void parseHeaders() {
         headersParsed = true;
-        for (String key : exchange.getRequestHeaders().keySet()) {
-            List<String> values = exchange.getRequestHeaders().get(key);
+        for (String key : httpExchange.getRequestHeaders().keySet()) {
+            List<String> values = httpExchange.getRequestHeaders().get(key);
             logger.info("parseHeaders", key, values);
             if (key.equals("Accept-encoding")) {
                 if (values.contains("gzip")) {
@@ -289,33 +289,33 @@ public class Httpx {
     }
 
     public void setResponseHeader(String key, String value) throws IOException {
-        exchange.getResponseHeaders().set(key, value);
+        httpExchange.getResponseHeaders().set(key, value);
     }
 
     public List<String> getRequestHeader(String key) throws IOException {
-        return exchange.getRequestHeaders().get(key);
+        return httpExchange.getRequestHeaders().get(key);
     }
 
     public void sendResponse(String contentType, byte[] bytes) throws IOException {
-        exchange.getResponseHeaders().set("Content-type", contentType);
-        exchange.getResponseHeaders().set("Content-length", Integer.toString(bytes.length));
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        httpExchange.getResponseHeaders().set("Content-type", contentType);
+        httpExchange.getResponseHeaders().set("Content-length", Integer.toString(bytes.length));
+        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         getPrintStream().write(bytes);
     }
     
     public void sendResponseFile(String contentType, String fileName) throws IOException {
-        exchange.getResponseHeaders().add("Content-Disposition",
+        httpExchange.getResponseHeaders().add("Content-Disposition",
                 "attachment; filename=" + fileName);
-        exchange.getResponseHeaders().set("Content-type", contentType);
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        httpExchange.getResponseHeaders().set("Content-type", contentType);
+        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
     }
     
     public void sendResponse(String contentType, boolean ok) throws IOException {
-        exchange.getResponseHeaders().set("Content-type", contentType);
+        httpExchange.getResponseHeaders().set("Content-type", contentType);
         if (ok) {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         } else {
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         }
     }
 
@@ -331,9 +331,9 @@ public class Httpx {
     public void handleError(String messageString) {
         try {
             logger.warn(messageString, parameterMap);
-            exchange.getResponseHeaders().set("Content-type", "text/json");
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            PrintStream out = new PrintStream(exchange.getResponseBody());
+            httpExchange.getResponseHeaders().set("Content-type", "text/json");
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+            PrintStream out = new PrintStream(httpExchange.getResponseBody());
             out.printf("{ errorMessage: \"%s\"; }\n", messageString);
         } catch (Exception e) {
             logger.warn(e);
@@ -342,7 +342,7 @@ public class Httpx {
     
     public PrintStream getPrintStream() {
         if (out == null) {
-            out = new PrintStream(exchange.getResponseBody());
+            out = new PrintStream(httpExchange.getResponseBody());
         }
         return out;
     }
@@ -353,7 +353,7 @@ public class Httpx {
     }
     
     public String getInputString() {
-        return Streams.readString(exchange.getRequestBody());
+        return Streams.readString(httpExchange.getRequestBody());
     }
 
 }

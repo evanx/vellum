@@ -11,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.app.SearchApp;
 import searchapp.entity.ConnectionEntity;
-import searchapp.util.httphandler.HttpExchangeInfo;
-import vellum.httpserver.Httpx;
-import vellum.util.Streams;
+import searchapp.util.http.HttpExchangeInfo;
 
 /**
  *
@@ -31,13 +29,13 @@ public class SaveConnectionHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
-        Httpx hx = new Httpx(exchange);
-        String connectionName = hx.getLastPathArg();
+        HttpExchangeInfo exchangeInfo = new HttpExchangeInfo(exchange);
+        String connectionName = exchangeInfo.getLastPathArg();
         logger.info("path {} {}", path, connectionName);
         try {
-            ConnectionEntity connection = new ConnectionEntity(hx.getParameterMap());
+            ConnectionEntity connection = new ConnectionEntity(exchangeInfo.getPostMap());
+            logger.info("connection {}", connection);
             if (app.getStorage().getConnectionStorage().containsKey(connectionName)) {
-                logger.info("connection {}", connection);
                 app.getStorage().getConnectionStorage().insert(connection);
             } else {
                 app.getStorage().getConnectionStorage().update(connection);
