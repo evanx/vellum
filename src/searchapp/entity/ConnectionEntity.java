@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import searchapp.util.storage.AbstractEntity;
+import vellum.parameter.StringMap;
 
 /**
  *
@@ -21,6 +22,14 @@ public class ConnectionEntity extends AbstractEntity {
     private transient Connection connection;
     
     public ConnectionEntity() {
+    }
+
+    public ConnectionEntity(StringMap map) {
+        this.connectionName = map.get("connectionName");
+        this.driver = map.get("driver");
+        this.url = map.get("url");
+        this.user = map.get("user");
+        this.password = map.get("password");
     }
     
     public ConnectionEntity(String connectionName, String driver, String url, 

@@ -18,17 +18,16 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.config;
+package searchapp.util.json;
 
 import dualcontrol.ExtendedProperties;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -40,44 +39,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author evan.summers
  */
-public class JsonConfig {
+public class JsonParser {
 
     Logger logger = LoggerFactory.getLogger(JsonConfig.class);
-    ExtendedProperties properties = new ExtendedProperties(System.getProperties());
     Pattern keyValuePattern = Pattern.compile(
             "\\s*[\"']*(\\w+)[\"']*:\\s*[\"']*(\\w+[^\"';,]+)[\"';,]*");
 
-    public void init(Class parent, String prefix) throws Exception {
-        String confFileName = properties.getString(prefix + ".json", prefix + ".json");
-        File confFile = new File(confFileName);
-        if (confFile.exists()) {            
-            parse(new FileInputStream(confFile));
-        } else {            
-            parse(parent.getResourceAsStream(prefix + ".json"));
-            properties.put("confParentClass", parent);
-        }
-    }
-
-    private void parse(InputStream stream) throws FileNotFoundException, IOException {
+    public Map parse(InputStream stream) throws FileNotFoundException, IOException {
+        Map map = new HashMap();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         while (true) {
             String line = reader.readLine();
             if (line == null) {
-                return;
+                return map;
             }
             Matcher matcher = keyValuePattern.matcher(line);
             if (matcher.find()) {
-                properties.put(matcher.group(1), matcher.group(2));
+                map.put(matcher.group(1), matcher.group(2));
                 logger.info("parse {} \"{}\"", matcher.group(1), matcher.group(2));
             }
         }
-    }
-
-    public ExtendedProperties getProperties() {
-        return properties;
-    }
-
-    public ExtendedProperties getProperties(String prefix) {
-        return properties;
     }
 }

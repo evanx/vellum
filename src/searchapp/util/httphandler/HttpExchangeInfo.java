@@ -18,26 +18,25 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.storage;
+package searchapp.util.httphandler;
 
-import java.util.Collection;
+import com.sun.net.httpserver.HttpExchange;
+import vellum.logr.Logr;
+import vellum.logr.LogrFactory;
 
 /**
- * 
+ *
  * @author evan.summers
  */
-public interface Storage<E extends AbstractEntity> {
-    
-    public boolean insert(E entity);
-    
-    public boolean update(E entity);
+public class HttpExchangeInfo {
+    Logr logger = LogrFactory.getLogger(HttpExchangeInfo.class);
+    HttpExchange exchange;
 
-    public boolean containsKey(Comparable key);
+    public HttpExchangeInfo(HttpExchange exchange) {
+        this.exchange = exchange;
+    }
     
-    public boolean delete(Comparable key);
     
-    public E select(Comparable key);
+    
 
-    public Collection<E> selectCollection(String query);
-    
 }

@@ -113,6 +113,11 @@ function newConnection() {
 function editConnection(connection) {
    console.log('editConnection', connection);
    resetConnectionForm();
+   $('form.connection').find('input[name=connectionName]').val(connection.connectionName);
+   $('form.connection').find('input[name=driver]').val(connection.driver);
+   $('form.connection').find('input[name=url]').val(connection.url);
+   $('form.connection').find('input[name=user]').val(connection.user);
+   $('form.connection').find('input[name=password]').val(connection.password);
 }
 
 function resetConnectionForm() {

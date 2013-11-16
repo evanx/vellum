@@ -3,7 +3,6 @@
  */
 package searchapp.handler;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
@@ -12,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.app.SearchApp;
 import searchapp.entity.ConnectionEntity;
+import searchapp.util.httphandler.HttpExchangeInfo;
+import vellum.httpserver.Httpx;
 import vellum.util.Streams;
 
 /**
@@ -30,14 +31,12 @@ public class SaveConnectionHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
-        String connectionName = getArg(exchange);
+        Httpx hx = new Httpx(exchange);
+        String connectionName = hx.getLastPathArg();
         logger.info("path {} {}", path, connectionName);
         try {
-            ConnectionEntity connection = app.getStorage().getConnectionStorage().
-                    select(connectionName);
-            if (connection == null) {
-                connection = new Gson().fromJson(Streams.readString(exchange.getRequestBody()), 
-                        ConnectionEntity.class);
+            ConnectionEntity connection = new ConnectionEntity(hx.getParameterMap());
+            if (app.getStorage().getConnectionStorage().containsKey(connectionName)) {
                 logger.info("connection {}", connection);
                 app.getStorage().getConnectionStorage().insert(connection);
             } else {
@@ -51,13 +50,5 @@ public class SaveConnectionHttpHandler implements HttpHandler {
         exchange.close();
     }
 
-    public static String getArg(HttpExchange exchange) {
-        String path = exchange.getRequestURI().getPath();
-        int index = path.lastIndexOf("/");
-        if (index > 0) {
-            return path.substring(index + 1);
-        }
-        throw new IllegalArgumentException(path);
-
-    }
+    
 }

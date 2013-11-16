@@ -48,6 +48,12 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
     }
 
     @Override
+    public boolean containsKey(Comparable key) {
+        logger.info("containsKey {}", key, map.containsKey(key));
+        return map.containsKey(key);
+    }
+    
+    @Override
     public boolean delete(Comparable key) {
         logger.info("delete {} {}", key, map.containsKey(key));
         return map.remove(key) != null;
