@@ -26,13 +26,17 @@ function buttonSearch() {
 
 function linkSearch() {
     console.log('linkSearch');
-   $('.link-all').removeClass('active');
-   $('#link-search').parent('li').addClass('active');
- }
+    $('.link-all').removeClass('active');
+    $('#link-search').parent('li').addClass('active');
+    $('.page-all').hide();
+    $('#page-search').show();
+}
 
 function linkConnections() {
     console.log('linkConnections');
-   $('.link-all').removeClass('active');
-   $('#link-connections').parent('li').addClass('active');
+    $('.link-all').removeClass('active');
+    $('#link-connections').parent('li').addClass('active');
+    $('.page-all').hide();
+    $('#page-connections').show();
 }
 
