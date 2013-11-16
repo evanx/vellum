@@ -77,4 +77,12 @@ public class ConnectionEntity extends AbstractEntity {
         }
         return connection;
     }
+
+    public boolean isValid() {
+        if (connectionName == null || connectionName.isEmpty()) return false;
+        if (driver == null || driver.isEmpty()) return false;
+        if (url == null || url.isEmpty()) return false;
+        if (user == null || user.isEmpty()) return false;
+        return true;
+    }
 }

@@ -11,18 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.app.SearchApp;
 import searchapp.entity.ConnectionEntity;
+import searchapp.util.http.EncodedMap;
 import searchapp.util.http.HttpExchangeInfo;
+import vellum.util.Streams;
 
 /**
  *
  * @author evan.summers
  */
-public class SaveConnectionHttpHandler implements HttpHandler {
+public class InsertConnectionHttpHandler implements HttpHandler {
 
-    Logger logger = LoggerFactory.getLogger(SaveConnectionHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(InsertConnectionHttpHandler.class);
     SearchApp app;
 
-    public SaveConnectionHttpHandler(SearchApp app) {
+    public InsertConnectionHttpHandler(SearchApp app) {
         this.app = app;
     }
 
@@ -30,23 +32,25 @@ public class SaveConnectionHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
         HttpExchangeInfo exchangeInfo = new HttpExchangeInfo(exchange);
-        String connectionName = exchangeInfo.getLastPathArg();
-        logger.info("path {} {}", path, connectionName);
+        String data = Streams.readString(exchange.getRequestBody());
+        logger.info("path {} {}", path, data);
         try {
-            ConnectionEntity connection = new ConnectionEntity(exchangeInfo.getPostMap());
+            ConnectionEntity connection = new ConnectionEntity(
+                    new EncodedMap().parse(data));
             logger.info("connection {}", connection);
-            if (app.getStorage().getConnectionStorage().containsKey(connectionName)) {
-                app.getStorage().getConnectionStorage().insert(connection);
+            if (!connection.isValid()) {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_NOT_ACCEPTABLE, 0);
+            } else if (app.getStorage().getConnectionStorage().containsKey(
+                    connection.getConnectionName())) {
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_CONFLICT, 0);
             } else {
-                app.getStorage().getConnectionStorage().update(connection);
+                app.getStorage().getConnectionStorage().insert(connection);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             }
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         } catch (Exception e) {
             logger.warn(e.getMessage(), e);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         }
         exchange.close();
     }
-
-    
 }

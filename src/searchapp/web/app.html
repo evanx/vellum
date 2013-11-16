@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -29,8 +28,10 @@
       </div>
 
       <div class="jumbotron page-all hide" id="page-search">
-        <h2>Welcome</h2>
         <div class="input-group">
+          <select type="text" class="form-control" 
+                 id="select-connection" placeholder="Connection">
+          </select>
           <input type="text" class="form-control" 
                  id="input-search" placeholder="Search">
           <button type="button" class="btn" id="button-search">Search</button>
@@ -40,7 +41,7 @@
       <div class="container page-all hide" id="page-connection">
         <div class="row">
           <div class="col-lg-4">
-            <form class="connection" role="form">
+            <form class="connection" onsubmit="return false;">
               <div class="form-group row">
                 <input type="text" class="form-control" 
                        name="connectionName" placeholder="Name">
@@ -58,8 +59,8 @@
                        name="user" placeholder="User">
               </div>
               <div class="form-group row">
-                <button class="btn button-cancel">Cancel</button>
-                <button class="btn button-save" >Save</button>
+                <button class="btn" id="connection-cancel">Cancel</button>
+                <button class="btn" id="connection-save">Save</button>
               </div>
             </form>
           </div>
@@ -69,6 +70,13 @@
       <div class="container page-all hide" id="page-connections">
         <div class="row">
           <div class="col-lg-8">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default" 
+                      id="button-newConnection">
+                <span class="glyphicon glyphicon-edit"></span> Edit new
+              </button>
+            </div>
+            <p></p>
             <table class="table table-striped table-bordered table-condensed">
               <thead>
                 <tr>
@@ -85,29 +93,21 @@
                   <td><span class="td-url"></span>
                   <td><span class="td-user"></span>
                   <td>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-default btn-lg button-edit">
-                        <span class="glyphicon glyphicon-edit"></span>
+                     <div class="btn-group">
+                      <button type="button" class="btn btn-default button-edit">
+                        <span class="glyphicon glyphicon-edit"></span> Edit
                       </button>
-                      <button type="button" class="btn btn-default btn-lg button-remove">
-                        <span class="glyphicon glyphicon-remove"></span>
+                      <button type="button" class="btn btn-default button-remove">
+                        <span class="glyphicon glyphicon-remove"></span> Delete
                       </button>
                     </div>
               </tbody>
             </table>    
-            <p></p>
-            <div class="btn-group">
-              <button type="button" class="btn btn-default btn-lg" 
-                      id="button-newConnection">
-                <span class="glyphicon glyphicon-edit"></span>
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
       <div class="jumbotron page-all hide" id="page-login">
-        <p>Use "demo" for username and password.</p>
         <div class="row">
           <div class="col-lg-6">
             <div class="input-group">        

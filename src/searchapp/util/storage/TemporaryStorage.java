@@ -21,8 +21,8 @@
 package searchapp.util.storage;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,18 +33,22 @@ import org.slf4j.LoggerFactory;
 public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
 
     Logger logger = LoggerFactory.getLogger(TemporaryStorage.class);
-    Map<Comparable, E> map = new HashMap();
+    Map<Comparable, E> map = new TreeMap();
 
     @Override
-    public boolean insert(E entity) {
+    public void insert(E entity) throws StorageException {
         logger.info("insert {} {}", entity.getKey(), !map.containsKey(entity.getKey()));
-        return map.put(entity.getKey(), entity) == null;
+        if (map.put(entity.getKey(), entity) != null) {
+            throw new StorageException(StorageExceptionType.ALREADY_EXISTS, entity.getKey());
+        }
     }
 
     @Override
-    public boolean update(E entity) {
+    public void update(E entity) throws StorageException {
         logger.info("update {} {}", entity.getKey(), map.containsKey(entity.getKey()));
-        return map.put(entity.getKey(), entity) != null;
+        if (map.put(entity.getKey(), entity) == null) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, entity.getKey());            
+        }
     }
 
     @Override
@@ -54,14 +58,19 @@ public class TemporaryStorage<E extends AbstractEntity> implements Storage<E> {
     }
     
     @Override
-    public boolean delete(Comparable key) {
+    public void delete(Comparable key) throws StorageException {
         logger.info("delete {} {}", key, map.containsKey(key));
-        return map.remove(key) != null;
+        if (map.remove(key) != null) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, key);           
+        }
     }
 
     @Override
-    public E select(Comparable key) {
+    public E select(Comparable key) throws StorageException {
         logger.info("delete {} {}", key, map.containsKey(key));
+        if (!map.containsKey(key)) {
+            throw new StorageException(StorageExceptionType.NOT_FOUND, key);            
+        }
         return map.get(key);
     }
 

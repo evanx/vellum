@@ -20,24 +20,13 @@
  */
 package searchapp.util.storage;
 
-import java.util.Collection;
-
 /**
  * 
  * @author evan.summers
  */
-public interface Storage<E extends AbstractEntity> {
-    
-    public void insert(E entity) throws StorageException;
-    
-    public void update(E entity) throws StorageException;
-
-    public boolean containsKey(Comparable key);
-    
-    public void delete(Comparable key) throws StorageException;
-    
-    public E select(Comparable key) throws StorageException;
-
-    public Collection<E> selectCollection(String query);
-    
+public enum StorageExceptionType {
+    NOT_FOUND,
+    ALREADY_EXISTS,
+    NO_UPDATE,
+    MULTIPLE_UPDATE
 }

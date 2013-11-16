@@ -24,15 +24,15 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
 public class DelegatingHttpHandler implements HttpHandler {
-    Logr logger = LogrFactory.getLogger(DelegatingHttpHandler.class);
+    Logger logger = LoggerFactory.getLogger(DelegatingHttpHandler.class);
     String context;
     HttpHandlerFactory factory;
     HttpHandler delegate;

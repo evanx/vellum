@@ -20,24 +20,25 @@
  */
 package searchapp.util.storage;
 
-import java.util.Collection;
-
 /**
  * 
  * @author evan.summers
  */
-public interface Storage<E extends AbstractEntity> {
+public class StorageException extends Exception {
+    StorageExceptionType exceptionType;
+    Comparable key;
     
-    public void insert(E entity) throws StorageException;
-    
-    public void update(E entity) throws StorageException;
+    public StorageException(StorageExceptionType exceptionType, Comparable key) {
+        super(exceptionType.name());
+        this.exceptionType = exceptionType;
+        this.key = key;
+    }
 
-    public boolean containsKey(Comparable key);
-    
-    public void delete(Comparable key) throws StorageException;
-    
-    public E select(Comparable key) throws StorageException;
+    public StorageExceptionType getExceptionType() {
+        return exceptionType;
+    }
 
-    public Collection<E> selectCollection(String query);
-    
+    public Comparable getKey() {
+        return key;
+    }                
 }

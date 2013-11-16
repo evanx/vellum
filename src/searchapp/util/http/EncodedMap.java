@@ -21,29 +21,44 @@
 package searchapp.util.http;
 
 import com.sun.net.httpserver.HttpExchange;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.parameter.StringMap;
+import vellum.util.Streams;
 
 /**
  *
  * @author evan.summers
  */
-public class HttpExchangeInfo {    
-    static Logger logger = LoggerFactory.getLogger(HttpExchangeInfo.class);
-    HttpExchange exchange;
-    StringMap parameterMap;
+public class EncodedMap {    
+    static Logger logger = LoggerFactory.getLogger(EncodedMap.class);
+    StringMap map = new StringMap();
 
-    public HttpExchangeInfo(HttpExchange exchange) {
-        this.exchange = exchange;
+    public EncodedMap() {
     }
     
-    public String getLastPathArg() {
-        String path = exchange.getRequestURI().getPath();
-        int index = path.lastIndexOf("/");
-        if (index > 0) {
-            return path.substring(index + 1);
+    public StringMap parse(String string) throws UnsupportedEncodingException {
+        int index = 0;
+        while (index < string.length()) {
+            int endIndex = string.indexOf("&", index);
+            if (endIndex > 0) {
+                put(string.substring(index, endIndex));
+                index = endIndex + 1;
+            } else if (index < string.length()) {
+                put(string.substring(index));
+                break;
+            }
         }
-        throw new IllegalArgumentException(path);
+        return map;
+    }
+
+    private void put(String string) throws UnsupportedEncodingException {
+        int index = string.indexOf("=");
+        if (index > 0 && index < string.length()) {
+            map.put(string.substring(0, index), 
+                    URLDecoder.decode(string.substring(index + 1), "UTF-8"));
+        }
     }
 }

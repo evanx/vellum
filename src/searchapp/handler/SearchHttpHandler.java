@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.app.SearchApp;
+import vellum.util.Streams;
 
 /**
  *
@@ -25,14 +26,15 @@ public class SearchHttpHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
+    public void handle(HttpExchange exchange) throws IOException {
+        String path = exchange.getRequestURI().getPath();
+        String searchString = Streams.readString(exchange.getRequestBody());
         logger.info("path {}", path);
-        try {
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        try {            
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         } catch (Exception e) {
-            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
         }
-        httpExchange.close();
+        exchange.close();
     }
 }

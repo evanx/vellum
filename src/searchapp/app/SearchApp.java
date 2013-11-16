@@ -50,7 +50,7 @@ public class SearchApp implements Shutdownable {
             storage = new MockSearchStorage();
             SearchAppTest test = new SearchAppTest(this);
             test.init();
-            if (config.getProperties().getBoolean("testing", false)) {
+            if (config.getProperties().getBoolean("testing", true)) {
                 test.test();
                 test.shutdown();
             }
