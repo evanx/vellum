@@ -45,26 +45,26 @@ public class ExtendedProperties extends Properties {
     }
 
     public ExtendedProperties(Properties properties, String prefix) {
-        for (Object key : properties.keySet()) {
-            String propertyName = key.toString();
-            if (propertyName.startsWith(prefix) && 
-                    propertyName.charAt(prefix.length()) == '.') {
-                super.put(propertyName.substring(prefix.length() + 1), 
-                        properties.get(propertyName));
+        for (Object object : properties.keySet()) {
+            String key = object.toString();
+            if (key.startsWith(prefix) && 
+                    key.charAt(prefix.length()) == '.') {
+                super.put(key.substring(prefix.length() + 1), 
+                        properties.get(key));
             }
         }
     }
     
-    public String getString(String propertyName) {
-        String propertyValue = super.getProperty(propertyName);
+    public String getString(String key) {
+        String propertyValue = super.getProperty(key);
         if (propertyValue == null) {
-            throw new RuntimeException("Missing property: " + propertyName);
+            throw new RuntimeException("Missing property: " + key);
         }
         return propertyValue;
     } 
 
-    public String getString(String propertyName, String defaultValue) {
-        String propertyValue = super.getProperty(propertyName);
+    public String getString(String key, String defaultValue) {
+        String propertyValue = super.getProperty(key);
         if (propertyValue == null) {
             return defaultValue;
         }
@@ -82,20 +82,20 @@ public class ExtendedProperties extends Properties {
         return Integer.parseInt(value.toString());
     }
     
-    public int getInt(String propertyName, int defaultValue) {
-        String propertyString = super.getProperty(propertyName);
+    public int getInt(String key, int defaultValue) {
+        String propertyString = super.getProperty(key);
         if (propertyString == null) {
             return defaultValue;
         }
         return Integer.parseInt(propertyString);
     }
 
-    public boolean getBoolean(String propertyName) {
-        return getBoolean(propertyName, false);
+    public boolean getBoolean(String key) {
+        return getBoolean(key, false);
     }
     
-    public boolean getBoolean(String propertyName, boolean defaultValue) {
-        Object object = super.get(propertyName);
+    public boolean getBoolean(String key, boolean defaultValue) {
+        Object object = super.get(key);
         if (object == null) {
             return defaultValue;
         }
@@ -105,25 +105,35 @@ public class ExtendedProperties extends Properties {
         if (object instanceof Boolean) {
             return (Boolean) object;
         }
-        throw new RuntimeException("Property value is not boolean: " + propertyName);
+        throw new RuntimeException("Property value is not boolean: " + key);
     }
     
     public char[] getPassword(String name) {
         return getPassword(name, new SystemConsole());
     }    
     
-    public char[] getPassword(String propertyName, MockableConsole console) {
-        Object object = super.get(propertyName);
+    public char[] getPassword(String key, MockableConsole console) {
+        Object object = super.get(key);
         if (object == null) {
-            return console.readPassword(propertyName);
+            return console.readPassword(key);
         }
-        logger.info("getPassword {} {}", propertyName, object.getClass().getName());        
+        logger.info("getPassword {} {}", key, object.getClass().getName());        
         if (object instanceof String) {
             return object.toString().toCharArray();
         }
         if (object instanceof char[]) {
             return (char[]) object;
         }
-        throw new RuntimeException("Unhandled password property type: " + propertyName);
+        throw new RuntimeException("Invalid passwordpassword property type: " + key);
     }        
+    
+    public Class getClass(String key) throws ClassNotFoundException {
+        Object object = get(key);
+        if (object instanceof Class) {
+            return (Class) object;
+        } else if (object instanceof String) {
+            return Class.forName((String) key);
+        }
+        throw new RuntimeException("Invalid class property type: " + key);
+    }
 }

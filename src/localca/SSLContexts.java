@@ -84,6 +84,11 @@ public class SSLContexts {
         keyStore.load(new FileInputStream(keyStoreLocation), pass);
         return create(keyStore, pass, new OpenTrustManager());
     }
+
+    public static SSLContext create(KeyStore keyStore, char[] pass) 
+            throws GeneralSecurityException, IOException {
+        return create(keyStore, pass, new OpenTrustManager());
+    }
     
     public static SSLContext create(String keyStoreLocation, char[] pass,
             String trustStoreLocation) throws GeneralSecurityException, IOException {

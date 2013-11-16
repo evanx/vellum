@@ -1,0 +1,12 @@
+{
+  "httpsServer": {
+    "port": 8443,
+    "keyStore": "keystore.jks",
+    "pass": "crum1234"
+  },
+  "dataSource": {
+    "driver": "org.h2.Driver",
+    "url": "jdbc:h2:mem",
+    "user": "sa"
+  }
+}

@@ -23,11 +23,9 @@ package searchapp.app;
 import searchapp.test.SearchAppTest;
 import searchapp.storage.SearchStorage;
 import searchapp.storage.MockSearchStorage;
-import searchapp.util.httphandler.ShutdownHttpHandler;
 import searchapp.util.config.JsonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import searchapp.util.httphandler.WebHttpHandler;
 import vellum.httpserver.VellumHttpsServer;
 import vellum.lifecycle.Shutdownable;
 
@@ -43,7 +41,7 @@ public class SearchApp implements Shutdownable {
     VellumHttpsServer httpsServer;
 
     public void init() throws Exception {
-        config.init("search");
+        config.init(getClass(), "search");
         httpsServer = VellumHttpsServer.start(config.getProperties("httpsServer"),
                 "/searchapp/web", new AppHttpHandlerFactory(this));
         logger.info("HTTPS server started");

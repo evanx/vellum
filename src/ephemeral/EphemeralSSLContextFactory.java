@@ -21,44 +21,65 @@
 package ephemeral;
 
 import dualcontrol.ExtendedProperties;
+import java.io.FileInputStream;
 import localca.OpenTrustManager;
 import java.io.IOException;
-import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.Arrays;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import localca.SSLContexts;
 import static localca.SSLContexts.create;
+import static localca.SSLContexts.createTrustManager;
 import vellum.crypto.rsa.RsaKeyStores;
 
 /**
  *
- * 
+ *
  * @author evan.summers
  */
 public class EphemeralSSLContextFactory {
 
     public EphemeralSSLContextFactory() {
     }
-    
-    public SSLContext create(ExtendedProperties properties) 
-            throws Exception {        
+
+    public SSLContext create(ExtendedProperties properties) throws Exception {
+        String keyStoreLocation = properties.getString("keyStore", null);
+        if (keyStoreLocation == null) {
+            return create(properties.getString("domain", "localhost"));
+        } else if (properties.containsKey("confParentClass")) {
+            return createResource(properties.getClass("confParentClass"), properties);
+        } else {
+            char[] pass = properties.getPassword("pass");
+            String trustStoreLocation = properties.getString("trustStore", null);
+            if (trustStoreLocation == null) {
+                return SSLContexts.create(keyStoreLocation, pass);
+            } else {
+                return SSLContexts.create(keyStoreLocation, pass, trustStoreLocation);
+            }
+        }
+    }
+
+    public SSLContext createResource(Class parentClass, ExtendedProperties properties)
+            throws Exception {
         String keyStoreLocation = properties.getString("keyStore", null);
         if (keyStoreLocation == null) {
             return create(properties.getString("domain", "localhost"));
         } else {
             char[] pass = properties.getPassword("pass");
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+            keyStore.load(parentClass.getResourceAsStream(keyStoreLocation), pass);
             String trustStoreLocation = properties.getString("trustStore", null);
             if (trustStoreLocation == null) {
-                return create(keyStoreLocation, pass);
+                return SSLContexts.create(keyStore, pass);
             } else {
-                return create(keyStoreLocation, pass, trustStoreLocation);
+                KeyStore trustStore = KeyStore.getInstance("JKS");
+                trustStore.load(parentClass.getResourceAsStream(trustStoreLocation), pass);
+                return SSLContexts.create(keyStore, pass, trustStore);
             }
         }
     }
-        
+    
     public SSLContext create(String commonName) throws GeneralSecurityException, IOException {
         char[] keyPassword = new EphemeralPasswords().create();
         try {
@@ -71,4 +92,13 @@ public class EphemeralSSLContextFactory {
         }
     }
 
+    public static SSLContext create(String keyStoreLocation,
+            char[] keyStorePassword, char[] keyPass, String trustStoreLocation,
+            char[] trustStorePassword) throws GeneralSecurityException, IOException {
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        keyStore.load(new FileInputStream(keyStoreLocation), keyStorePassword);
+        KeyStore trustStore = KeyStore.getInstance("JKS");
+        trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword);
+        return create(keyStore, keyPass, createTrustManager(trustStore));
+    }
 }

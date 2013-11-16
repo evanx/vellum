@@ -22,29 +22,43 @@ package searchapp.util.config;
 
 import dualcontrol.ExtendedProperties;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @TODO implement properly using GSON for different sections for different prefixes
- * 
+ * @TODO implement properly using GSON for different sections for different
+ * prefixes
+ *
  * @author evan.summers
  */
 public class JsonConfig {
 
     Logger logger = LoggerFactory.getLogger(JsonConfig.class);
     ExtendedProperties properties = new ExtendedProperties(System.getProperties());
-    Pattern keyValuePattern = Pattern.compile("\\s*(\\w+):\\s*[\"']*([/|\\w|.]+)[\"';,]*");
+    Pattern keyValuePattern = Pattern.compile("\\s*[\"']*(\\w+)[\"']*:\\s*[\"']*([/|\\w|.]+)[\"';,]*");
 
-    
-    public void init(String prefix) throws FileNotFoundException, IOException {
-        String confFileName = properties.getString(prefix + ".conf", prefix + ".conf");
-        BufferedReader reader = new BufferedReader(new FileReader(confFileName));
+    public void init(Class parent, String prefix) throws Exception {
+        String confFileName = properties.getString(prefix + ".json", prefix + ".json");
+        File confFile = new File(confFileName);
+        if (confFile.exists()) {            
+            parse(new FileInputStream(confFile));
+        } else {            
+            parse(parent.getResourceAsStream(prefix + ".json"));
+            properties.put("confParentClass", parent);
+        }
+    }
+
+    private void parse(InputStream stream) throws FileNotFoundException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         while (true) {
             String line = reader.readLine();
             if (line == null) {
