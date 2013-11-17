@@ -56,13 +56,13 @@ function search() {
       type: 'POST',
       url: '/app/search',
       data: data,
-      success: function(res) {
-         console.log(res);
-         if (res.error) {
+      success: function(results) {
+         console.log(results);
+         if (results.error) {
          } else {
             state.results = results;
-            if (res.length > 0) {
-               showResults(res);
+            if (results.length > 0) {
+               showResults(results);
             }
          }
       },
@@ -259,6 +259,7 @@ function cancelConnectionForm(event) {
 }
 
 function saveConnectionForm(event) {
+   $('form.connection').find('input[name=connectionName]').removeAttr('disabled');
    var data = $('form.connection').serialize();
    console.log("saveConnectionForm", data);
    if (validateFilled($('form.connection'))) {

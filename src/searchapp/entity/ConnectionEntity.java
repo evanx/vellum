@@ -72,7 +72,6 @@ public class ConnectionEntity extends AbstractEntity {
     }
     
     
-    
     public Connection getConnection() throws SQLException {
         if (connection == null) {
             connection = DriverManager.getConnection(url, user, password);
