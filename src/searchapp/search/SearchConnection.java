@@ -66,6 +66,9 @@ public class SearchConnection {
         while (resultSet.next()) {
             for (String columnName : columnList) {
                 String string = resultSet.getString(columnName);
+                if (string.length() > 500) {
+                    string = string.substring(0, 500);
+                }
                 if (string.contains(searchString)) {
                     matches.add(new Match(connectionEntity.getConnectionName(),
                             tableName, columnName, string, resultSet.getLong(rowIdColumnName)));
