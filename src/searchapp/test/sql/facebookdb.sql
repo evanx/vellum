@@ -1,4 +1,6 @@
 
+drop all objects;
+
 create table message_entry (
   message_entry_id integer auto_increment primary key,
   timestamp_ timestamp default now(),
@@ -8,3 +10,7 @@ create table message_entry (
 
 insert into message_entry (friend, message) 
 values ('Evan Summers', 'Article published');
+
+insert into message_entry (friend, message) 
+values ('Anthony', 'Summer is here');
+

@@ -1,4 +1,6 @@
 
+drop all objects;
+
 create table tweet_entry (
   tweet_entry_id integer auto_increment primary key,
   timestamp_ timestamp default now(),

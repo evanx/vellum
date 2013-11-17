@@ -45,7 +45,6 @@ public class SearchConnection {
             search(connection.getCatalog(), "PUBLIC");
             return matches;
         } finally {
-            connection.close();
         }
     }
 

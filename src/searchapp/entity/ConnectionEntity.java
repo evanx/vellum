@@ -1,6 +1,7 @@
 package searchapp.entity;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -20,7 +21,8 @@ public class ConnectionEntity extends AbstractEntity {
     private String user;
     private String password;
     private transient Connection connection;
-    
+    private transient DatabaseMetaData databaseMetaData;
+
     public ConnectionEntity() {
     }
 
@@ -84,5 +86,12 @@ public class ConnectionEntity extends AbstractEntity {
         if (url == null || url.isEmpty()) return false;
         if (user == null || user.isEmpty()) return false;
         return true;
+    }
+
+    public DatabaseMetaData getMetaData() throws SQLException {
+        if (databaseMetaData == null) {
+            databaseMetaData = connection.getMetaData();
+        }
+        return databaseMetaData;
     }
 }

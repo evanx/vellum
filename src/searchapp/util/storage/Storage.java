@@ -36,7 +36,7 @@ public interface Storage<E extends AbstractEntity> {
     
     public void delete(Comparable key) throws StorageException;
     
-    public E select(Comparable key) throws StorageException;
+    public E select(Comparable key);
 
     public Collection<E> selectCollection(String query);
     

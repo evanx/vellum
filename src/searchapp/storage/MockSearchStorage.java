@@ -21,11 +21,9 @@
 package searchapp.storage;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 import org.h2.tools.Server;
-import searchapp.entity.ConnectionEntity;
 
 /**
  *

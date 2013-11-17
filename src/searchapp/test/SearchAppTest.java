@@ -48,9 +48,9 @@ public class SearchAppTest {
     static Logger logger = LoggerFactory.getLogger(SearchAppTest.class);
     SearchApp app;
     ConnectionEntity[] connectionEntities = {
-        new ConnectionEntity("blogdb", "org.h2.Driver", "jdbc:h2:mem", "sa", null),
-        new ConnectionEntity("twitterdb", "org.h2.Driver", "jdbc:h2:mem", "sa", null),
-        new ConnectionEntity("facebookdb", "org.h2.Driver", "jdbc:h2:mem", "sa", null)
+        new ConnectionEntity("blogdb", "org.h2.Driver", "jdbc:h2:mem:blog", "sa", null),
+        new ConnectionEntity("tweetdb", "org.h2.Driver", "jdbc:h2:mem:tweet", "sa", null),
+        new ConnectionEntity("facebookdb", "org.h2.Driver", "jdbc:h2:mem:facebook", "sa", null)
     };
     Map<String, String> queryMap = new HashMap();
 
@@ -81,17 +81,16 @@ public class SearchAppTest {
     public void testData() throws Exception {
         logger.info("testData");
         queryMap.put("blogdb", "select blog_entry_id, title from blog_entry");
-        queryMap.put("twitterdb", "select author_content from tweet_entry");
+        queryMap.put("tweetdb", "select author, content from tweet_entry");
         queryMap.put("facebookdb", "select timestamp_, friend from message_entry");
         for (ConnectionEntity connectionEntity : connectionEntities) {
             logger.info("testData {}", connectionEntity.getConnectionName());
             Connection connection = connectionEntity.getConnection();
             ResultSet resultSet = connection.createStatement().executeQuery(
                     queryMap.get(connectionEntity.getConnectionName()));
-            if (!resultSet.next()) {
-                logger.warn("no results");
+            while (resultSet.next()) {
+                logger.info("{}, {}", resultSet.getObject(1), resultSet.getObject(2));
             }
-            logger.info("{} {}", resultSet.getObject(1), resultSet.getObject(2));
         }
     }
     

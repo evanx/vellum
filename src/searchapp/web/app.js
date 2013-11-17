@@ -24,13 +24,14 @@ function documentReady() {
    $('#page-login').show();
    $('#input-username').focus();
    $('#button-login').click(login);
-   $('#button-search').click(search);
-   $('#link-search').click(navigateSearch);
-   $('#link-connections').click(navigateConnections);
+   $('form.search').find('button[name=search]').click(search);
+   $('#nav-search').click(navigateSearch);
+   $('#nav-connections').click(navigateConnections);
    $('#connection-cancel').click(cancelConnectionForm);
    $('#connection-save').click(saveConnectionForm);
    $('#button-newConnection').click(newConnection);
    tbodyHtml.connections = $('#tbody-connections').html();
+   tbodyHtml.results = $('#tbody-results').html();
    getConnections();
 }
 
@@ -49,16 +50,20 @@ function login() {
 }
 
 function search() {
-   var searchVal = $('#input-search').val();
-   console.log('search', searchVal);
+   var data = $('form.search').serialize();
+   console.log('search', data);
    $.ajax({
       type: 'POST',
       url: '/app/search',
-      data: searchVal,
+      data: data,
       success: function(res) {
          console.log(res);
          if (res.error) {
          } else {
+            state.results = results;
+            if (res.length > 0) {
+               showResults(res);
+            }
          }
       },
       error: function() {
@@ -67,17 +72,71 @@ function search() {
    });   
 }
 
+function showResults(results) {
+   console.log('showResults', results.length);
+   state.results = results;
+   $('#tbody-results').empty();
+   for (var i = 0; i < results.length; i++) {
+      console.log("row", i, results[i]);
+      $('#tbody-results').append(tbodyHtml.results);
+      var tr = $("#tbody-results > tr:last-child");
+      tr.find('span.td-connection').text(results[i].connectionName);
+      tr.find('span.td-table').text(results[i].tableName);
+      tr.find('span.td-column').text(results[i].columnName);
+      tr.find('span.td-row').text(results[i].rowId);
+      tr.find('span.td-content').text(results[i].content.substring(0, 30));
+      tr.click(results[i], function(event) {
+         showResult(event.data);
+      });
+   }
+   $('.page-all').hide();
+   $('#page-results').show();
+}
+
+function showResult(result) {
+   console.log('showResult', result);
+   $('#result-connectionName').text(result.connectionName);
+   $('#result-tableName').text(result.tableName);
+   $('#result-columnName').text(result.columnName);
+   $('#result-rowId').text(result.rowId);
+   $('#result-content').text(result.content);
+   $('.page-all').hide();
+   $('#page-result').show();   
+}
+
 function navigateSearch() {
-   var options = $('#select-connection');
+   var options = $('form.search').find('select[name=connection]');
+   options.empty();
    $.each(state.connections, function() {
       options.append($("<option />").val(this.connectionName).text(this.connectionName));
    });
    console.log('linkSearch');
-   $('.link-all').removeClass('active');
-   $('#link-search').parent('li').addClass('active');
+   enableSearch();
+   $('form.search').find('input[name=search]').on('keyup', function() {
+      enableSearch();
+   });
+   $('.nav-all').removeClass('active');
+   $('#nav-search').parent('li').addClass('active');
    $('.page-all').hide();
    $('#page-search').show();
+   $('form.search').find('input[name=search]').focus();
    return false;
+}
+
+function enableSearch() {
+   if ($('form.search').find('input[name=search]').val()) {
+      $('form.search').find('button[name=search]').removeAttr('disabled');
+   } else {
+      $('form.search').find('button[name=search]').attr('disabled', 'disabled');
+   }
+
+function navigateResults(event) {
+   console.log('navigateResults');
+   if (state.results) {
+      showResults(state.results);
+   }
+   return false;
+}
 }
 
 function navigateConnections(event) {
@@ -103,8 +162,8 @@ function getConnections() {
 
 function showConnections() {
    console.log('showConnections');
-   $('.link-all').removeClass('active');
-   $('#link-connections').parent('li').addClass('active');
+   $('.nav-all').removeClass('active');
+   $('#nav-connections').parent('li').addClass('active');
    $('#tbody-connections').empty();
    $('.page-all').hide();
    $('#page-connections').show();
@@ -137,14 +196,12 @@ function showConnections() {
                   return false;
                });
                tr.click(res[i], function(event) {
-                  console.log('row', event);
                   editConnection(event.data);
                });
             }
          }
       },
    });
-   return false;
 }
 
 function newConnection() {
