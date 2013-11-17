@@ -32,24 +32,25 @@ public class AppHttpHandlerFactory implements HttpHandlerFactory {
     public HttpHandler getHandler(HttpExchange exchange) {
         String path = exchange.getRequestURI().getPath();
         logger.info("path", path);
-        if (path.equals("/shutdown")) {
-            return new ShutdownHttpHandler(app);
-        } else if (path.equals("/app/connection/insert")) {
-            return new InsertConnectionHttpHandler(app);
-        } else if (path.startsWith("/app/connection/update/")) {
-            return new UpdateConnectionHttpHandler(app);
-        } else if (path.equals("/app/connection/list")) {
-            return new ListConnectionsHttpHandler(app);
-        } else if (path.startsWith("/app/connection/delete/")) {
-            return new DeleteConnectionHttpHandler(app);
-        } else if (path.equals("/app/search")) {
-            return new SearchHttpHandler(app);
+        if (filter(exchange)) {
+            if (path.equals("/shutdown")) {
+                return new ShutdownHttpHandler(app);
+            } else if (path.equals("/app/connection/insert")) {
+                return new InsertConnectionHttpHandler(app);
+            } else if (path.startsWith("/app/connection/update/")) {
+                return new UpdateConnectionHttpHandler(app);
+            } else if (path.equals("/app/connection/list")) {
+                return new ListConnectionsHttpHandler(app);
+            } else if (path.startsWith("/app/connection/delete/")) {
+                return new DeleteConnectionHttpHandler(app);
+            } else if (path.equals("/app/search")) {
+                return new SearchHttpHandler(app);
+            }
         }
         return null;
     }
 
-    @Override
-    public boolean filter(HttpExchange exchange) {
+    private boolean filter(HttpExchange exchange) {
         return true;
     }
 }

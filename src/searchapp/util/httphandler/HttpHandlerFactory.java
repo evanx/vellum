@@ -27,7 +27,7 @@ import com.sun.net.httpserver.HttpHandler;
  *
  * @author evan.summers
  */
-public interface HttpHandlerFactory extends HttpFilter {
+public interface HttpHandlerFactory {
     
     public HttpHandler getHandler(HttpExchange exchange);
 }

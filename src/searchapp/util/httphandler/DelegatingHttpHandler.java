@@ -49,9 +49,7 @@ public class DelegatingHttpHandler implements HttpHandler {
         if (path.startsWith(context)) {
             HttpHandler handler = factory.getHandler(exchange);
             if (handler != null) {
-                if (factory.filter(exchange)) {
-                    handler.handle(exchange);
-                }
+                handler.handle(exchange);
             } else {
                 logger.info("handler {} {}", context, path);
                 exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);

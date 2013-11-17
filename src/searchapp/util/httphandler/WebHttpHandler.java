@@ -89,7 +89,6 @@ public class WebHttpHandler implements HttpHandler {
     
     public static HttpHandler create(String appContext, String webPath, 
             HttpHandlerFactory factory) {
-        return new FilteringHttpHandler(factory, new DelegatingHttpHandler(appContext, factory, 
-                new WebHttpHandler(webPath)));
+        return new DelegatingHttpHandler(appContext, factory, new WebHttpHandler(webPath));
     }
 }
