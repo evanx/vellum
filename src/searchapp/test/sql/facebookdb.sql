@@ -9,7 +9,7 @@ create table message_entry (
 );
 
 insert into message_entry (friend, message) 
-values ('Evan Summers', 'Article published');
+values ('Evan Summers', 'Finished that article so going to the beach');
 
 insert into message_entry (friend, message) 
 values ('Cameron', 'Summer is here');

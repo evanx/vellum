@@ -70,7 +70,7 @@ public class AnonymousMethodInvoker<T> {
                     logger.warn(e.getCause().getMessage());
                     throw e;
                 } finally {
-                    executorService.shutdown();      
+                    executorService.shutdown();
                 }
             }
         });

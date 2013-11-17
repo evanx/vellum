@@ -7,13 +7,13 @@ import searchapp.handler.ListConnectionsHttpHandler;
 import searchapp.handler.SearchHttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import searchapp.handler.DeleteConnectionHttpHandler;
 import searchapp.handler.InsertConnectionHttpHandler;
 import searchapp.handler.UpdateConnectionHttpHandler;
 import searchapp.util.httphandler.HttpHandlerFactory;
 import searchapp.util.httphandler.ShutdownHttpHandler;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
 
 /**
  *
@@ -21,7 +21,7 @@ import vellum.logr.LogrFactory;
  */
 public class AppHttpHandlerFactory implements HttpHandlerFactory {
 
-    Logr logger = LogrFactory.getLogger(AppHttpHandlerFactory.class);
+    Logger logger = LoggerFactory.getLogger(AppHttpHandlerFactory.class);
     SearchApp app;
 
     public AppHttpHandlerFactory(SearchApp app) {

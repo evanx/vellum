@@ -14,4 +14,7 @@ insert into blog_entry (title, author, abstract, content)
 values ('Dual Control', 'Evan Summers', '', 'Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual Evan Summers content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. Herewith the dual content. ');
 
 insert into blog_entry (title, author, abstract, content) 
-values ('Password Salt', 'Evan Summers', '', 'Herewith the salty content');
+values ('Password Salt', 'Evan Summers', '', 'This article is about password salt');
+
+insert into blog_entry (title, author, abstract, content) 
+values ('Google Authenticator', 'Evan Summers', '', 'Using this mobile app to secure your own websites');

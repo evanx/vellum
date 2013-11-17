@@ -47,7 +47,7 @@ public class LocalCaMain {
         SSLContext serverSSLContext = SSLContexts.create(
                 serverKeyStoreLocation, pass, serverTrustStoreLocation);
         SSLContext clientSSLContext = SSLContexts.create(
-                clientKeyStoreLocation, pass, clientTrustStoreLocation);        
+                clientKeyStoreLocation, pass, clientTrustStoreLocation);  
         ServerThread serverThread = new ServerThread();
         try {
             serverThread.start(serverSSLContext, PORT, 1);

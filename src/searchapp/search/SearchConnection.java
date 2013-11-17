@@ -37,7 +37,7 @@ public class SearchConnection {
     }
     
     public Collection<Match> search() throws SQLException {
-        logger.info("search: connection {}, string {}", 
+        logger.info("search: connection {}, string [{}]", 
                 connectionEntity.getConnectionName(), searchString);
         this.connection = connectionEntity.getConnection();
         try {

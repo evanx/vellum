@@ -285,5 +285,5 @@ public class DualControlTest {
         Sockets.waitPort("127.0.0.1", 4444, 2000, 500);
     }
     
-    static Logger logger = Logger.getLogger(DualControlTest.class);    
+    static Logger logger = Logger.getLogger(DualControlTest.class);
 }
