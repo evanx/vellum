@@ -21,7 +21,6 @@ public class ConnectionEntity extends AbstractEntity {
     private String user;
     private String password;
     private transient Connection connection;
-    private transient DatabaseMetaData databaseMetaData;
 
     public ConnectionEntity() {
     }
@@ -34,6 +33,16 @@ public class ConnectionEntity extends AbstractEntity {
         this.password = map.get("password");
     }
     
+    public Map toMap() {
+        Map map = new HashMap();
+        map.put("connectionName", connectionName);
+        map.put("driver", driver);
+        map.put("url", url);
+        map.put("user", user);
+        map.put("password", password);
+        return map;
+    }
+
     public ConnectionEntity(String connectionName, String driver, String url, 
             String user, String password) {
         this.connectionName = connectionName;
@@ -56,16 +65,6 @@ public class ConnectionEntity extends AbstractEntity {
         return driver;
     }
 
-    public Map toMap() {
-        Map map = new HashMap();
-        map.put("connectionName", connectionName);
-        map.put("driver", driver);
-        map.put("url", url);
-        map.put("user", user);
-        map.put("password", password);
-        return map;
-    }
-
     @Override
     public String toString() {
         return toMap().values().toString();
@@ -80,17 +79,18 @@ public class ConnectionEntity extends AbstractEntity {
     }
 
     public boolean isValid() {
-        if (connectionName == null || connectionName.isEmpty()) return false;
-        if (driver == null || driver.isEmpty()) return false;
-        if (url == null || url.isEmpty()) return false;
-        if (user == null || user.isEmpty()) return false;
-        return true;
-    }
-
-    public DatabaseMetaData getMetaData() throws SQLException {
-        if (databaseMetaData == null) {
-            databaseMetaData = connection.getMetaData();
+        if (connectionName == null || connectionName.isEmpty()) {
+            return false;
         }
-        return databaseMetaData;
+        if (driver == null || driver.isEmpty()) {
+            return false;
+        }
+        if (url == null || url.isEmpty()) {
+            return false;
+        }
+        if (user == null || user.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

@@ -24,6 +24,7 @@
                   <li class="active nav-all"><a href="#" id="nav-connections">Connections</a></li>
                   <li class="nav-all"><a href="#" id="nav-search">Search</a></li>
                   <li class="nav-all"><a href="#" id="nav-results">Results</a></li>
+                  <li class="nav-all"><a href="#" id="nav-result">View</a></li>
                </ul>
             </div>
          </div>
@@ -39,7 +40,8 @@
                   <button type="button" class="btn" name="search">Search</button>
                </div>
             </form>
-         </div>
+            <span class="label label-warning" id="message-search"></span>
+           </div>
 
          <div class="container page-all hide" id="page-results">
             <div class="row">
@@ -123,7 +125,7 @@
          <div class="container page-all hide" id="page-connection">
             <div class="row">
                <div class="col-lg-4">
-                  <form class="connection" onsubmit="return false;">
+                  <form class="connection">
                      <div class="form-group row">
                         <input type="text" class="form-control" 
                                name="connectionName" placeholder="Name">
@@ -189,9 +191,10 @@
             </div>
          </div>
 
-         <div class="jumbotron page-all hide" id="page-login">
+         <div class="jumbotron page-all" id="page-login">
             <div class="row">
                <div class="col-lg-6">
+                  <p>This is demo version - just press the "Login" button.</p>
                   <div class="input-group">        
                      <input type="text" class="form-control" 
                             name="username" placeholder="Username">
@@ -205,7 +208,6 @@
       </div>
 
       <script src="js/jquery-1.10.2.min.js"></script>
-      <script src="js/angular-1.2.0.min.js"></script>
       <script src="bootstrap-3.0.2/js/bootstrap.min.js"></script>
       <script src="app.js"></script>
       <script type="text/javascript">
@@ -215,4 +217,5 @@
       </script>
 
    </body>
+   
 </html>

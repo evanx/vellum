@@ -12,5 +12,5 @@ insert into message_entry (friend, message)
 values ('Evan Summers', 'Article published');
 
 insert into message_entry (friend, message) 
-values ('Anthony', 'Summer is here');
+values ('Cameron', 'Summer is here');
 

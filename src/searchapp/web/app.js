@@ -19,20 +19,27 @@ var state = {};
 
 function documentReady() {
    console.log('documentReady');
+   pullConnections();
+   $('form').submit(function(event) {
+      event.preventDefault();
+      return false;
+   });   
+   $('form input').keyup(function(event) {
+      return event.which !== 13; 
+   });   
    $('.page-all').hide();
    $('.page-all').removeClass('hide');
    $('#page-login').show();
    $('#input-username').focus();
-   $('#button-login').click(login);
    $('form.search').find('button[name=search]').click(search);
    $('#nav-search').click(navigateSearch);
    $('#nav-connections').click(navigateConnections);
+   $('#nav-results').click(navigateResults);
    $('#connection-cancel').click(cancelConnectionForm);
    $('#connection-save').click(saveConnectionForm);
    $('#button-newConnection').click(newConnection);
    tbodyHtml.connections = $('#tbody-connections').html();
    tbodyHtml.results = $('#tbody-results').html();
-   getConnections();
 }
 
 function load() {
@@ -40,18 +47,21 @@ function load() {
       console.log('loaded', name);
       unloadedCount--;
    });
-
 }
+
 function login() {
    $('.page-all').hide();
    $('#page-search').show();
    var username = $('#input-username').val();
+   $('#message-search').text('');
    console.log('login', username);
+   navigateSearch();
 }
 
 function search() {
    var data = $('form.search').serialize();
    console.log('search', data);
+   $('#message-search').text('');
    $.ajax({
       type: 'POST',
       url: '/app/search',
@@ -59,21 +69,27 @@ function search() {
       success: function(results) {
          console.log(results);
          if (results.error) {
+            $('#message-search').text('No results');
          } else {
             state.results = results;
             if (results.length > 0) {
                showResults(results);
+            } else {
+               $('#message-search').text('No results');
             }
          }
       },
       error: function() {
          console.log('error');
+         $('#message-search').text('No results');
       }
    });   
 }
 
 function showResults(results) {
    console.log('showResults', results.length);
+   $('li.nav-all').removeClass('active');
+   $('#nav-results').parent('li').addClass('active');
    state.results = results;
    $('#tbody-results').empty();
    for (var i = 0; i < results.length; i++) {
@@ -95,6 +111,8 @@ function showResults(results) {
 
 function showResult(result) {
    console.log('showResult', result);
+   $('li.nav-all').removeClass('active');
+   $('#nav-result').parent('li').addClass('active');
    $('#result-connectionName').text(result.connectionName);
    $('#result-tableName').text(result.tableName);
    $('#result-columnName').text(result.columnName);
@@ -104,15 +122,23 @@ function showResult(result) {
    $('#page-result').show();   
 }
 
-function navigateSearch() {
+function populateConnections() {
    var options = $('form.search').find('select[name=connection]');
    options.empty();
    $.each(state.connections, function() {
       options.append($("<option />").val(this.connectionName).text(this.connectionName));
    });
+}
+
+function navigateSearch() {
+   $('#message-search').text('');
    console.log('linkSearch');
    enableSearch();
-   $('form.search').find('input[name=search]').on('keyup', function() {
+   $('form.search').find('input[name=search]').keyup(function() {
+      enableSearch();
+      return event.which !== 13;
+   });
+   $('form.search').find('input[name=search]').focus(function() {
       enableSearch();
    });
    $('.nav-all').removeClass('active');
@@ -124,11 +150,13 @@ function navigateSearch() {
 }
 
 function enableSearch() {
+   $('#message-search').text('');
    if ($('form.search').find('input[name=search]').val()) {
       $('form.search').find('button[name=search]').removeAttr('disabled');
    } else {
       $('form.search').find('button[name=search]').attr('disabled', 'disabled');
    }
+}
 
 function navigateResults(event) {
    console.log('navigateResults');
@@ -137,15 +165,18 @@ function navigateResults(event) {
    }
    return false;
 }
-}
 
 function navigateConnections(event) {
    console.log('navigateConnections');
-   showConnections();
+   $('.nav-all').removeClass('active');
+   $('#nav-connections').parent('li').addClass('active');
+   $('.page-all').hide();
+   $('#page-connections').show();
+   pullConnections();
    return false;
 }
 
-function getConnections() {
+function pullConnections() {
    $.ajax({
       type: 'POST',
       data: '',
@@ -155,53 +186,39 @@ function getConnections() {
          if (res.error) {
          } else {
             state.connections = res;
+            populateConnections();
+            renderConnections();
+            $('#button-login').click(login);
          }
       }
    });
 }
 
-function showConnections() {
-   console.log('showConnections');
-   $('.nav-all').removeClass('active');
-   $('#nav-connections').parent('li').addClass('active');
+function renderConnections() {
    $('#tbody-connections').empty();
-   $('.page-all').hide();
-   $('#page-connections').show();
-   $.ajax({
-      type: 'POST',
-      data: '',
-      url: '/app/connection/list',
-      success: function(res) {
-         console.log("list", res.length);
-         if (res.error) {
-         } else {
-            state.connections = res;
-            for (var i = 0; i < res.length; i++) {
-               console.log("row", i, res[i]);
-               $('#tbody-connections').append(tbodyHtml.connections);
-               var tr = $("#tbody-connections > tr:last-child");
-               tr.find('span.td-name').text(res[i].connectionName);
-               tr.find('span.td-driver').text(res[i].driver);
-               tr.find('span.td-url').text(res[i].url);
-               tr.find('span.td-user').text(res[i].user);
-               tr.find('button.button-edit').click(res[i], function(event) {
-                  console.log('edit', event.data);
-                  editConnection(event.data);
-                  return false;
-               });
-               tr.find('button.button-remove').click(res[i], function(event) {
-                  console.log('remove', event.data);
-                  $(this).closest('tr').remove();
-                  deleteConnection(event.data);
-                  return false;
-               });
-               tr.click(res[i], function(event) {
-                  editConnection(event.data);
-               });
-            }
-         }
-      },
-   });
+   for (var i = 0; i < state.connections.length; i++) {
+      console.log("row", i, state.connections[i]);
+      $('#tbody-connections').append(tbodyHtml.connections);
+      var tr = $("#tbody-connections > tr:last-child");
+      tr.find('span.td-name').text(state.connections[i].connectionName);
+      tr.find('span.td-driver').text(state.connections[i].driver);
+      tr.find('span.td-url').text(state.connections[i].url);
+      tr.find('span.td-user').text(state.connections[i].user);
+      tr.find('button.button-edit').click(state.connections[i], function(event) {
+         console.log('edit', event.data);
+         editConnection(event.data);
+         return false;
+      });
+      tr.find('button.button-remove').click(state.connections[i], function(event) {
+         console.log('remove', event.data);
+         $(this).closest('tr').remove();
+         deleteConnection(event.data);
+         return false;
+      });
+      tr.click(state.connections[i], function(event) {
+         editConnection(event.data);
+      });
+   }
 }
 
 function newConnection() {
@@ -233,6 +250,11 @@ function resetConnectionForm() {
    $('form.connection').find('input').val('');
    $('form.connection').children('div').removeClass('has-error');
    $('form.connection input').first().focus();
+   $('form.connection').submit(function(event) {
+      event.preventDefault();
+      return false;  
+   });   
+   
 }
 
 function deleteConnection(connection) {
@@ -254,7 +276,7 @@ function deleteConnection(connection) {
 function cancelConnectionForm(event) {
    console.log('cancelConnectionForm');
    resetConnectionForm();
-   showConnections();
+   navigateConnections();
    return false;
 }
 
@@ -296,7 +318,7 @@ function insertConnection(data) {
          console.log(res);
          if (res.error) {
          } else {
-            showConnections();
+            navigateConnections();
          }
       },
       error: function() {
@@ -315,7 +337,7 @@ function updateConnection(data) {
          console.log(res);
          if (res.error) {
          } else {
-            showConnections();
+            navigateConnections();
          }
       },
       error: function() {
