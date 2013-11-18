@@ -30,14 +30,14 @@
          </div>
 
          <div class="jumbotron page-all hide" id="page-search">
-            <p>For this demo, try searching for "S"</p>
+            <h5>For this demo, try searching for "S"</h5>
             <form class="search">
                <div class="input-group">
                   <select type="text" class="form-control" 
                           name="connection" placeholder="Connection">
                   </select>
                   <input type="text" class="form-control" autocomplete="off"
-                         name="search" placeholder="Search">
+                         name="search" placeholder="Search" value="S">
                   <button type="button" class="btn" name="search">Search</button>
                </div>
             </form>
@@ -45,6 +45,7 @@
          </div>
 
          <div class="container page-all hide" id="page-results">
+            <h5 id="message-results"></h5>
             <div class="row">
                <div class="col-lg-8">
                   <table class="table table-striped table-bordered table-condensed">
@@ -60,7 +61,7 @@
                      </thead>
                      <tbody id="tbody-results">
                         <tr>
-                           <td><input type="checkbox" class="td-checkbox"/>
+                           <td><input type="checkbox" name="check"/>
                            <td><span class="td-connection"></span>
                            <td><span class="td-table"></span>
                            <td><span class="td-column"></span>
@@ -78,16 +79,15 @@
                <div class="col-lg-8">
                   <form class="form-inline" id="form-replace">
                      <div class="form-group">
-                        <input type="text" class="form-control" 
+                        <input type="text" class="form-control" id="input-replace"
                                name="replace" placeholder="Replace with">
                      </div>                     
                      <button type="button" class="btn btn-default" 
-                             id="button-replace">
+                             id="button-replace" disabled>
                         <span class="glyphicon glyphicon-edit"></span> Replace
                      </button>
                   </form>
                </div>
-               <br><span class="label label-info" id="message-results"></span>
             </div>
          </div>
 
@@ -135,19 +135,19 @@
                <div class="col-lg-4">
                   <form class="connection">
                      <div class="form-group row">
-                        <input type="text" class="form-control" 
+                        <input type="text" class="form-control" required
                                name="connectionName" placeholder="Name">
                      </div>
                      <div class="form-group row">
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control" required
                                name="driver" placeholder="Driver">
                      </div>
                      <div class="form-group row">
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control" required
                                name="url" placeholder="Database URL">
                      </div>
                      <div class="form-group row">
-                        <input type="text" class="form-control"
+                        <input type="text" class="form-control" required
                                name="user" placeholder="User">
                      </div>
                      <div class="form-group row">
@@ -185,12 +185,12 @@
                            <td><span class="td-url"></span>
                            <td><span class="td-user"></span>
                            <td>
-                                 <button type="button" class="btn btn-default button-edit">
-                                    <span class="glyphicon glyphicon-edit"></span> Edit
-                                 </button>
-                                 <button type="button" class="btn btn-default button-remove">
-                                    <span class="glyphicon glyphicon-remove"></span> Delete
-                                 </button>
+                              <button type="button" class="btn btn-default button-edit">
+                                 <span class="glyphicon glyphicon-edit"></span> Edit
+                              </button>
+                              <button type="button" class="btn btn-default button-remove">
+                                 <span class="glyphicon glyphicon-remove"></span> Delete
+                              </button>
                      </tbody>
                   </table>    
                </div>
@@ -200,7 +200,7 @@
          <div class="jumbotron page-all" id="page-login">
             <div class="row">
                <div class="col-lg-6">
-                  <p>This is demo version - just press the "Login" button.</p>
+                  <h5>For this demo, just press "Login"</h5>
                   <div class="input-group">        
                      <input type="text" class="form-control" 
                             name="username" placeholder="Username">
@@ -215,6 +215,7 @@
 
       <script src="js/jquery-1.10.2.min.js"></script>
       <script src="bootstrap-3.0.2/js/bootstrap.min.js"></script>
+      <script src="connections.js"></script>
       <script src="app.js"></script>
       <script type="text/javascript">
          $(document).ready(function() {
