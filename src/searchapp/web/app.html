@@ -35,13 +35,13 @@
                   <select type="text" class="form-control" 
                           name="connection" placeholder="Connection">
                   </select>
-                  <input type="text" class="form-control" 
+                  <input type="text" class="form-control" autocomplete="off"
                          name="search" placeholder="Search">
                   <button type="button" class="btn" name="search">Search</button>
                </div>
             </form>
             <span class="label label-warning" id="message-search"></span>
-           </div>
+         </div>
 
          <div class="container page-all hide" id="page-results">
             <div class="row">
@@ -65,6 +65,12 @@
                            <td><span class="td-column"></span>
                            <td><span class="td-row"></span>
                            <td><span class="td-content"></span>
+                           <td>
+                              <div class="btn-group">
+                                 <button type="button" class="btn btn-default btn-sm button-view">
+                                    <span class="glyphicon glyphicon-open"></span> View
+                                 </button>
+                              </div>                              
                      </tbody>
                   </table>    
                </div>
@@ -80,6 +86,7 @@
                      </button>
                   </form>
                </div>
+               <br><span class="label label-info" id="message-results"></span>
             </div>
          </div>
 
@@ -177,14 +184,12 @@
                            <td><span class="td-url"></span>
                            <td><span class="td-user"></span>
                            <td>
-                              <div class="btn-group">
                                  <button type="button" class="btn btn-default button-edit">
                                     <span class="glyphicon glyphicon-edit"></span> Edit
                                  </button>
                                  <button type="button" class="btn btn-default button-remove">
                                     <span class="glyphicon glyphicon-remove"></span> Delete
                                  </button>
-                              </div>
                      </tbody>
                   </table>    
                </div>
@@ -211,11 +216,11 @@
       <script src="bootstrap-3.0.2/js/bootstrap.min.js"></script>
       <script src="app.js"></script>
       <script type="text/javascript">
-                     $(document).ready(function() {
-                        documentReady();
-                     });
+         $(document).ready(function() {
+            documentReady();
+         });
       </script>
 
    </body>
-   
+
 </html>

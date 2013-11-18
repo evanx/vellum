@@ -87,7 +87,7 @@ function search() {
 }
 
 function showResults(results) {
-   console.log('showResults', results.length);
+   console.log('renderResults', results.length);
    $('li.nav-all').removeClass('active');
    $('#nav-results').parent('li').addClass('active');
    state.results = results;
@@ -101,6 +101,11 @@ function showResults(results) {
       tr.find('span.td-column').text(results[i].columnName);
       tr.find('span.td-row').text(results[i].rowId);
       tr.find('span.td-content').text(results[i].content.substring(0, 30));
+      tr.find('button.button-view').click(results[i], function(event) {
+         console.log('edit', event.data);
+         showResult(event.data);
+         return false;
+      });
       tr.click(results[i], function(event) {
          showResult(event.data);
       });
