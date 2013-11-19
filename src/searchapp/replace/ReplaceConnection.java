@@ -1,5 +1,5 @@
 
-package searchapp.search;
+package searchapp.replace;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

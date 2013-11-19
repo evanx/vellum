@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import searchapp.app.SearchApp;
 import searchapp.entity.ConnectionEntity;
 import searchapp.entity.Match;
-import searchapp.search.ReplaceConnection;
+import searchapp.replace.ReplaceConnection;
 
 /**
  *
