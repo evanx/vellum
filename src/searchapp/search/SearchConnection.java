@@ -71,7 +71,8 @@ public class SearchConnection {
                 }
                 if (string.contains(searchString)) {
                     matches.add(new Match(connectionEntity.getConnectionName(),
-                            tableName, columnName, string, resultSet.getLong(rowIdColumnName)));
+                            tableName, columnName, rowIdColumnName, string,
+                            resultSet.getLong(rowIdColumnName)));
                 }
             }
         }

@@ -32,7 +32,6 @@ import org.h2.tools.Server;
 public class MockSearchStorage extends TemporaryConnectionStorage implements SearchStorage {
     Server h2Server;
     ConnectionStorage connectionStorage = new TemporaryConnectionStorage();
-    MatchesStorage matchesStorage = new TemporaryMatchesStorage();
     Map<String, Connection> connectionMap = new HashMap();
     
     @Override
@@ -52,8 +51,4 @@ public class MockSearchStorage extends TemporaryConnectionStorage implements Sea
         return connectionStorage;
     }
 
-    @Override
-    public MatchesStorage getMatchesStorage() {
-        return matchesStorage;
-    }
 }

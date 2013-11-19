@@ -15,7 +15,7 @@ var server = {
 
 var unloadedCount = 1;
 var tbodyHtml = {};
-var state = {}; 
+var state = {};
 
 function documentReady() {
    console.log('documentReady');
@@ -23,16 +23,16 @@ function documentReady() {
    $('form').submit(function(event) {
       event.preventDefault();
       return false;
-   });   
+   });
    $('form input').keyup(function(event) {
-      return event.which !== 13; 
-   });   
+      return event.which !== 13;
+   });
    $('#input-replace').keyup(function(event) {
       if (this.value) {
          $('#button-replace').removeAttr('disabled');
       } else {
-         $('#button-replace').attr('disabled', 'disabled');         
-      }    
+         $('#button-replace').attr('disabled', 'disabled');
+      }
    });
    $('.page-all').hide();
    $('.page-all').removeClass('hide');
@@ -46,6 +46,14 @@ function documentReady() {
    $('#nav-connections').click(navigateConnections);
    $('#nav-results').click(navigateResults);
    $('#button-replace').click(replace);
+   $('#checkbox-results').click(function() {      
+      var checked = $('#checkbox-results').is(':checked');
+      console.log('checkbox', checked);      
+      $.each(state.results, function(index, object) {         
+         object.checked = checked;
+      });
+      renderResults(state.results);
+   });
    tbodyHtml.connections = $('#tbody-connections').html();
    tbodyHtml.results = $('#tbody-results').html();
 }
@@ -68,7 +76,8 @@ function login() {
 
 function search() {
    var data = $('form.search').serialize();
-   state.searchString = $('form.search').find('input[name=search]').val();
+   state.connectionName = $('form.search').find('select[name=connectionName]').val();
+   state.searchString = $('form.search').find('input[name=searchString]').val();
    console.log('search', data);
    $('#message-search').text('');
    $.ajax({
@@ -82,6 +91,9 @@ function search() {
          } else {
             state.results = results;
             if (results.length > 0) {
+               $('#message-results').text(results.length + 
+                       ' results for \'' + state.searchString + '\'');  
+               $('#message-search').text(results.length + ' results');
                renderResults(results);
             } else {
                $('#message-search').text('No results');
@@ -92,15 +104,15 @@ function search() {
          console.log('error');
          $('#message-search').text('No results');
       }
-   });   
+   });
 }
 
 function renderResults(results) {
    console.log('renderResults', results.length);
    $('li.nav-all').removeClass('active');
    $('#nav-results').parent('li').addClass('active');
+   $('#checkbox-results').prop('checked', false);
    state.results = results;
-   $('#message-results').text('Results for \'' + state.searchString + '\'');
    $('#tbody-results').empty();
    for (var i = 0; i < results.length; i++) {
       console.log("row", i, results[i]);
@@ -116,14 +128,18 @@ function renderResults(results) {
          showResult(event.data);
          return false;
       });
-      var checkbox = tr.find('input[name=check]');
+      var checkbox = tr.find('input[name=check]').first();
+      checkbox.prop('checked', results[i].checked === true);
       checkbox.click(results[i], function(event) {
-         console.log('check', event.data);
+         console.log("checked", event.target.checked);
+         event.data.checked = event.target.checked;
+      });
+      checkbox.closest('td').click(results[i], function(event) {
+         checkbox.checked = true;
       });
       tr.click(results[i], function(event) {
-         console.log('row', event.target);
-         if  (event.target.name !== 'check') {
-            showResult(event);
+         if (event.target.name !== 'check') {
+            showResult(event.data);
          }
       });
    }
@@ -141,11 +157,11 @@ function showResult(result) {
    $('#result-rowId').text(result.rowId);
    $('#result-content').text(result.content);
    $('.page-all').hide();
-   $('#page-result').show();   
+   $('#page-result').show();
 }
 
 function populateConnections() {
-   var options = $('form.search').find('select[name=connection]');
+   var options = $('form.search').find('select[name=connectionName]');
    options.empty();
    $.each(state.connections, function() {
       options.append($("<option />").val(this.connectionName).text(this.connectionName));
@@ -154,26 +170,27 @@ function populateConnections() {
 
 function navigateSearch() {
    $('#message-search').text('');
+   $('#input-replace').val();
    console.log('linkSearch');
    enableSearch();
-   $('form.search').find('input[name=search]').keyup(function() {
+   $('form.search').find('input[name=searchString]').keyup(function() {
       enableSearch();
       return event.which !== 13;
    });
-   $('form.search').find('input[name=search]').focus(function() {
+   $('form.search').find('input[name=searchString]').focus(function() {
       enableSearch();
    });
    $('.nav-all').removeClass('active');
    $('#nav-search').parent('li').addClass('active');
    $('.page-all').hide();
    $('#page-search').show();
-   $('form.search').find('input[name=search]').focus();
+   $('form.search').find('input[name=searchString]').focus();
    return false;
 }
 
 function enableSearch() {
    $('#message-search').text('');
-   if ($('form.search').find('input[name=search]').val()) {
+   if ($('form.search').find('input[name=searchString]').val()) {
       $('form.search').find('button[name=search]').removeAttr('disabled');
    } else {
       $('form.search').find('button[name=search]').attr('disabled', 'disabled');
@@ -183,6 +200,7 @@ function enableSearch() {
 function navigateResults(event) {
    console.log('navigateResults');
    if (state.results) {
+      $('#message-results').text('');     
       renderResults(state.results);
    }
    return false;
@@ -191,5 +209,46 @@ function navigateResults(event) {
 function replace(event) {
    state.replaceString = $('#input-replace').val();
    console.log('replace', state.replaceString);
-   
+   state.matches = [];
+   $.each(state.results, function(index, value) {
+      console.log('each', index, value);
+      if (value.checked) {
+         state.matches.push(value);
+      }
+   });
+   if (state.matches.length > 0) {
+      $.ajax({
+         type: 'POST',
+         url: '/app/replace',
+         dataType: 'json',
+         contentType: "application/json",
+         data: JSON.stringify({
+            connectionName: state.connectionName,
+            searchString: state.searchString,
+            replaceString: state.replaceString,
+            matches: state.matches
+         }),
+         success: function(results) {
+            console.log(results);
+            if (results.error) {
+               $('#message-results').text('Error');
+            } else {
+               state.results = results;
+               if (results.length === 1) {
+                  $('#message-results').text('Replaced in single record');
+                  renderResults(results);
+               } else if (results.length > 0) {
+                  $('#message-results').text('Replaced in ' + results.length + ' records');
+                  renderResults(results);
+               } else {
+                  $('#message-results').text('No replacements');
+               }
+            }
+         },
+         error: function() {
+            console.log('error');
+            $('#message-search').text('No results');
+         }
+      });
+   }
 }

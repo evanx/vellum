@@ -28,5 +28,4 @@ public interface SearchStorage {
     public void init() throws Exception;
     public void shutdown();
     public ConnectionStorage getConnectionStorage();
-    public MatchesStorage getMatchesStorage();
 }

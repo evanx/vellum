@@ -20,18 +20,16 @@
  */
 package searchapp.util.json;
 
-import dualcontrol.ExtendedProperties;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.parameter.StringMap;
 
 /**
  * @TODO implement properly using GSON for different sections for different
@@ -45,8 +43,8 @@ public class JsonParser {
     Pattern keyValuePattern = Pattern.compile(
             "\\s*[\"']*(\\w+)[\"']*:\\s*[\"']*(\\w+[^\"';,]+)[\"';,]*");
 
-    public Map parse(InputStream stream) throws FileNotFoundException, IOException {
-        Map map = new HashMap();
+    public StringMap parse(InputStream stream) throws FileNotFoundException, IOException {
+        StringMap map = new StringMap();
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         while (true) {
             String line = reader.readLine();

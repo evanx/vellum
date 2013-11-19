@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import searchapp.handler.DeleteConnectionHttpHandler;
 import searchapp.handler.InsertConnectionHttpHandler;
+import searchapp.handler.ReplaceHttpHandler;
 import searchapp.handler.UpdateConnectionHttpHandler;
 import searchapp.util.httphandler.HttpHandlerFactory;
 import searchapp.util.httphandler.ShutdownHttpHandler;
@@ -45,6 +46,8 @@ public class AppHttpHandlerFactory implements HttpHandlerFactory {
                 return new DeleteConnectionHttpHandler(app);
             } else if (path.equals("/app/search")) {
                 return new SearchHttpHandler(app);
+            } else if (path.equals("/app/replace")) {
+                return new ReplaceHttpHandler(app);
             }
         }
         return null;
