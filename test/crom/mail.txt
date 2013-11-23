@@ -1,8 +1,0 @@
-From: root (Cron Daemon)
-To: root
-Subject: Cron <root@bizadmin> scripts/nightly.sh
-Content-Type: text/plain; charset=UTF-8
-Auto-Submitted: auto-generated
-X-Cron-Env: <SHELL=/bin/sh>
-
-test

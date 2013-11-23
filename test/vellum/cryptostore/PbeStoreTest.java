@@ -22,7 +22,7 @@
 package vellum.cryptostore;
 
 import static junit.framework.Assert.*;
-import dualcontrol.AesPbeStore;
+import vellum.pbestore.AesPbeStore;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;

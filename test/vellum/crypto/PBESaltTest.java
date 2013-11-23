@@ -23,7 +23,7 @@ package vellum.crypto;
 
 import org.junit.Assert;
 import org.junit.Test;
-import vellum.crypto.util.Base64;
+import vellum.util.Base64;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 

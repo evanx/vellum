@@ -21,6 +21,7 @@
  */
 package dualcontrol;
 
+import vellum.util.ExtendedProperties;
 import vellum.crypto.rsa.GenRsaPair;
 import localca.SSLContexts;
 import java.security.GeneralSecurityException;

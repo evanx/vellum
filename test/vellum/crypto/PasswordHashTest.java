@@ -21,7 +21,7 @@
  */
 package vellum.crypto;
 
-import vellum.crypto.util.Base64;
+import vellum.util.Base64;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.Test;

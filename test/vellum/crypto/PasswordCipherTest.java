@@ -22,7 +22,7 @@
 package vellum.crypto;
 
 import vellum.crypto.api.Encrypted;
-import vellum.crypto.util.Base64;
+import vellum.util.Base64;
 import java.util.Arrays;
 import org.junit.Test;
 import static junit.framework.Assert.*;
