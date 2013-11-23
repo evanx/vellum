@@ -20,6 +20,9 @@
  */
 package localca;
 
+import vellum.ssl.OpenTrustManager;
+import vellum.ssl.ExplicitTrustManager;
+import vellum.ssl.KeyStores;
 import vellum.util.MockableConsole;
 import vellum.util.ExtendedProperties;
 import java.io.FileInputStream;

@@ -22,7 +22,7 @@ package ephemeral;
 
 import vellum.util.ExtendedProperties;
 import java.io.FileInputStream;
-import localca.OpenTrustManager;
+import vellum.ssl.OpenTrustManager;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
