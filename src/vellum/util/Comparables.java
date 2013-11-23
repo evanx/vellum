@@ -48,7 +48,9 @@ public class Comparables {
     public static int hashCode(Comparable[] array) {
         int hash = 0;
         for (int i = 0; i < array.length; i++) {
-            hash ^= array[i].hashCode();
+            if (array[i] != null) {
+                hash ^= array[i].hashCode();
+            }
         }
         return hash;
     }

@@ -218,6 +218,7 @@ public class StatusRecord {
         }
         if (alertType == AlertType.OUTPUT_CHANGED) {
             if (isLinesChanged(previousStatus)) {
+                statusType = StatusType.OUTPUT_CHANGED;
                 return true;
             }
         } else if (alertType == AlertType.STATUS_CHANGED) {

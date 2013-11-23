@@ -134,7 +134,7 @@ public class CromApp implements Runnable {
                 exec(properties.getAlertScript(), 
                         "from=" + statusRecord.getFrom(),
                         "source=" + statusRecord.getSource(),
-                        "status=" + statusRecord.getStatusType().name(),
+                        "status=" + statusRecord.getStatusType(),
                         "subject=" + statusRecord.getSubject(),
                         "alert=" + statusRecord.getAlertString()
                         );

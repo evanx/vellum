@@ -13,6 +13,7 @@ public enum StatusType {
     WARNING,
     CRITICAL,
     UNKNOWN,
+    OUTPUT_CHANGED,
     ELAPSED;
 
     public boolean isAlertable() {
