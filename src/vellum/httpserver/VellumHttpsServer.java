@@ -31,10 +31,9 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import searchapp.util.httphandler.DelegatingHttpHandler;
-import searchapp.util.httphandler.FilteringHttpHandler;
-import searchapp.util.httphandler.HttpHandlerFactory;
-import searchapp.util.httphandler.WebHttpHandler;
+import vellum.httphandler.DelegatingHttpHandler;
+import vellum.httphandler.HttpHandlerFactory;
+import vellum.httphandler.WebHttpHandler;
 import vellum.lifecycle.Shutdownable;
 import vellum.security.HttpsConfiguratorFactory;
 

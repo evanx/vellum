@@ -18,15 +18,16 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.storage;
+package vellum.httphandler;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 /**
- * 
+ *
  * @author evan.summers
  */
-public enum StorageExceptionType {
-    NOT_FOUND,
-    ALREADY_EXISTS,
-    NO_UPDATE,
-    MULTIPLE_UPDATE
+public interface HttpHandlerFactory {
+    
+    public HttpHandler getHandler(HttpExchange exchange);
 }

@@ -18,45 +18,44 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.httphandler;
+package vellum.httphandler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import vellum.lifecycle.Shutdownable;
 
 /**
  *
  * @author evan.summers
  */
-public class DelegatingHttpHandler implements HttpHandler {
-    Logger logger = LoggerFactory.getLogger(DelegatingHttpHandler.class);
-    String context;
-    HttpHandlerFactory factory;
-    HttpHandler delegate;
+public class ShutdownHttpHandler implements HttpHandler {
+    Logger logger = LoggerFactory.getLogger(ShutdownHttpHandler.class);
+    Shutdownable app;
     
-    public DelegatingHttpHandler(String context, HttpHandlerFactory factory, HttpHandler delegate) {
-        this.context = context;
-        this.factory = factory;
-        this.delegate = delegate;
+    public ShutdownHttpHandler(Shutdownable app) {
+        this.app = app;
     }
     
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        if (path.startsWith(context)) {
-            HttpHandler handler = factory.getHandler(exchange);
-            if (handler != null) {
-                handler.handle(exchange);
+    public void handle(HttpExchange httpExchange) throws IOException {
+        try {
+            if (httpExchange.getRemoteAddress().getAddress().equals(
+                    InetAddress.getLocalHost())) {
+                app.shutdown();
+                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);          
             } else {
-                logger.info("handler {} {}", context, path);
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-                exchange.close();
+                httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
             }
-        } else {
-            delegate.handle(exchange);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+        } finally {
+            httpExchange.close();
         }
-    }
+    }    
 }

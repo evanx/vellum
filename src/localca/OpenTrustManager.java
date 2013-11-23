@@ -25,7 +25,6 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import searchapp.handler.SearchHttpHandler;
 
 /**
  *

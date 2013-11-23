@@ -18,41 +18,25 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.storage;
+package vellum.httphandler;
 
-import vellum.entity.*;
+import com.sun.net.httpserver.HttpExchange;
+import vellum.logr.Logr;
+import vellum.logr.LogrFactory;
 
 /**
  *
  * @author evan.summers
  */
-public abstract class AbstractEntity implements Comparable<AbstractEntity> {
+public class HttpExchangeInfo {
+    Logr logger = LogrFactory.getLogger(HttpExchangeInfo.class);
+    HttpExchange exchange;
 
-    public abstract Comparable getKey();
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof AbstractEntity) {
-            AbstractEntity other = (AbstractEntity) obj;
-            return Comparables.equals(getKey(), other.getKey());
-        }
-        return false;
+    public HttpExchangeInfo(HttpExchange exchange) {
+        this.exchange = exchange;
     }
+    
+    
+    
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-    
-    @Override
-    public int compareTo(AbstractEntity o) {
-        return Comparables.compareTo(getKey(), o.getKey());
-    }
-    
-    @Override
-    public String toString() {
-        if (getKey() == null) return getClass().getSimpleName();
-        return getKey().toString();
-    }
-        
 }

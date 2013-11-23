@@ -18,7 +18,7 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.httphandler;
+package vellum.httphandler;
 
 import com.sun.net.httpserver.HttpExchange;
 

@@ -18,31 +18,44 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.httphandler;
+package vellum.httphandler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import java.net.HttpURLConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author evan.summers
  */
-public class FilteringHttpHandler implements HttpHandler {
-    Logr logger = LogrFactory.getLogger(FilteringHttpHandler.class);
-    HttpFilter filter;
+public class DelegatingHttpHandler implements HttpHandler {
+    Logger logger = LoggerFactory.getLogger(DelegatingHttpHandler.class);
+    String context;
+    HttpHandlerFactory factory;
     HttpHandler delegate;
-
-    public FilteringHttpHandler(HttpFilter filter, HttpHandler delegate) {
-        this.filter = filter;
+    
+    public DelegatingHttpHandler(String context, HttpHandlerFactory factory, HttpHandler delegate) {
+        this.context = context;
+        this.factory = factory;
         this.delegate = delegate;
     }
-       
+    
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if (filter.filter(exchange)) {
+        String path = exchange.getRequestURI().getPath();
+        if (path.startsWith(context)) {
+            HttpHandler handler = factory.getHandler(exchange);
+            if (handler != null) {
+                handler.handle(exchange);
+            } else {
+                logger.info("handler {} {}", context, path);
+                exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                exchange.close();
+            }
+        } else {
             delegate.handle(exchange);
         }
     }

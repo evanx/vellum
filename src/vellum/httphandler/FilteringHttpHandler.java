@@ -18,26 +18,32 @@
  specific language governing permissions and limitations
  under the License.  
  */
-package searchapp.util.storage;
+package vellum.httphandler;
 
-import java.util.Collection;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import java.io.IOException;
+import vellum.logr.Logr;
+import vellum.logr.LogrFactory;
 
 /**
- * 
+ *
  * @author evan.summers
  */
-public interface Storage<E extends AbstractEntity> {
-    
-    public void insert(E entity) throws StorageException;
-    
-    public void update(E entity) throws StorageException;
+public class FilteringHttpHandler implements HttpHandler {
+    Logr logger = LogrFactory.getLogger(FilteringHttpHandler.class);
+    HttpFilter filter;
+    HttpHandler delegate;
 
-    public boolean containsKey(Comparable key);
-    
-    public void delete(Comparable key) throws StorageException;
-    
-    public E select(Comparable key);
-
-    public Collection<E> selectCollection(String query);
-    
+    public FilteringHttpHandler(HttpFilter filter, HttpHandler delegate) {
+        this.filter = filter;
+        this.delegate = delegate;
+    }
+       
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        if (filter.filter(exchange)) {
+            delegate.handle(exchange);
+        }
+    }
 }
