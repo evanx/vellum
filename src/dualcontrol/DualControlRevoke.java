@@ -20,7 +20,7 @@
  */
 package dualcontrol;
 
-import vellum.util.SystemConsole;
+import vellum.system.SystemConsole;
 import vellum.util.MockableConsole;
 import vellum.util.ExtendedProperties;
 import java.io.FileOutputStream;
