@@ -23,7 +23,6 @@ package dualcontrol;
 
 import vellum.util.ExtendedProperties;
 import vellum.crypto.rsa.GenRsaPair;
-import localca.SSLContexts;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
@@ -45,6 +44,7 @@ import javax.net.ssl.SSLContext;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import vellum.ssl.SSLContexts;
 
 /**
  *

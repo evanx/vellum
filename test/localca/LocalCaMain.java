@@ -23,6 +23,7 @@ package localca;
 import java.util.Arrays;
 import javax.net.ssl.SSLContext;
 import junit.framework.Assert;
+import vellum.ssl.SSLContexts;
 
 /**
  *

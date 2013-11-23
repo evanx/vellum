@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import sun.security.pkcs.PKCS10;
 import sun.security.validator.Validator;
+import vellum.ssl.SSLContexts;
 
 /**
  *
