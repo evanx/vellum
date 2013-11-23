@@ -20,6 +20,8 @@
  */
 package dualcontrol;
 
+import vellum.util.MockableConsole;
+import vellum.util.ExtendedProperties;
 import localca.SSLContexts;
 import java.io.FileOutputStream;
 import java.security.KeyStore;

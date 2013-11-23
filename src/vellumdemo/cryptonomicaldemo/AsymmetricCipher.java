@@ -10,7 +10,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
-import vellum.crypto.util.Base64;
+import vellum.util.Base64;
 
 public class AsymmetricCipher {
     static final String asymmetricAlgorithm = "RSA";

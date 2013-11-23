@@ -20,8 +20,8 @@
  */
 package localca;
 
-import dualcontrol.MockableConsole;
-import dualcontrol.ExtendedProperties;
+import vellum.util.MockableConsole;
+import vellum.util.ExtendedProperties;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;

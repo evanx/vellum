@@ -8,7 +8,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import vellum.crypto.util.Base64;
+import vellum.util.Base64;
 
 public class SymmetricCipher {
     static final String symmetricAlgorithm = "AES";

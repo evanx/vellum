@@ -20,7 +20,7 @@
  */
 package ephemeral;
 
-import dualcontrol.ExtendedProperties;
+import vellum.util.ExtendedProperties;
 import java.io.FileInputStream;
 import localca.OpenTrustManager;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.Arrays;
 import javax.net.ssl.SSLContext;
+import vellum.ssl.SSLContextFactory;
 import localca.SSLContexts;
 import static localca.SSLContexts.create;
 import static localca.SSLContexts.createTrustManager;
@@ -38,7 +39,7 @@ import vellum.crypto.rsa.RsaKeyStores;
  *
  * @author evan.summers
  */
-public class EphemeralSSLContextFactory {
+public class EphemeralSSLContextFactory implements SSLContextFactory {
 
     public EphemeralSSLContextFactory() {
     }

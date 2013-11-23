@@ -20,6 +20,7 @@
  */
 package dualcontrol;
 
+import vellum.util.ExtendedProperties;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 

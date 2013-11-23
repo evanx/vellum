@@ -20,6 +20,7 @@
  */
 package dualcontrol;
 
+import vellum.util.MockableConsole;
 import java.io.Console;
 import org.apache.log4j.Logger;
 

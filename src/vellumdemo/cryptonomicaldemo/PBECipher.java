@@ -6,7 +6,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import vellum.crypto.util.Base64;
+import vellum.util.Base64;
 
 public class PBECipher {
     private static final String ALGORITHM = "PBEWithMD5AndDES"; // PBEWithSHAAnd3KeyTripleDES
