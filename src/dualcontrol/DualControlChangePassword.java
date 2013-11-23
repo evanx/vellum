@@ -22,7 +22,6 @@ package dualcontrol;
 
 import vellum.util.MockableConsole;
 import vellum.util.ExtendedProperties;
-import localca.SSLContexts;
 import java.io.FileOutputStream;
 import java.security.KeyStore;
 import java.util.Arrays;
@@ -32,6 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 import javax.crypto.SecretKey;
 import org.apache.log4j.Logger;
+import vellum.ssl.SSLContexts;
 
 /**
  *

@@ -20,8 +20,6 @@
  */
 package dualcontrol;
 
-import localca.SSLContexts;
-import java.io.Console;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -40,6 +38,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLSocket;
 import org.apache.log4j.Logger;
+import vellum.ssl.SSLContexts;
 
 /**
  *

@@ -20,7 +20,6 @@
  */
 package dualcontrol;
 
-import localca.SSLContexts;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.InetAddress;
@@ -30,6 +29,7 @@ import java.util.TreeSet;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 import org.apache.log4j.Logger;
+import vellum.ssl.SSLContexts;
 
 /**
  *

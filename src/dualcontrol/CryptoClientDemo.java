@@ -21,12 +21,12 @@
 package dualcontrol;
 
 import vellum.util.MockableConsole;
-import localca.SSLContexts;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.Properties;
 import org.apache.commons.codec.binary.Base64;
+import vellum.ssl.SSLContexts;
 
 /**
  *

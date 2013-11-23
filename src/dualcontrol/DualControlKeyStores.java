@@ -20,13 +20,13 @@
  */
 package dualcontrol;
 
-import localca.SSLContexts;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.Socket;
 import java.security.KeyStore;
 import javax.net.ssl.SSLContext;
 import org.apache.log4j.Logger;
+import vellum.ssl.SSLContexts;
 
 /**
  *

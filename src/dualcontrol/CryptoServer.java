@@ -21,7 +21,6 @@
 package dualcontrol;
 
 import vellum.util.MockableConsole;
-import localca.SSLContexts;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -29,6 +28,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import javax.net.ssl.SSLContext;
 import org.apache.log4j.Logger;
+import vellum.ssl.SSLContexts;
 
 /**
  *

@@ -20,7 +20,6 @@
  */
 package localca;
 
-import vellum.ssl.KeyStores;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -30,6 +29,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
+import vellum.security.KeyStores;
+import vellum.ssl.SSLContexts;
 
 /**
  *

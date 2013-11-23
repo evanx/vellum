@@ -29,10 +29,8 @@ import java.security.KeyStore;
 import java.util.Arrays;
 import javax.net.ssl.SSLContext;
 import vellum.ssl.SSLContextFactory;
-import localca.SSLContexts;
-import static localca.SSLContexts.create;
-import static localca.SSLContexts.createTrustManager;
 import vellum.crypto.rsa.RsaKeyStores;
+import vellum.ssl.SSLContexts;
 
 /**
  *
@@ -91,15 +89,5 @@ public class EphemeralSSLContextFactory implements SSLContextFactory {
         } finally {
             Arrays.fill(keyPassword, (char) 0);
         }
-    }
-
-    public static SSLContext create(String keyStoreLocation,
-            char[] keyStorePassword, char[] keyPass, String trustStoreLocation,
-            char[] trustStorePassword) throws GeneralSecurityException, IOException {
-        KeyStore keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(new FileInputStream(keyStoreLocation), keyStorePassword);
-        KeyStore trustStore = KeyStore.getInstance("JKS");
-        trustStore.load(new FileInputStream(trustStoreLocation), trustStorePassword);
-        return create(keyStore, keyPass, createTrustManager(trustStore));
     }
 }
