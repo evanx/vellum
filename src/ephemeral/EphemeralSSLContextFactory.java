@@ -42,6 +42,7 @@ public class EphemeralSSLContextFactory implements SSLContextFactory {
     public EphemeralSSLContextFactory() {
     }
 
+    @Override
     public SSLContext create(ExtendedProperties properties) throws Exception {
         String keyStoreLocation = properties.getString("keyStore", null);
         if (keyStoreLocation == null) {
