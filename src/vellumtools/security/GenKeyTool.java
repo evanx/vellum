@@ -130,7 +130,7 @@ public class GenKeyTool {
     }
 
     void keyTool(String[] args) throws Exception {
-        System.out.println(Strings.joinArray(" ", args));
+        System.out.println(Strings.join(" ", args));
         KeyTool.main(args);
     }
 

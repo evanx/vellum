@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.pkcs.PKCS10;
 import vellum.ssl.SSLContexts;
-import vellum.system.Exec;
+import vellum.system.Executor;
 import vellumtest.util.AnonymousMethodInvoker;
 
 /**
@@ -284,7 +284,7 @@ public class LocalCaTest {
                 accept(server.keyStore, pass, server.trustStore, port);
             }
         }).start();
-        logger.info(new Exec().exec("openssl s_client -connect localhost:4446"));
+        logger.info(new Executor().exec("openssl s_client -connect localhost:4446"));
     }
 
     public static void main0(String[] args) throws Exception {
