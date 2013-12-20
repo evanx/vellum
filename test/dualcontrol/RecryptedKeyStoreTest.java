@@ -26,7 +26,7 @@ import javax.crypto.SecretKey;
 import org.junit.Test;
 import vellum.crypto.api.Encrypted;
 import vellum.crypto.api.VellumCipher;
-import vellum.datatype.Millis;
+import vellum.data.Millis;
 import vellum.logging.FormatLogger;
 import vellum.util.Bytes;
 

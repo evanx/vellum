@@ -27,7 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import org.junit.Test;
-import vellum.datatype.Millis;
+import vellum.data.Millis;
 import vellum.logr.Logr;
 import vellum.logr.LogrFactory;
 

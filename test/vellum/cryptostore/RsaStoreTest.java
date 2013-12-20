@@ -32,7 +32,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import vellum.pbestore.RsaKeyStore;
 import vellum.crypto.asymmetricstore.RsaStore;
-import vellum.datatype.Millis;
+import vellum.data.Millis;
 
 /**
  *

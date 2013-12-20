@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
-import vellum.datatype.Millis;
+import vellum.data.Millis;
 
 /**
  *
@@ -49,9 +49,9 @@ public class MillisTest {
 
     @Test
     public void testIntervalMillis() {
-        Assert.assertEquals(Millis.format(1001), "00:00:01,001");
-        Assert.assertEquals(Millis.format(60888), "00:01:00,888");
-        Assert.assertEquals(Millis.format(3600999), "01:00:00,999");
+        Assert.assertEquals(Millis.formatPeriod(1001), "00:00:01,001");
+        Assert.assertEquals(Millis.formatPeriod(60888), "00:01:00,888");
+        Assert.assertEquals(Millis.formatPeriod(3600999), "01:00:00,999");
     }
     
     @Test
