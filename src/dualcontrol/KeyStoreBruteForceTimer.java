@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.apache.log4j.Logger;
-import vellum.datatype.Millis;
-import vellum.datatype.Nanos;
+import vellum.data.Millis;
+import vellum.data.Nanos;
 
 /**
  *
@@ -93,7 +93,7 @@ public class KeyStoreBruteForceTimer extends Thread implements Cloneable, Runnab
         nanos = Nanos.elapsed(nanos);
         long average = nanos/maximumCount/threadCount;
         System.out.printf("threads %d, count %d, time %s, avg %s\n",
-                threadCount, maximumCount, Millis.format(Nanos.toMillis(nanos)), 
+                threadCount, maximumCount, Millis.formatPeriod(Nanos.toMillis(nanos)), 
                 Nanos.formatMillis(average));
         if (average > 0) {
             System.out.printf("%d guesses per millisecond\n", 1000*1000/average);

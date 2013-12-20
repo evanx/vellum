@@ -30,7 +30,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import vellum.datatype.Nanos;
+import vellum.data.Nanos;
 
 /**
  *
