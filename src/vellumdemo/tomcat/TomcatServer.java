@@ -32,7 +32,8 @@ public class TomcatServer {
         }
     };
     
-    public static void main(String[] args) throws LifecycleException, InterruptedException, ServletException {
+    public static void main(String[] args) throws LifecycleException, 
+            InterruptedException, ServletException {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(8080);
         Context ctx = tomcat.addContext("/", new File(".").getAbsolutePath());
