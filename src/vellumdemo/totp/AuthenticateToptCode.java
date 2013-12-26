@@ -12,8 +12,8 @@ import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base32;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 import vellum.util.Strings;
 
 /**

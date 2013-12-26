@@ -4,8 +4,8 @@
  */
 package vellumdemo.totp;
 
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 import vellum.util.Strings;
 
 /**

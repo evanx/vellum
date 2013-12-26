@@ -12,8 +12,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 import vellum.util.Base64;
 
 public class CryptonomicalSocket {

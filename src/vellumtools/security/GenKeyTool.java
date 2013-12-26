@@ -22,8 +22,8 @@ package vellumtools.security;
 
 import java.io.File;
 import sun.security.tools.KeyTool;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 import vellum.security.Certificates;
 import vellum.util.Streams;
 import vellum.util.Strings;

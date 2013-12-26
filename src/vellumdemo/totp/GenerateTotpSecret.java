@@ -6,8 +6,8 @@ package vellumdemo.totp;
 
 import java.security.SecureRandom;
 import org.apache.commons.codec.binary.Base32;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 
 /**
  *
