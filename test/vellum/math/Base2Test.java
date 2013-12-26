@@ -25,8 +25,8 @@ import java.util.Arrays;
 import org.junit.Test;
 import vellum.util.Base2;
 import static junit.framework.Assert.*;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 
 /**
  *

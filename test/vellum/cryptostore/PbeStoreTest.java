@@ -28,8 +28,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import org.junit.Test;
 import vellum.data.Millis;
-import vellum.logr.Logr;
-import vellum.logr.LogrFactory;
+import vellumexp.logr.Logr;
+import vellumexp.logr.LogrFactory;
 
 /**
  *
