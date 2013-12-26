@@ -21,6 +21,7 @@
  */
 package vellum.util;
 
+import vellumexp.json.JsonStrings;
 import org.junit.Test;
 
 /**
