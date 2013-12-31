@@ -69,7 +69,7 @@ public class SimpleSSLClientDemo {
                 KeyManagerFactory.getInstance("SunX509");
         keyManagerFactory.init(keyStore, keyPassword);
         this.keyManagers = keyManagerFactory.getKeyManagers();
-        for (String alias : Lists.asList(keyStore.aliases())) {
+        for (String alias : Lists.list(keyStore.aliases())) {
             System.out.println("alias " + alias);
         }
     }
