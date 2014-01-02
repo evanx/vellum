@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.crypto.genkeypair;
+package vellumx.rsa;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

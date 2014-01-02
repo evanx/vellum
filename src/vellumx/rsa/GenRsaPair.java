@@ -20,8 +20,6 @@
  */
 package vellumx.rsa;
 
-import vellum.crypto.genkeypair.GenKeyPair;
-
 /**
  *
  * @author evan.summers
