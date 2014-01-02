@@ -29,7 +29,7 @@ import java.security.KeyStore;
 import java.util.Arrays;
 import javax.net.ssl.SSLContext;
 import vellum.ssl.SSLContextFactory;
-import vellum.crypto.rsa.RsaKeyStores;
+import vellumx.rsa.RsaKeyStores;
 import vellum.ssl.SSLContexts;
 
 /**
