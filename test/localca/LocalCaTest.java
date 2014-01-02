@@ -21,7 +21,7 @@
  */
 package localca;
 
-import vellum.crypto.rsa.GenRsaPair;
+import vellumx.rsa.GenRsaPair;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

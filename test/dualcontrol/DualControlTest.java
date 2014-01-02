@@ -22,7 +22,7 @@
 package dualcontrol;
 
 import vellum.util.ExtendedProperties;
-import vellum.crypto.rsa.GenRsaPair;
+import vellumx.rsa.GenRsaPair;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;

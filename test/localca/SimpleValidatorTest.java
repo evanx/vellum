@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import sun.security.validator.Validator;
-import vellum.crypto.rsa.GenRsaPair;
+import vellumx.rsa.GenRsaPair;
 
 /**
  *

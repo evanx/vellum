@@ -21,7 +21,7 @@
  */
 package localca;
 
-import vellum.crypto.rsa.GenRsaPair;
+import vellumx.rsa.GenRsaPair;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
