@@ -26,6 +26,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import vellum.data.Millis;
+import vellum.exception.ParseException;
 
 /**
  *
@@ -42,20 +43,20 @@ public class MillisTest {
     
     @Test
     public void testIntervalSeconds() {
-        Assert.assertEquals(Millis.formatAsSeconds(1000), "00:00:01");
-        Assert.assertEquals(Millis.formatAsSeconds(60000), "00:01:00");
-        Assert.assertEquals(Millis.formatAsSeconds(3600000), "01:00:00");
+        Assert.assertEquals("00:00:01", Millis.formatAsSeconds(1000));
+        Assert.assertEquals("00:01:00", Millis.formatAsSeconds(60000));
+        Assert.assertEquals("01:00:00", Millis.formatAsSeconds(3600000));
     }
 
     @Test
     public void testIntervalMillis() {
-        Assert.assertEquals(Millis.formatPeriod(1001), "00:00:01,001");
-        Assert.assertEquals(Millis.formatPeriod(60888), "00:01:00,888");
-        Assert.assertEquals(Millis.formatPeriod(3600999), "01:00:00,999");
+        Assert.assertEquals("00:00:01,001", Millis.formatPeriod(1001));
+        Assert.assertEquals("00:01:00,888", Millis.formatPeriod(60888));
+        Assert.assertEquals("01:00:00,999", Millis.formatPeriod(3600999));
     }
     
     @Test
-    public void testParse() {
+    public void testParse() throws ParseException {
         Assert.assertEquals(Millis.parse("1 SECONDS"), 1000);
         Assert.assertEquals(Millis.parse("1m"), 60000);
         Assert.assertEquals(Millis.parse("60m"), 3600000);
