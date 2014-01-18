@@ -21,7 +21,8 @@
  */
 package localca;
 
-import vellumx.rsa.GenRsaPair;
+import vellumcert.KeyUsageType;
+import vellumcert.GenRsaPair;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -37,6 +38,7 @@ import org.junit.Test;
 import sun.security.pkcs.PKCS10;
 import sun.security.validator.Validator;
 import vellum.ssl.SSLContexts;
+import vellumcert.Signer;
 
 /**
  *
@@ -120,7 +122,7 @@ public class RevocableTrustManagerTest {
 
     private void testSigned() throws Exception {
         certRequest = clientPair.getCertRequest("CN=client");
-        signedCert = Certificates.sign(serverPair.getPrivateKey(),
+        signedCert = Signer.sign(serverPair.getPrivateKey(),
                 serverPair.getCertificate(), certRequest, new Date(), 365, 1234,
                 false, 0, KeyUsageType.DIGITAL_SIGNATURE);
         Assert.assertEquals("CN=server", signedCert.getIssuerDN().getName());

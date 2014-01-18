@@ -21,7 +21,8 @@
  */
 package localca;
 
-import vellumx.rsa.GenRsaPair;
+import vellumcert.KeyUsageType;
+import vellumcert.GenRsaPair;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import sun.security.pkcs.PKCS10;
 import vellum.ssl.SSLContexts;
 import vellum.system.Executor;
+import vellumcert.Signer;
 import vellumtest.util.AnonymousMethodInvoker;
 
 /**
@@ -99,7 +101,7 @@ public class LocalCaTest {
                 throws Exception {
             PKCS10 certRequest = pair.getCertRequest("CN=" + alias);
             logger.info("sign {}", signer.cert.getSubjectDN());
-            signedCert = Certificates.sign(signer.pair.getPrivateKey(),
+            signedCert = Signer.sign(signer.pair.getPrivateKey(),
                     signer.pair.getCertificate(), certRequest, new Date(), 365,
                     serialNumber, false, 0, keyUsage);
             this.signer = signer;
