@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import vellumx.rsa.GenKeyPair;
+import vellumcert.GenKeyPair;
 
 /**
  *

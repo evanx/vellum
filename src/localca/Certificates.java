@@ -20,6 +20,7 @@
  */
 package localca;
 
+import vellumcert.KeyUsageType;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.Signature;

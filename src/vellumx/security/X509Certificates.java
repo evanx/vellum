@@ -18,7 +18,7 @@
        specific language governing permissions and limitations
        under the License.  
  */
-package vellum.security;
+package vellumx.security;
 
 import javax.security.cert.X509Certificate;
 import vellum.util.Base64;

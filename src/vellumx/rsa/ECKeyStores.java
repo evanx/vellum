@@ -20,6 +20,7 @@
  */
 package vellumx.rsa;
 
+import vellumcert.GenECPair;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;

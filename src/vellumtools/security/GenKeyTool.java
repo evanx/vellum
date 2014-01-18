@@ -24,7 +24,6 @@ import java.io.File;
 import sun.security.tools.KeyTool;
 import vellumexp.logr.Logr;
 import vellumexp.logr.LogrFactory;
-import vellum.security.Certificates;
 import vellum.util.Streams;
 import vellum.util.Strings;
 
@@ -38,7 +37,7 @@ public class GenKeyTool {
     String keyStoreType = "JKS";
     String providerName = null;
     String keyAlgName = "RSA";
-    String dname = Certificates.LOCAL_DNAME;
+    String dname = "CN=localhost, OU=local, O=local, L=local, S=local, C=local";
     String keyStoreLocation;
     String trustStoreLocation;
     String keyStorePassword;
