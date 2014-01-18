@@ -35,10 +35,10 @@ import javax.net.ssl.SSLContext;
 import junit.framework.Assert;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import sun.security.pkcs.PKCS10;
 import sun.security.validator.Validator;
 import vellum.ssl.SSLContexts;
-import vellumcert.Signer;
+import vellumcert.CertReq;
+import vellumcert.CertReqs;
 
 /**
  *
@@ -57,7 +57,7 @@ public class RevocableTrustManagerTest {
     SSLContext clientContext;
     KeyStore clientKeyStore;
     X509Certificate clientCert;
-    PKCS10 certRequest;
+    CertReq certRequest;
     KeyStore signedKeyStore;
     X509Certificate signedCert;
     SSLContext signedContext;
@@ -122,8 +122,8 @@ public class RevocableTrustManagerTest {
 
     private void testSigned() throws Exception {
         certRequest = clientPair.getCertRequest("CN=client");
-        signedCert = Signer.sign(serverPair.getPrivateKey(),
-                serverPair.getCertificate(), certRequest, new Date(), 365, 1234,
+        signedCert = CertReqs.sign(certRequest, serverPair.getPrivateKey(),
+                serverPair.getCertificate(), new Date(), 365, 1234,
                 false, 0, KeyUsageType.DIGITAL_SIGNATURE);
         Assert.assertEquals("CN=server", signedCert.getIssuerDN().getName());
         Assert.assertEquals("CN=client", signedCert.getSubjectDN().getName());

@@ -1,4 +1,4 @@
-package common;
+package vellumtest.util;
 
 /*
  * Source https://code.google.com/p/vellum by @evanxsummers
