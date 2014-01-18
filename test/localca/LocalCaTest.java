@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vellum.ssl.SSLContexts;
 import vellum.system.Executor;
+import vellum.util.Calendars;
 import vellumcert.CertReq;
 import vellumcert.CertReqs;
 import vellumtest.util.AnonymousMethodInvoker;
@@ -102,7 +103,7 @@ public class LocalCaTest {
             CertReq certRequest = pair.getCertRequest("CN=" + alias);
             logger.info("sign {}", signer.cert.getSubjectDN());
             signedCert = CertReqs.sign(certRequest, signer.pair.getPrivateKey(),
-                    signer.pair.getCertificate(), new Date(), 365,
+                    signer.pair.getCertificate(), new Date(), Calendars.newDate(365),
                     serialNumber, false, 0, keyUsage);
             this.signer = signer;
             if (signer.signer == null) {

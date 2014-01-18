@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 import sun.security.validator.Validator;
 import vellum.ssl.SSLContexts;
+import vellum.util.Calendars;
 import vellumcert.CertReq;
 import vellumcert.CertReqs;
 
@@ -123,7 +124,7 @@ public class RevocableTrustManagerTest {
     private void testSigned() throws Exception {
         certRequest = clientPair.getCertRequest("CN=client");
         signedCert = CertReqs.sign(certRequest, serverPair.getPrivateKey(),
-                serverPair.getCertificate(), new Date(), 365, 1234,
+                serverPair.getCertificate(), new Date(), Calendars.newDate(365), 1234,
                 false, 0, KeyUsageType.DIGITAL_SIGNATURE);
         Assert.assertEquals("CN=server", signedCert.getIssuerDN().getName());
         Assert.assertEquals("CN=client", signedCert.getSubjectDN().getName());
