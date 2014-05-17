@@ -51,7 +51,11 @@ public class GenKeyTool {
         dname = getProperty("dname");
         File keyStoreFile = new File(keyStoreLocation);
         File trustStoreFile = new File(trustStoreLocation);
-        String keyAlias = Streams.removeFileNameExtension(keyStoreFile);
+        String keyAlias = keyStoreFile.getName();
+        int index = keyAlias.lastIndexOf(".");
+        if (index > 0) {
+            keyAlias = keyAlias.substring(0, index);
+        }
         String certFilePath = keyStoreFile.getParent() + File.separator + keyAlias + ".pem";
         File certFile = new File(certFilePath);
         logger.info("certFile", certFilePath);
