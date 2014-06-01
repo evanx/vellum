@@ -1,8 +1,5 @@
 package vellumdemo.cryptonomicaldemo;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-
 public class AsymmetricCipherTest {
     AsymmetricCipher cipher = new AsymmetricCipher();
     
