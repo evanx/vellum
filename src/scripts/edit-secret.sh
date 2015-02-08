@@ -10,7 +10,7 @@ fi
 
 if ! which openssl 
 then
-  echo "Please isntall openssl"
+  echo "Please install openssl"
   exit 1
 fi
 
