@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Source https://github.com/evanxvellum by @evanxsummers
+
 if ! echo $BASH | grep -q '/bin/bash' 
 then
   echo "Please invoke this using bash"
